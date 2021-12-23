@@ -13,8 +13,8 @@ template.innerHTML = `
   <style>
     :host {
       display: inline-block;
-      height: 100px;
-      width: 100px;
+      max-height: 80px;
+      max-width: 80px;
       padding: 0;
       margin: 0;
       border-radius: 10px;
@@ -26,17 +26,17 @@ template.innerHTML = `
       margin: 0 auto;
     }
     ::slotted(*) {
-      width: 75px;
+      width: 60px;
     }
     img {
-      width: 50px;
+      width: 40px;
     }
     #tile {
       background-color: white;
-      width: 100px;
-      height: 100px;
-      padding-top: 15px;
-      padding-bottom: 15px;
+      width: 80px;
+      height: 80px;
+      padding-top: 10px;
+      padding-bottom: 10px;
       border-radius: 10px;
       box-shadow: -1px 1px 2px #333;
       border: 1px solid #666;

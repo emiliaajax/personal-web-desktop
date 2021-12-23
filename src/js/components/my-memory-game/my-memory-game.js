@@ -8,7 +8,7 @@ template.innerHTML = `
   <div id='board'></div>
   <style>
     :host {
-      --tile-size: 100px;
+      --tile-size: 80px;
     }
     #board {
       display: grid;
@@ -20,7 +20,7 @@ template.innerHTML = `
       grid-template-columns: repeat(2, var(--tile-size));
     }
     #counter {
-      font-size: 2rem;
+      font-size: 1.5rem;
       text-align: center;
       margin-bottom: 20px;
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
@@ -124,7 +124,7 @@ customElements.define('my-memory-game',
     }
 
     /**
-     * Returns a shuffled array of relative adresses to the images used in the game.
+     * Returns a shuffled array of relative adresses to the images used in the game. Inspired by code from A3 assignment.
      *
      * @returns {string[]} A shuffled array of relative adresses to images.
      */

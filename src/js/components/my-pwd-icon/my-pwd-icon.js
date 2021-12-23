@@ -1,4 +1,6 @@
 
+import '../my-window/index.js'
+
 const template = document.createElement('template')
 
 template.innerHTML = `
@@ -39,6 +41,7 @@ customElements.define('my-pwd-icon',
         .appendChild(template.content.cloneNode(true))
 
       this.#imageIcon = this.shadowRoot.querySelector('#image-icon')
+      this.#imageIcon.addEventListener('click', () => this.dispatchEvent(new CustomEvent('clicked')))
     }
 
     /**
