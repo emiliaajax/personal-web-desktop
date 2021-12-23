@@ -7,18 +7,20 @@ template.innerHTML = `
   </div>
   <style>
     :host {
-      display: block;
-      position: absolute;
+      position: fixed;
       bottom: 0%;
       left: 10%;
       right: 10%;
     }
     #dock {
+      display: flex;
+      flex-direction: row;
       max-width: 1200px;
-      height: 80px;
-      background-color: black;
-      opacity: 0.4;
+      height: 130px;
+      background-color: rgb(0, 0, 0, 0.6);
       border-radius: 5px;
+      justify-content: center;
+      align-items: center;
     }
   </style>
 `
