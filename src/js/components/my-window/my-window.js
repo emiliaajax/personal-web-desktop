@@ -59,7 +59,10 @@ customElements.define('my-window',
         .appendChild(template.content.cloneNode(true))
 
       this.#close = this.shadowRoot.querySelector('#close')
-      this.#close.addEventListener('click', () => this.dispatchEvent(new CustomEvent('closed')))
+      this.#close.addEventListener('click', (event) => {
+        event.preventDefault()
+        this.dispatchEvent(new CustomEvent('closed'))
+      })
     }
   }
 )

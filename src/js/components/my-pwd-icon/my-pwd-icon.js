@@ -41,7 +41,10 @@ customElements.define('my-pwd-icon',
         .appendChild(template.content.cloneNode(true))
 
       this.#imageIcon = this.shadowRoot.querySelector('#image-icon')
-      this.#imageIcon.addEventListener('click', () => this.dispatchEvent(new CustomEvent('clicked')))
+      this.#imageIcon.addEventListener('click', (event) => {
+        event.preventDefault()
+        this.dispatchEvent(new CustomEvent('clicked'))
+      })
     }
 
     /**
