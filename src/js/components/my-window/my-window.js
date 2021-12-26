@@ -9,6 +9,11 @@ template.innerHTML = `
     <slot></slot>
   <div>
   <style>
+    :host {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+    }
     #window {
       width: 500px;
       height: 500px;
@@ -61,7 +66,8 @@ customElements.define('my-window',
       this.#close = this.shadowRoot.querySelector('#close')
       this.#close.addEventListener('click', (event) => {
         event.preventDefault()
-        this.dispatchEvent(new CustomEvent('closed'))
+        // this.dispatchEvent(new CustomEvent('closed'))
+        this.classList.add('hidden')
       })
     }
   }

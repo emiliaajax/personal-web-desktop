@@ -7,6 +7,9 @@ template.innerHTML = `
   <div id='icon'>
     <img id='image-icon'>
   </div>
+  <my-window class='hidden'> 
+    <slot></slot>
+  </my-window>
   <style>
     :host {
       margin-left: 10px;
@@ -23,6 +26,9 @@ template.innerHTML = `
       max-width: 90%;
       margin: 0 auto;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 `
 
@@ -32,6 +38,7 @@ customElements.define('my-pwd-icon',
    */
   class extends HTMLElement {
     #imageIcon
+    #slot
     /**
      * Creates an instance of current type.
      */
@@ -41,10 +48,9 @@ customElements.define('my-pwd-icon',
         .appendChild(template.content.cloneNode(true))
 
       this.#imageIcon = this.shadowRoot.querySelector('#image-icon')
-      this.#imageIcon.addEventListener('click', (event) => {
-        event.preventDefault()
-        this.dispatchEvent(new CustomEvent('clicked'))
-      })
+      this.#slot = this.shadowRoot.querySelector('my-window')
+
+      this.#imageIcon.addEventListener('click', event => this.#openApp(event))
     }
 
     /**
@@ -67,6 +73,16 @@ customElements.define('my-pwd-icon',
       if (name === 'src' && oldValue !== newValue) {
         this.#imageIcon.setAttribute('src', newValue)
       }
+    }
+
+    /**
+     * Hello.
+     *
+     * @param {HTMLElement} event Hej.
+     */
+    #openApp (event) {
+      event.preventDefault()
+      this.#slot.classList.remove('hidden')
     }
   }
 )

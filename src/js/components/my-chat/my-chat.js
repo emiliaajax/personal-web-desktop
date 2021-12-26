@@ -18,7 +18,7 @@ template.innerHTML = `
     #chat {
       width: 450px;
       height: 450px;
-      /* background-image: linear-gradient(180deg, #edf1fa, #e4ebf6, #d3def0, #cad9ef, #d9e2f3, white); */
+      /*background-image: linear-gradient(180deg, #edf1fa, #e4ebf6, #d3def0, #cad9ef, #d9e2f3, white); */
       background-color: white;
       display: grid;
       grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
@@ -31,12 +31,12 @@ template.innerHTML = `
     }
     #chat-output {
       background-color: white;
-      width: 350px;
+      width: 480px;
       height: 250px;
-      border-radius: 10px 10px 0px 0px;
+      /* border-radius: 10px 10px 0px 0px; */
       grid-column: 2/4;
       margin-top: 10px;
-      border: solid #333;
+      border-top: solid black;
       border-width: thin;
       padding: 10px;
     }
@@ -48,12 +48,15 @@ template.innerHTML = `
       resize: none;
       display: block;
       height: 100px;
-      width: 350px;
-      border-radius: 10px 10px 0px 0px;
+      width: 480px;
+      border: none;
+      border-top: solid black;
+      /* border-radius: 10px 10px 0px 0px;*/
       border-width: thin;
     }
     #chat-message input[type='submit'] {
       float: right;
+      margin-right: 10px;
     }
     .hidden {
       display: none;
@@ -149,7 +152,6 @@ customElements.define('my-chat',
      */
     #displayChatMessage (event) {
       const data = JSON.parse(event.data)
-      console.log(data)
       if (data.type === 'notification' || data.type === 'message') {
         const message = document.createElement('p')
         message.textContent = `${data.username}: ${data.data}`
