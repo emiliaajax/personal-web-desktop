@@ -72,6 +72,7 @@ customElements.define('my-chat',
     #nicknameForm
     #socket
     #mymessage
+    #chatOutput
     /**
      * Creates an instance of current type.
      */
@@ -83,6 +84,7 @@ customElements.define('my-chat',
       this.#chatMessage = this.shadowRoot.querySelector('#chat-message')
       this.#message = this.shadowRoot.querySelector('#message')
       this.#nicknameForm = this.shadowRoot.querySelector('nickname-form')
+      this.#chatOutput = this.shadowRoot.querySelector('#chat-output')
 
       this.#chatMessage.addEventListener('submit', (event) => this.#onSubmit(event))
       this.#nicknameForm.addEventListener('added', (event) => this.#startChat(event))
@@ -93,8 +95,7 @@ customElements.define('my-chat',
      */
     connectedCallback () {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
-      this.#socket.addEventListener('open', event => this.#socket.send(JSON.stringify(this.#mymessage)))
-      this.#socket.addEventListener('message', event => console.log(event.data))
+      this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
     }
 
     /**
@@ -123,12 +124,36 @@ customElements.define('my-chat',
      */
     #onSubmit (event) {
       event.preventDefault()
-      console.log(this.#message.value)
-      this.#mymessage = {
-        type: 'message',
-        data: this.#message.value,
-        username: this.#username,
-        api: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+      if (this.#socket.readyState === 1) {
+      // this.#socket.addEventListener('open', () => this.#socket.send(JSON.stringify({
+      //   type: 'message',
+      //   data: this.#message.value,
+      //   username: this.#username,
+      //   key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+      // })))
+        this.#socket.send(JSON.stringify({
+          type: 'message',
+          data: this.#message.value,
+          username: this.#username,
+          key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+        }))
+      }
+      this.#chatMessage.reset()
+      console.log(this.#socket)
+    }
+
+    /**
+     * Creates an instance of current type.
+     *
+     * @param {Event} event The submit event.
+     */
+    #displayChatMessage (event) {
+      const data = JSON.parse(event.data)
+      console.log(data)
+      if (data.type === 'notification' || data.type === 'message') {
+        const message = document.createElement('p')
+        message.textContent = `${data.username}: ${data.data}`
+        this.#chatOutput.append(message)
       }
     }
   }
