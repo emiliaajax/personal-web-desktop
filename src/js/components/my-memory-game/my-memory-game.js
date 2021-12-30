@@ -13,6 +13,9 @@ template.innerHTML = `
     <div id='counter'>Moves: 0</div>
     <div id='board'></div>
   </div>
+  <div id='game-over'>
+    
+  </div>
   <style>
     :host {
       --tile-size: 80px;
@@ -39,6 +42,9 @@ template.innerHTML = `
     :host([level = 'easy']) #memory-game {
       margin-top: 100px;
     }
+    :host([level = 'medium']) #memory-game {
+      margin-top: 100px;
+    }
     #counter {
       font-size: 1.5rem;
       text-align: center;
@@ -46,10 +52,10 @@ template.innerHTML = `
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
 
     }
-    my-flipping-tile {
+    /* my-flipping-tile {
       width: var(--tile-size);
       height: var(--tile-size);
-    }
+    } */
     .hidden {
       display: none;
     }
@@ -170,8 +176,21 @@ customElements.define('my-memory-game',
       setTimeout(() => {
         tiles[0].removeAttribute('revealed')
         tiles[1].removeAttribute('revealed')
-        this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('disabled', ''))
+        this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('disabled'))
+        this.#checkIfAllTilesCollected()
       }, 1000)
+    }
+
+    /**
+     * Checks if all tiles has been collected.
+     */
+    #checkIfAllTilesCollected () {
+      if (Array.from(this.shadowRoot.querySelectorAll('.tile')).every(tile => tile.hasAttribute('invisible'))) {
+        this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
+        this.shadowRoot.querySelector('#levels').classList.remove('hidden')
+        this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
+        this.removeAttribute('level')
+      }
     }
 
     /**
