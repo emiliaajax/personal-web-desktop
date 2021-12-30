@@ -308,18 +308,33 @@ customElements.define('my-memory-game',
       this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
     }
 
+    /**
+     * Restarts the game on the current level.
+     *
+     * @param {Event} event The click event.
+     */
     #playAgain (event) {
       event.preventDefault()
       this.shadowRoot.querySelector('#game-over').classList.add('hidden')
       this.shadowRoot.querySelector('#memory-game').classList.remove('hidden')
     }
 
+    /**
+     * Restarts the game from the beginning with choosing nickname.
+     *
+     * @param {Event} event The click event.
+     */
     #newPlayer (event) {
       event.preventDefault()
       this.shadowRoot.querySelector('#game-over').classList.add('hidden')
       this.shadowRoot.querySelector('nickname-form').classList.remove('hidden')
     }
 
+    /**
+     * Restarts game from choosing level.
+     *
+     * @param {Event} event The click event.
+     */
     #changeLevel (event) {
       event.preventDefault()
       this.shadowRoot.querySelector('#game-over').classList.add('hidden')
