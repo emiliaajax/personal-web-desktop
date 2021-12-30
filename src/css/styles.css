@@ -1,4 +1,6 @@
 body {
+	max-width: 1600px;
+	min-height: 800px;
 	background: url('../images/background.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;

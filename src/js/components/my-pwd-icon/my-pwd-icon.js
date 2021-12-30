@@ -7,7 +7,7 @@ template.innerHTML = `
   <div id='icon'>
     <img id='image-icon'>
   </div>
-  <my-window class='hidden'> 
+  <my-window id='my-window' class='hidden' draggable='true'> 
     <slot></slot>
   </my-window>
   <style>
@@ -38,7 +38,7 @@ customElements.define('my-pwd-icon',
    */
   class extends HTMLElement {
     #imageIcon
-    #slot
+    #window
     /**
      * Creates an instance of current type.
      */
@@ -48,9 +48,16 @@ customElements.define('my-pwd-icon',
         .appendChild(template.content.cloneNode(true))
 
       this.#imageIcon = this.shadowRoot.querySelector('#image-icon')
-      this.#slot = this.shadowRoot.querySelector('my-window')
+      this.#window = this.shadowRoot.querySelector('my-window')
 
       this.#imageIcon.addEventListener('click', event => this.#openApp(event))
+      // this.#window.addEventListener('dragstart', (event) => {
+      //   this.#window.setAttribute('dragging', '')
+      //   event.dataTransfer.setData('text/plain', this.#window.id)
+      // })
+      // this.#window.addEventListener('dragend', (event) => {
+      //   this.#window.removeAttribute('dragging')
+      // })
     }
 
     /**
@@ -82,7 +89,7 @@ customElements.define('my-pwd-icon',
      */
     #openApp (event) {
       event.preventDefault()
-      this.#slot.classList.remove('hidden')
+      this.#window.classList.remove('hidden')
     }
   }
 )
