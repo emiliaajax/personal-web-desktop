@@ -97,7 +97,7 @@ customElements.define('high-score',
      * @param {string} nickname The nickname to add to the high score.
      * @param {string} score The score associated with the nickname.
      */
-    addToHighScore (nickname = 'Player', score) {
+    addToHighScore (nickname, score) {
       if (score) {
         if (localStorage.length === 0) {
           const json = JSON.stringify(this.#scoreArray)
