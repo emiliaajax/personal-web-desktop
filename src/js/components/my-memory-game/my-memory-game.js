@@ -145,6 +145,10 @@ customElements.define('my-memory-game',
       this.#easyLevel.addEventListener('click', event => this.#setLevel(event, 'easy'))
       this.#mediumLevel.addEventListener('click', event => this.#setLevel(event, 'medium'))
       this.#difficultLevel.addEventListener('click', event => this.#setLevel(event, 'difficult'))
+
+      this.shadowRoot.querySelector('#play-again').addEventListener('click', event => this.#playAgain(event))
+      this.shadowRoot.querySelector('#new-player').addEventListener('click', event => this.#newPlayer(event))
+      this.shadowRoot.querySelector('#change-level').addEventListener('click', event => this.#changeLevel(event))
     }
 
     /**
@@ -256,7 +260,6 @@ customElements.define('my-memory-game',
       if (Array.from(this.shadowRoot.querySelectorAll('.tile')).every(tile => tile.hasAttribute('invisible'))) {
         this.shadowRoot.querySelector('high-score').addToHighScore(this.#nickname, this.#counter)
         this.#gameOver()
-        // this.shadowRoot.querySelector('#levels').classList.remove('hidden')
       }
     }
 
@@ -303,7 +306,24 @@ customElements.define('my-memory-game',
       this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
       this.#counter = 0
       this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
-      this.removeAttribute('level')
+    }
+
+    #playAgain (event) {
+      event.preventDefault()
+      this.shadowRoot.querySelector('#game-over').classList.add('hidden')
+      this.shadowRoot.querySelector('#memory-game').classList.remove('hidden')
+    }
+
+    #newPlayer (event) {
+      event.preventDefault()
+      this.shadowRoot.querySelector('#game-over').classList.add('hidden')
+      this.shadowRoot.querySelector('nickname-form').classList.remove('hidden')
+    }
+
+    #changeLevel (event) {
+      event.preventDefault()
+      this.shadowRoot.querySelector('#game-over').classList.add('hidden')
+      this.shadowRoot.querySelector('#levels').classList.remove('hidden')
     }
   }
 )
