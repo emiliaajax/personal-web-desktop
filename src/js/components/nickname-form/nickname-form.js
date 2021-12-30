@@ -11,6 +11,7 @@ template.innerHTML = `
   <form id='form' autocomplete='off' method='POST' action=''>
     <label part='name-text' for='name'>Username</label>
     <input id='name' type='text' name='name' autofocus>
+    <div id='wrong-input'></div>
     <input id='submit' type='submit' value='Start'>
   </form>
   <style>
@@ -49,6 +50,11 @@ template.innerHTML = `
       outline: 2px solid #666;
       border: none;
     }
+    #wrong-input {
+      text-align: center;
+      color: white;
+      margin-top: 10px;
+    }
   </style>
 `
 
@@ -83,7 +89,11 @@ customElements.define('nickname-form',
      */
     #onSubmit (event) {
       event.preventDefault()
-      this.dispatchEvent(new CustomEvent('added', { detail: { nickname: this.shadowRoot.querySelector('input#name').value } }))
+      if (this.shadowRoot.querySelector('input#name').value.length > 2) {
+        this.dispatchEvent(new CustomEvent('added', { detail: { nickname: this.shadowRoot.querySelector('input#name').value } }))
+      } else {
+        this.shadowRoot.querySelector('#wrong-input').textContent = '* Username must be at least three characters'
+      }
     }
   }
 )

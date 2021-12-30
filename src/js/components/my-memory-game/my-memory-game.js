@@ -1,6 +1,7 @@
 
 import '../my-flipping-tile/index.js'
 import '../nickname-form/nickname-form.js'
+import '../high-score/high-score.js'
 
 const template = document.createElement('template')
 
@@ -17,9 +18,12 @@ template.innerHTML = `
   </div>
   <div id='game-over' class='hidden'>
     <div id='text'></div>
-    <button id='play-again'>Play again</button>
-    <button id='new-player'>New player</button>
-    <button id='change-level'>Change level</button>
+    <high-score></high-score>
+    <div id='buttons'>
+      <button id='play-again'>Play again</button>
+      <button id='new-player'>New player</button>
+      <button id='change-level'>Change level</button>
+    </div>
   </div>
   <style>
     :host {
@@ -66,13 +70,47 @@ template.innerHTML = `
       font-size: 1.5rem;
       text-align: center;
       margin-bottom: 20px;
+      color: white;
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
-
     }
     /* my-flipping-tile {
       width: var(--tile-size);
       height: var(--tile-size);
     } */
+    #game-over {
+      padding-top: 80px;
+    }
+    #text {
+      text-align: center;
+      color: white;
+      font-size: 1.3rem;
+    }
+    high-score {
+      width: 250px;
+      height: 250px;
+      font-size: 1rem;
+    }
+    #buttons {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 0.8fr 1fr 1fr 1fr 0.8fr;
+    }
+    #game-over button {
+      display: inline-block;
+      text-align: center;
+      width: 100px;
+      height: 40px;
+      margin: 0 auto;
+    }
+    #play-again {
+      grid-column: 2/3;
+    }
+    #new-player {
+      grid-column: 3/4;
+    }
+    #change-level {
+      grid-column: 4/5;
+    }
     .hidden {
       display: none;
     }
@@ -90,6 +128,7 @@ customElements.define('my-memory-game',
     #easyLevel
     #mediumLevel
     #difficultLevel
+    #nickname
     /**
      * Creates an instance of current type.
      */
@@ -172,6 +211,7 @@ customElements.define('my-memory-game',
      * @param {Event} event The added event.
      */
     #addNickname (event) {
+      this.#nickname = event.detail.nickname
       this.shadowRoot.querySelector('nickname-form').classList.add('hidden')
       this.shadowRoot.querySelector('#levels').classList.remove('hidden')
     }
@@ -214,10 +254,9 @@ customElements.define('my-memory-game',
      */
     #checkIfAllTilesCollected () {
       if (Array.from(this.shadowRoot.querySelectorAll('.tile')).every(tile => tile.hasAttribute('invisible'))) {
+        this.shadowRoot.querySelector('high-score').addToHighScore(this.#nickname, this.#counter)
         this.#gameOver()
         // this.shadowRoot.querySelector('#levels').classList.remove('hidden')
-        // this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
-        // this.removeAttribute('level')
       }
     }
 
@@ -263,6 +302,8 @@ customElements.define('my-memory-game',
       this.shadowRoot.querySelector('#text').textContent = `You made it in ${this.#counter} moves!`
       this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
       this.#counter = 0
+      this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
+      this.removeAttribute('level')
     }
   }
 )

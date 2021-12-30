@@ -47,7 +47,7 @@ template.innerHTML = `
       background-color: white;
       color: black;
       font-size: 1.5rem;
-      border: 20px inset #F0F0F0;
+      border: 2px inset #FFFFFF;
     }
     th {
       text-transform: uppercase;
@@ -73,14 +73,6 @@ customElements.define('high-score',
      * An array to contain all scores.
      */
     #scoreArray
-    /**
-     * The username.
-     */
-    #nickname = 'Player'
-    /**
-     * The score corresponding to the username.
-     */
-    #score
 
     /**
      * Creates an instance of current type.
@@ -93,32 +85,6 @@ customElements.define('high-score',
     }
 
     /**
-     * Attributes to monitor for changes.
-     *
-     * @returns {string[]} A string array of attributes.
-     */
-    static get observedAttributes () {
-      return ['nickname', 'score']
-    }
-
-    /**
-     * Called when observed attribute changes.
-     *
-     * @param {string} name - The attribute's name.
-     * @param {*} oldValue - The old value.
-     * @param {*} newValue - The new value.
-     */
-    attributeChangedCallback (name, oldValue, newValue) {
-      if (name === 'nickname' && newValue.trim()) {
-        this.#nickname = newValue
-      }
-      if (name === 'score') {
-        this.#score = newValue
-        this.#addToHighScore()
-      }
-    }
-
-    /**
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
@@ -127,25 +93,30 @@ customElements.define('high-score',
 
     /**
      * Compares the current score with the scores saved in localStorage and saves up to five of the best scores.
+     *
+     * @param {string} nickname The nickname to add to the high score.
+     * @param {string} score The score associated with the nickname.
      */
-    #addToHighScore () {
-      if (localStorage.length === 0) {
-        const json = JSON.stringify(this.#scoreArray)
-        localStorage.setItem('highscore', json)
+    addToHighScore (nickname = 'Player', score) {
+      if (score) {
+        if (localStorage.length === 0) {
+          const json = JSON.stringify(this.#scoreArray)
+          localStorage.setItem('highscore', json)
+        }
+        const highscoreJSON = localStorage.getItem('highscore')
+        let highscoreArray = JSON.parse(highscoreJSON)
+        highscoreArray.push({
+          nickname: nickname,
+          score: score
+        })
+        highscoreArray.sort((a, b) => a.score - b.score, 0)
+        if (highscoreArray.length >= 5) {
+          highscoreArray = highscoreArray.slice(0, 5)
+        }
+        highscoreArray = JSON.stringify(highscoreArray)
+        localStorage.setItem('highscore', highscoreArray)
+        this.#updateHighScore()
       }
-      const highscoreJSON = localStorage.getItem('highscore')
-      let highscoreArray = JSON.parse(highscoreJSON)
-      highscoreArray.push({
-        nickname: this.#nickname,
-        score: this.#score
-      })
-      highscoreArray.sort((a, b) => a.score - b.score, 0)
-      if (highscoreArray.length >= 5) {
-        highscoreArray = highscoreArray.slice(0, 5)
-      }
-      highscoreArray = JSON.stringify(highscoreArray)
-      localStorage.setItem('highscore', highscoreArray)
-      this.#updateHighScore()
     }
 
     /**
