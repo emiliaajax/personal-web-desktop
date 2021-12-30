@@ -9,9 +9,9 @@ const template = document.createElement('template')
 
 template.innerHTML = `
   <form id='form' autocomplete='off' method='POST' action=''>
-    <label for='name'>Username</label>
+    <label part='name-text' for='name'>Username</label>
     <input id='name' type='text' name='name' autofocus>
-    <input id='submit' type='submit' value='Enter chat'>
+    <input id='submit' type='submit' value='Start'>
   </form>
   <style>
     label {

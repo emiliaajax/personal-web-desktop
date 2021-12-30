@@ -44,7 +44,7 @@ template.innerHTML = `
     ::slotted(*) {
       display: block;
       margin: 0 auto;
-      margin-top: 20px;
+      /* margin-top: 20px; */
     }
   </style>
 `

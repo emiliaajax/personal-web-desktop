@@ -1,10 +1,12 @@
 
 import '../my-flipping-tile/index.js'
+import '../nickname-form/nickname-form.js'
 
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <div id='levels'>
+  <nickname-form></nickname-form>
+  <div id='levels' class='hidden'>
     <button id='easy'>Easy</button>
     <button id='medium'>Medium</button>
     <button id='difficult'>Difficult</button>
@@ -13,15 +15,30 @@ template.innerHTML = `
     <div id='counter'>Moves: 0</div>
     <div id='board'></div>
   </div>
-  <div id='game-over'>
-    
+  <div id='game-over' class='hidden'>
+    <div id='text'></div>
+    <button id='play-again'>Play again</button>
+    <button id='new-player'>New player</button>
+    <button id='change-level'>Change level</button>
   </div>
   <style>
     :host {
       --tile-size: 80px;
+      background: url('../../../images/memory-background.jpg');
+      background-position: top;
+      width: 500px;
+      height: 500px;
+    }
+    nickname-form {
+      display: block;
+      padding-top: 130px;
+    }
+    nickname-form::part(name-text) {
+      color: white;
+      text-transform: uppercase;
     }
     #levels {
-      margin-top: 130px;
+      padding-top: 130px;
     }
     button {
       display: block;
@@ -40,10 +57,10 @@ template.innerHTML = `
       grid-template-columns: repeat(2, var(--tile-size)) !important;
     }
     :host([level = 'easy']) #memory-game {
-      margin-top: 100px;
+      padding-top: 100px;
     }
     :host([level = 'medium']) #memory-game {
-      margin-top: 100px;
+      padding-top: 100px;
     }
     #counter {
       font-size: 1.5rem;
@@ -85,6 +102,7 @@ customElements.define('my-memory-game',
       this.#mediumLevel = this.shadowRoot.querySelector('#medium')
       this.#difficultLevel = this.shadowRoot.querySelector('#difficult')
 
+      this.shadowRoot.querySelector('nickname-form').addEventListener('added', event => this.#addNickname(event))
       this.#easyLevel.addEventListener('click', event => this.#setLevel(event, 'easy'))
       this.#mediumLevel.addEventListener('click', event => this.#setLevel(event, 'medium'))
       this.#difficultLevel.addEventListener('click', event => this.#setLevel(event, 'difficult'))
@@ -149,6 +167,16 @@ customElements.define('my-memory-game',
     }
 
     /**
+     * Starts the memory game.
+     *
+     * @param {Event} event The added event.
+     */
+    #addNickname (event) {
+      this.shadowRoot.querySelector('nickname-form').classList.add('hidden')
+      this.shadowRoot.querySelector('#levels').classList.remove('hidden')
+    }
+
+    /**
      * Checks how many tiles are revealed.
      */
     async #checkTilesRevealed () {
@@ -186,10 +214,10 @@ customElements.define('my-memory-game',
      */
     #checkIfAllTilesCollected () {
       if (Array.from(this.shadowRoot.querySelectorAll('.tile')).every(tile => tile.hasAttribute('invisible'))) {
-        this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
-        this.shadowRoot.querySelector('#levels').classList.remove('hidden')
-        this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
-        this.removeAttribute('level')
+        this.#gameOver()
+        // this.shadowRoot.querySelector('#levels').classList.remove('hidden')
+        // this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
+        // this.removeAttribute('level')
       }
     }
 
@@ -225,6 +253,16 @@ customElements.define('my-memory-game',
       this.setAttribute('level', level)
       this.shadowRoot.querySelector('#levels').classList.add('hidden')
       this.shadowRoot.querySelector('#memory-game').classList.remove('hidden')
+    }
+
+    /**
+     * Displays when all tiles has been collected and game is over.
+     */
+    #gameOver () {
+      this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
+      this.shadowRoot.querySelector('#text').textContent = `You made it in ${this.#counter} moves!`
+      this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
+      this.#counter = 0
     }
   }
 )
