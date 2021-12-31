@@ -85,7 +85,7 @@ customElements.define('my-window',
 
       this.#windowContainer.addEventListener('mousedown', (event) => this.#startDragging(event))
       this.#windowContainer.addEventListener('mouseup', (event) => this.#endDragging(event))
-      this.#windowContainer.addEventListener('mousemove', (event) => this.#drag(event))
+      document.addEventListener('mousemove', (event) => this.#drag(event))
       this.#close.addEventListener('click', (event) => {
         event.preventDefault()
         // this.dispatchEvent(new CustomEvent('closed'))
