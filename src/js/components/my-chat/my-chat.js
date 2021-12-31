@@ -30,9 +30,6 @@ template.innerHTML = `
       margin: 0 auto;
     }
     #chat-output {
-      /* display: flex;
-      flex-direction: column;
-      flex-wrap: wrap; */
       background-color: white;
       width: 400px;
       height: 250px;
@@ -44,8 +41,6 @@ template.innerHTML = `
       overflow: scroll;
     }
     #chat-output p {
-      /* flex-wrap: wrap; */
-      /* display: block; */
       background-color: #e8e8e8;
       box-shadow: 1px 1px 5px #cdcdcd;
       border-radius: 20px;
@@ -56,6 +51,7 @@ template.innerHTML = `
       max-width: 250px !important;
       margin-top: 5px;
       margin-bottom: 5px;
+      word-break: break-all;
     }
     #chat-output p[right] {
       display: table;
