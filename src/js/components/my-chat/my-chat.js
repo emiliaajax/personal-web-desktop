@@ -16,9 +16,9 @@ template.innerHTML = `
   </div>
   <style>
     #chat {
-      width: 450px;
-      height: 450px;
-      /*background-image: linear-gradient(180deg, #edf1fa, #e4ebf6, #d3def0, #cad9ef, #d9e2f3, white); */
+      width: 500px;
+      height: 500px;
+      background-image: linear-gradient(180deg, #edf1fa, #e4ebf6, #d3def0, #cad9ef, #d9e2f3, white);
       background-color: white;
       display: grid;
       grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
@@ -30,36 +30,66 @@ template.innerHTML = `
       margin: 0 auto;
     }
     #chat-output {
+      /* display: flex;
+      flex-direction: column;
+      flex-wrap: wrap; */
       background-color: white;
-      width: 480px;
+      width: 400px;
       height: 250px;
-      /* border-radius: 10px 10px 0px 0px; */
+      border-radius: 10px 10px 0px 0px; 
       grid-column: 2/4;
-      margin-top: 10px;
-      border-top: solid black;
-      border-width: thin;
-      padding: 10px;
+      grid-row: 1/2;
+      margin-top: 20px;
+      padding: 20px;
+      overflow: scroll;
+    }
+    #chat-output p {
+      /* flex-wrap: wrap; */
+      /* display: block; */
+      background-color: #e8e8e8;
+      box-shadow: 1px 1px 5px #cdcdcd;
+      border-radius: 20px;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      max-width: 250px !important;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    #chat-output p[right] {
+      display: table;
+      text-align: right;
+      margin-right: 0px;
+      margin-left: auto;
+      background-color: cornflowerblue;
     }
     #chat-message {
       grid-column: 2/4;
+      grid-row: 2/3;
+      justify-content: center;
+      display: grid;
+      grid-template-columns: 4fr 1fr;
     }
     #message {
-      padding: 10px;
+      padding: 20px;
+      padding-top: 20px;
       resize: none;
       display: block;
       height: 100px;
-      width: 480px;
+      width: 330px;
       border: none;
-      border-top: solid black;
-      /* border-radius: 10px 10px 0px 0px;*/
-      border-width: thin;
+      grid-column: 1/2;
     }
     #chat-message input[type='submit'] {
-      float: right;
-      margin-right: 10px;
+      margin-left: 10px;
+      grid-column: 2/3;
+      width: 60px;
+      height: 50px;
+      margin-bottom: 20px;
     }
     .hidden {
-      display: none;
+      display: none !important;
     }
   </style>
 `
@@ -74,7 +104,6 @@ customElements.define('my-chat',
     #username
     #nicknameForm
     #socket
-    #mymessage
     #chatOutput
     /**
      * Creates an instance of current type.
@@ -138,7 +167,8 @@ customElements.define('my-chat',
           type: 'message',
           data: this.#message.value,
           username: this.#username,
-          key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+          key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
+          channel: 'emilias-channel'
         }))
       }
       this.#chatMessage.reset()
@@ -155,8 +185,10 @@ customElements.define('my-chat',
       if (data.type === 'notification' || data.type === 'message') {
         const message = document.createElement('p')
         message.textContent = `${data.username}: ${data.data}`
+        data.channel === 'emilias-channel' ? message.setAttribute('right', '') : message.setAttribute('left', '')
         this.#chatOutput.append(message)
       }
+      this.#chatOutput.scrollTop = this.#chatOutput.scrollHeight
     }
   }
 )

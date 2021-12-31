@@ -26,7 +26,8 @@ template.innerHTML = `
       height: 25px;
       background-color: #e8e8e8;
       border-radius: 5px 5px 0px 0px;
-      box-shadow: 0px 1px 1px #666;
+      /* box-shadow: 0px 1px 1px #666; */
+      border-bottom: 1px solid #cdcdcd;
     }
     #close {
       float: right;
