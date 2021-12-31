@@ -53,6 +53,12 @@ template.innerHTML = `
       margin-bottom: 5px;
       word-break: break-all;
     }
+    #chat-output p[left] {
+      display: table;
+      text-align: left;
+      margin-left: 0px;
+      margin-right: auto;
+    }
     #chat-output p[right] {
       display: table;
       text-align: right;
@@ -168,7 +174,6 @@ customElements.define('my-chat',
         }))
       }
       this.#chatMessage.reset()
-      console.log(this.#socket)
     }
 
     /**

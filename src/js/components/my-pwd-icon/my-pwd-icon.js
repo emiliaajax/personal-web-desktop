@@ -7,7 +7,7 @@ template.innerHTML = `
   <div id='icon'>
     <img id='image-icon'>
   </div>
-  <my-window id='my-window' class='hidden' draggable='true'> 
+  <my-window id='my-window' class='hidden'> 
     <slot></slot>
   </my-window>
   <style>
