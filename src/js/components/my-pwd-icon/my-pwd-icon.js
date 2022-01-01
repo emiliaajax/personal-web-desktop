@@ -7,9 +7,9 @@ template.innerHTML = `
   <div id='icon'>
     <img id='image-icon'>
   </div>
-  <my-window id='my-window' class='hidden'> 
+  <!-- <my-window id='my-window' class='hidden'>  -->
     <slot></slot>
-  </my-window>
+  <!-- </my-window> -->
   <style>
     :host {
       margin-left: 10px;
@@ -38,7 +38,7 @@ customElements.define('my-pwd-icon',
    */
   class extends HTMLElement {
     #imageIcon
-    #window
+    // #window
     /**
      * Creates an instance of current type.
      */
@@ -48,16 +48,9 @@ customElements.define('my-pwd-icon',
         .appendChild(template.content.cloneNode(true))
 
       this.#imageIcon = this.shadowRoot.querySelector('#image-icon')
-      this.#window = this.shadowRoot.querySelector('my-window')
+      // this.#window = this.shadowRoot.querySelector('my-window')
 
       this.#imageIcon.addEventListener('click', event => this.#openApp(event))
-      // this.#window.addEventListener('dragstart', (event) => {
-      //   this.#window.setAttribute('dragging', '')
-      //   event.dataTransfer.setData('text/plain', this.#window.id)
-      // })
-      // this.#window.addEventListener('dragend', (event) => {
-      //   this.#window.removeAttribute('dragging')
-      // })
     }
 
     /**
@@ -89,7 +82,8 @@ customElements.define('my-pwd-icon',
      */
     #openApp (event) {
       event.preventDefault()
-      this.#window.classList.remove('hidden')
+      // this.#window.classList.remove('hidden')
+      this.dispatchEvent(new CustomEvent('clicked'))
     }
   }
 )

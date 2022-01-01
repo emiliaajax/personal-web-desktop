@@ -50,7 +50,6 @@ template.innerHTML = `
     ::slotted(*) {
       display: block;
       margin: 0 auto;
-      /* margin-top: 20px; */
     }
   </style>
 `
@@ -83,14 +82,10 @@ customElements.define('my-window',
       this.#window = this.shadowRoot.querySelector('#window')
       this.#close = this.shadowRoot.querySelector('#close')
 
-      this.#windowContainer.addEventListener('mousedown', (event) => this.#startDragging(event))
-      this.#windowContainer.addEventListener('mouseup', (event) => this.#endDragging(event))
-      document.addEventListener('mousemove', (event) => this.#drag(event))
-      this.#close.addEventListener('click', (event) => {
-        event.preventDefault()
-        // this.dispatchEvent(new CustomEvent('closed'))
-        this.classList.add('hidden')
-      })
+      this.#windowContainer.addEventListener('mousedown', event => this.#startDragging(event))
+      document.addEventListener('mousemove', event => this.#drag(event))
+      this.#windowContainer.addEventListener('mouseup', event => this.#endDragging(event))
+      this.#close.addEventListener('click', event => this.#closeWindow(event))
     }
 
     /**
@@ -102,6 +97,7 @@ customElements.define('my-window',
       this.#initX = event.clientX - this.#xOffset
       this.#initY = event.clientY - this.#yOffset
       this.#dragging = true
+      this.dispatchEvent(new CustomEvent('focus'))
     }
 
     /**
@@ -140,6 +136,16 @@ customElements.define('my-window',
      */
     #setTranslate (x, y, elem) {
       elem.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    }
+
+    /**
+     * Saying that window should close.
+     *
+     * @param {Event} event The click event.
+     */
+    #closeWindow (event) {
+      event.preventDefault()
+      this.dispatchEvent(new CustomEvent('closed'))
     }
   }
 )
