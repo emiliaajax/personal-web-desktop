@@ -1,6 +1,4 @@
 
-import '../my-window/index.js'
-
 const template = document.createElement('template')
 
 template.innerHTML = `

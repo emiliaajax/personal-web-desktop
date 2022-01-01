@@ -112,7 +112,7 @@ customElements.define('my-window',
         this.#currY = event.clientY - this.#initY
         this.#xOffset = this.#currX
         this.#yOffset = this.#currY
-        this.#setTranslate(this.#currX, this.#currY, this.#window)
+        this.#setTranslate()
       }
     }
 
@@ -129,13 +129,9 @@ customElements.define('my-window',
 
     /**
      * Sets the position of the element.
-     *
-     * @param {number} x The x-coordinate.
-     * @param {number} y The y-coordinate.
-     * @param {HTMLElement} elem The element to set the position for.
      */
-    #setTranslate (x, y, elem) {
-      elem.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    #setTranslate () {
+      this.style.transform = `translate3d(${this.#currX}px, ${this.#currY}px, 0)`
     }
 
     /**

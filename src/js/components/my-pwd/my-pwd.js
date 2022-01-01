@@ -37,7 +37,7 @@ customElements.define('my-pwd',
     }
 
     /**
-     * Opens a sub app.
+     * Opens up a sub app.
      *
      * @param {Event} event The clicked event.
      */
@@ -50,11 +50,10 @@ customElements.define('my-pwd',
       window.append(app)
       window.addEventListener('closed', event => this.#closeApp(event))
       window.addEventListener('focus', event => {
-        console.log(window)
-        event.preventDefault()
+        event.target.style.zIndex = this.#zIndex.toString()
         this.#zIndex += 1
-        window.style.zIndex = this.#zIndex.toString()
       })
+      app.focus()
       event.target.append(window)
     }
 
