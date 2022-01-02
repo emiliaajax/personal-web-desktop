@@ -15,7 +15,10 @@ customElements.define('my-snake-app',
     #snakeX = 15
     #snakeY = 100
     #snakeMoveX = 1
+    #snakeMoveY = 0
     #snakeLength = 50
+    #snakeWidth = 10
+    #intervalID
     /**
      * Creates an instance of current type.
      */
@@ -26,16 +29,93 @@ customElements.define('my-snake-app',
 
       this.#canvas = this.shadowRoot.querySelector('#game-canvas')
       this.#canvasContext = this.#canvas.getContext('2d')
+
+      document.addEventListener('keydown', event => {
+        event.preventDefault()
+        const snakeMoveX = this.#snakeMoveX
+        const snakeLength = this.#snakeLength
+        if (this.#snakeMoveX > 0) {
+          switch (event.key) {
+            case 'ArrowUp':
+              this.#snakeMoveX = this.#snakeMoveY
+              this.#snakeMoveY = -snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+            case 'ArrowDown':
+              this.#snakeMoveX = this.#snakeMoveY
+              this.#snakeMoveY = snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+          }
+        }
+        if (this.#snakeMoveX < 0) {
+          switch (event.key) {
+            case 'ArrowUp':
+              this.#snakeMoveX = this.#snakeMoveY
+              this.#snakeMoveY = snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+            case 'ArrowDown':
+              this.#snakeMoveX = this.#snakeMoveY
+              this.#snakeMoveY = -snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+          }
+        }
+        if (this.#snakeMoveY > 0) {
+          switch (event.key) {
+            case 'ArrowRight':
+              this.#snakeMoveX = this.#snakeMoveY
+              this.#snakeMoveY = snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+            case 'ArrowLeft':
+              this.#snakeMoveX = -this.#snakeMoveY
+              this.#snakeMoveY = snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+          }
+        }
+        if (this.#snakeMoveY < 0) {
+          switch (event.key) {
+            case 'ArrowRight':
+              this.#snakeMoveX = -this.#snakeMoveY
+              this.#snakeMoveY = snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+            case 'ArrowLeft':
+              this.#snakeMoveX = this.#snakeMoveY
+              this.#snakeMoveY = snakeMoveX
+              this.#snakeLength = this.#snakeWidth
+              this.#snakeWidth = snakeLength
+              break
+          }
+        }
+      })
     }
 
     /**
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
-      setInterval(() => {
+      this.#intervalID = setInterval(() => {
         this.#moveSnake()
         this.#drawGameContent()
-      }, 20)
+      }, 50)
+    }
+
+    /**
+     * Called after the element is removed from the DOM.
+     */
+    disconnectedCallback () {
+      clearInterval(this.#intervalID)
     }
 
     /**
@@ -43,7 +123,7 @@ customElements.define('my-snake-app',
      */
     #drawGameContent () {
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
-      this.#drawRect(this.#snakeX, this.#snakeY, this.#snakeLength, 10, 'green')
+      this.#drawRect(this.#snakeX, this.#snakeY, this.#snakeLength, this.#snakeWidth, 'green')
     }
 
     /**
@@ -51,6 +131,7 @@ customElements.define('my-snake-app',
      */
     #moveSnake () {
       this.#snakeX += this.#snakeMoveX
+      this.#snakeY += this.#snakeMoveY
     }
 
     /**
