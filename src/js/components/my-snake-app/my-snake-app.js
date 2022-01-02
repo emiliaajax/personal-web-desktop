@@ -12,7 +12,14 @@ customElements.define('my-snake-app',
   class extends HTMLElement {
     #canvas
     #canvasContext
-    #snake = [{ x: 10, y: 200 }, { x: 20, y: 200 }, { x: 30, y: 200 }, { x: 40, y: 200 }, { x: 50, y: 200 }]
+    #snake = [
+      { x: 50, y: 200, moveX: 1, moveY: 0 },
+      { x: 40, y: 200, moveX: 1, moveY: 0 },
+      { x: 30, y: 200, moveX: 1, moveY: 0 },
+      { x: 20, y: 200, moveX: 1, moveY: 0 },
+      { x: 10, y: 200, moveX: 1, moveY: 0 }]
+
+    #snakeHead = this.#snake[0]
     #snakeMoveX = 1
     #snakeMoveY = 0
     #snakeLength = 10
@@ -31,69 +38,51 @@ customElements.define('my-snake-app',
 
       document.addEventListener('keydown', event => {
         event.preventDefault()
-        const snakeMoveX = this.#snakeMoveX
-        const snakeLength = this.#snakeLength
-        if (this.#snakeMoveX > 0) {
+        if (this.#snakeHead.moveX > 0) {
           switch (event.key) {
             case 'ArrowUp':
-              this.#snakeMoveX = this.#snakeMoveY
-              this.#snakeMoveY = -snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = this.#snakeMoveY
+              this.#snakeHead.moveY = -this.#snakeMoveX
               break
             case 'ArrowDown':
-              this.#snakeMoveX = this.#snakeMoveY
-              this.#snakeMoveY = snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = this.#snakeMoveY
+              this.#snakeHead.moveY = this.snakeMoveX
               break
           }
         }
-        if (this.#snakeMoveX < 0) {
+        if (this.#snakeHead.moveX < 0) {
           switch (event.key) {
             case 'ArrowUp':
-              this.#snakeMoveX = this.#snakeMoveY
-              this.#snakeMoveY = snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = this.#snakeMoveY
+              this.#snakeHead.moveY = this.#snakeMoveX
               break
             case 'ArrowDown':
-              this.#snakeMoveX = this.#snakeMoveY
-              this.#snakeMoveY = -snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = this.#snakeMoveY
+              this.#snakeHead.moveY = -this.snakeMoveX
               break
           }
         }
-        if (this.#snakeMoveY > 0) {
+        if (this.#snakeHead.moveY > 0) {
           switch (event.key) {
             case 'ArrowRight':
-              this.#snakeMoveX = this.#snakeMoveY
-              this.#snakeMoveY = snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = this.#snakeMoveY
+              this.#snakeHead.moveY = this.#snakeMoveX
               break
             case 'ArrowLeft':
-              this.#snakeMoveX = -this.#snakeMoveY
-              this.#snakeMoveY = snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = -this.#snakeMoveY
+              this.#snakeHead.moveY = this.snakeMoveX
               break
           }
         }
-        if (this.#snakeMoveY < 0) {
+        if (this.#snakeHead.moveY < 0) {
           switch (event.key) {
             case 'ArrowRight':
-              this.#snakeMoveX = -this.#snakeMoveY
-              this.#snakeMoveY = snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = -this.#snakeMoveY
+              this.#snakeHead.moveY = this.#snakeMoveX
               break
             case 'ArrowLeft':
-              this.#snakeMoveX = this.#snakeMoveY
-              this.#snakeMoveY = snakeMoveX
-              this.#snakeLength = this.#snakeWidth
-              this.#snakeWidth = snakeLength
+              this.#snakeHead.moveX = this.#snakeMoveY
+              this.#snakeHead.moveY = this.snakeMoveX
               break
           }
         }
@@ -107,7 +96,7 @@ customElements.define('my-snake-app',
       this.#intervalID = setInterval(() => {
         this.#moveSnake()
         this.#drawGameContent()
-      }, 50)
+      }, 30)
     }
 
     /**
@@ -130,8 +119,8 @@ customElements.define('my-snake-app',
      */
     #moveSnake () {
       this.#snake.forEach(part => {
-        part.x += this.#snakeMoveX
-        part.y += this.#snakeMoveY
+        part.x += part.moveX
+        part.y += part.moveY
       })
     }
 
