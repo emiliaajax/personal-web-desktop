@@ -12,11 +12,10 @@ customElements.define('my-snake-app',
   class extends HTMLElement {
     #canvas
     #canvasContext
-    #snakeX = 15
-    #snakeY = 100
+    #snake = [{ x: 10, y: 200 }, { x: 20, y: 200 }, { x: 30, y: 200 }, { x: 40, y: 200 }, { x: 50, y: 200 }]
     #snakeMoveX = 1
     #snakeMoveY = 0
-    #snakeLength = 50
+    #snakeLength = 10
     #snakeWidth = 10
     #intervalID
     /**
@@ -123,15 +122,17 @@ customElements.define('my-snake-app',
      */
     #drawGameContent () {
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
-      this.#drawRect(this.#snakeX, this.#snakeY, this.#snakeLength, this.#snakeWidth, 'green')
+      this.#snake.forEach(part => this.#drawRect(part.x, part.y, this.#snakeLength, this.#snakeWidth, 'green'))
     }
 
     /**
      * Moves the snake.
      */
     #moveSnake () {
-      this.#snakeX += this.#snakeMoveX
-      this.#snakeY += this.#snakeMoveY
+      this.#snake.forEach(part => {
+        part.x += this.#snakeMoveX
+        part.y += this.#snakeMoveY
+      })
     }
 
     /**
