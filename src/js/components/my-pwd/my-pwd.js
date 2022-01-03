@@ -12,7 +12,7 @@ template.innerHTML = `
     <my-pwd-dock>
       <my-pwd-icon id='my-memory-game' src='../../../images/1.png'></my-pwd-icon>
       <my-pwd-icon id='my-chat' src='../../../images/2.png'></my-pwd-icon>
-      <my-pwd-icon id='my-memory-game' src='../../../images/3.png'></my-pwd-icon>
+      <my-pwd-icon id='my-snake-app' src='../../../images/3.png'></my-pwd-icon>
     </my-pwd-dock>
   </div>
   <style>

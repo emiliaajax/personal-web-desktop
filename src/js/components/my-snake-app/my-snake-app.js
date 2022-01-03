@@ -97,14 +97,15 @@ customElements.define('my-snake-app',
      * @param {Event} event The keydown event.
      */
     #turnSnake (event) {
-      event.preventDefault()
       if (this.#snakeMoveX !== 0) {
         switch (event.key) {
           case 'ArrowUp':
+            event.preventDefault()
             this.#snakeMoveX = 0
             this.#snakeMoveY = -this.#velocity
             break
           case 'ArrowDown':
+            event.preventDefault()
             this.#snakeMoveX = 0
             this.#snakeMoveY = this.#velocity
             break
@@ -113,10 +114,12 @@ customElements.define('my-snake-app',
       if (this.#snakeMoveY !== 0) {
         switch (event.key) {
           case 'ArrowRight':
+            event.preventDefault()
             this.#snakeMoveX = this.#velocity
             this.#snakeMoveY = 0
             break
           case 'ArrowLeft':
+            event.preventDefault()
             this.#snakeMoveX = -this.#velocity
             this.#snakeMoveY = 0
             break
