@@ -3,6 +3,27 @@ const template = document.createElement('template')
 
 template.innerHTML = `
   <canvas id='game-canvas' width='500' height='500'></canvas>
+  <button class='hidden'>Restart game</button>
+  <div id='game-over' class='hidden'>Game Over</div>
+  <style>
+    #game-over {
+      font-size: 40px;
+      position: fixed;
+      left: 28%;
+      top: 35%;
+      z-index: 1000;
+      color: white;
+    }
+    button {
+      position: fixed;
+      /* left: 10px; */
+      left: 35%;
+      top: 45%;
+    }
+    .hidden {
+      display: none !important;
+    }
+  </style>
 `
 
 customElements.define('my-snake-app',
@@ -19,6 +40,7 @@ customElements.define('my-snake-app',
     #snakeWidth = 19
     #intervalID
     #foodPosition
+    #score = 0
     #snake = [
       { x: 250, y: 200 }, { x: 230, y: 200 }, { x: 210, y: 200 },
       { x: 190, y: 200 }, { x: 170, y: 200 }, { x: 150, y: 200 }
@@ -36,12 +58,20 @@ customElements.define('my-snake-app',
       this.#canvasContext = this.#canvas.getContext('2d')
 
       document.addEventListener('keydown', event => this.#turnSnake(event))
+      this.shadowRoot.querySelector('button').addEventListener('click', event => this.#restartGame(event))
     }
 
     /**
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
+      this.#startGame()
+    }
+
+    /**
+     * Starts the game.
+     */
+    #startGame () {
       this.#foodPosition = {
         x: Math.floor(Math.random() * (this.#canvas.width * 0.7)),
         y: Math.floor(Math.random() * (this.#canvas.height * 0.7))
@@ -68,6 +98,7 @@ customElements.define('my-snake-app',
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
       this.#drawRect(this.#foodPosition.x, this.#foodPosition.y, 5, 5, 'white')
       this.#snake.forEach(part => this.#drawRect(part.x, part.y, this.#snakeLength, this.#snakeWidth, 'green'))
+      this.#drawScore()
     }
 
     /**
@@ -139,11 +170,21 @@ customElements.define('my-snake-app',
           x: Math.floor(Math.random() * this.#canvas.width * 0.7),
           y: Math.floor(Math.random() * this.#canvas.height * 0.7)
         }
+        this.#score += 100
         this.#snake.push({
           x: this.#snake[this.#snake.length - 1].x + this.#snakeWidth,
           y: this.#snake[this.#snake.length - 1].y + this.#snakeLength
         })
       }
+    }
+
+    /**
+     * Draws the score at the top left corner of the canvas.
+     */
+    #drawScore () {
+      this.#canvasContext.font = '16px Arial'
+      this.#canvasContext.fillStyle = 'white'
+      this.#canvasContext.fillText(`Score: ${this.#score}`, 10, 25)
     }
 
     /**
@@ -155,10 +196,30 @@ customElements.define('my-snake-app',
           this.#snake[i].x <= this.#snake[0].x + this.#snakeWidth &&
           this.#snake[i].y >= this.#snake[0].y &&
           this.#snake[i].y <= this.#snake[0].y + this.#snakeLength) {
-          console.log('game over')
+          this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
+          this.shadowRoot.querySelector('button').classList.remove('hidden')
           clearInterval(this.#intervalID)
         }
       }
+    }
+
+    /**
+     * Restarts game.
+     *
+     * @param {Event} event The click event.
+     */
+    #restartGame (event) {
+      event.preventDefault()
+      this.#score = 0
+      this.#snakeMoveX = this.#velocity
+      this.#snakeMoveY = 0
+      this.#snake = [
+        { x: 250, y: 200 }, { x: 230, y: 200 }, { x: 210, y: 200 },
+        { x: 190, y: 200 }, { x: 170, y: 200 }, { x: 150, y: 200 }
+      ]
+      this.shadowRoot.querySelector('#game-over').classList.add('hidden')
+      this.shadowRoot.querySelector('button').classList.add('hidden')
+      this.#startGame()
     }
 
     /**
