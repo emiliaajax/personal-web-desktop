@@ -50,6 +50,7 @@ customElements.define('my-snake-app',
         this.#moveSnake()
         this.#drawGameContent()
         this.#snakeEatsFood()
+        this.#collisionDetection()
       }, 110)
     }
 
@@ -139,6 +140,18 @@ customElements.define('my-snake-app',
           x: this.#snake[this.#snake.length - 1].x + this.#snakeWidth,
           y: this.#snake[this.#snake.length - 1].y + this.#snakeLength
         })
+      }
+    }
+
+    #collisionDetection() {
+      for (let i = 1; i < this.#snake.length; i++) {
+        if (this.#snake[i].x >= this.#snake[0].x &&
+          this.#snake[i].x <= this.#snake[0].x + this.#snakeWidth &&
+          this.#snake[i].y >= this.#snake[0].y &&
+          this.#snake[i].y <= this.#snake[0].y + this.#snakeLength) {
+          console.log('game over')
+          clearInterval(this.#intervalID)
+        }
       }
     }
 
