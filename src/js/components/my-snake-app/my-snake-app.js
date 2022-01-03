@@ -143,7 +143,10 @@ customElements.define('my-snake-app',
       }
     }
 
-    #collisionDetection() {
+    /**
+     * Sets game over when snake collides with itself.
+     */
+    #collisionDetection () {
       for (let i = 1; i < this.#snake.length; i++) {
         if (this.#snake[i].x >= this.#snake[0].x &&
           this.#snake[i].x <= this.#snake[0].x + this.#snakeWidth &&
