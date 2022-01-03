@@ -74,6 +74,18 @@ customElements.define('my-snake-app',
      */
     #moveSnake () {
       const snakeHead = { x: this.#snake[0].x + this.#snakeMoveX, y: this.#snake[0].y + this.#snakeMoveY }
+      if (snakeHead.x > this.#canvas.width) {
+        snakeHead.x = 0
+      }
+      if (snakeHead.x < 0) {
+        snakeHead.x = this.#canvas.width
+      }
+      if (snakeHead.y > this.#canvas.height) {
+        snakeHead.y = 0
+      }
+      if (snakeHead.y < 0) {
+        snakeHead.y = this.#canvas.height
+      }
       this.#snake.unshift(snakeHead)
       this.#snake.pop()
     }
@@ -115,9 +127,10 @@ customElements.define('my-snake-app',
      * Adds length to the snake if the coordinates of the food and the head of the snake match. When a food is eaten, a new appears at randomized coordinates.
      */
     #snakeEatsFood () {
-      if (this.#foodPosition.x >= this.#snake[0].x && this.#foodPosition.x <= this.#snake[0].x + (this.#snakeWidth) &&
-        this.#foodPosition.y >= this.#snake[0].y && this.#foodPosition.y <= this.#snake[0].y + this.#snakeLength) {
-        console.log('Mmmm, lite gottgott i magisen')
+      if (this.#foodPosition.x >= this.#snake[0].x &&
+        this.#foodPosition.x <= this.#snake[0].x + this.#snakeWidth &&
+        this.#foodPosition.y >= this.#snake[0].y &&
+        this.#foodPosition.y <= this.#snake[0].y + this.#snakeLength) {
         this.#foodPosition = {
           x: Math.floor(Math.random() * this.#canvas.width * 0.7),
           y: Math.floor(Math.random() * this.#canvas.height * 0.7)
