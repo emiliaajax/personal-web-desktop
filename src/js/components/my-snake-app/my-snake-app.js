@@ -12,20 +12,17 @@ customElements.define('my-snake-app',
   class extends HTMLElement {
     #canvas
     #canvasContext
-    #snake = [
-      { x: 250, y: 200 },
-      { x: 235, y: 200 },
-      { x: 220, y: 200 },
-      { x: 205, y: 200 },
-      { x: 190, y: 200 },
-      { x: 175, y: 200 }]
-
     #velocity = 15
     #snakeMoveX = this.#velocity
     #snakeMoveY = 0
     #snakeLength = 14
     #snakeWidth = 14
     #intervalID
+    #snake = [
+      { x: 250, y: 200 }, { x: 235, y: 200 }, { x: 220, y: 200 },
+      { x: 205, y: 200 }, { x: 190, y: 200 }, { x: 175, y: 200 }
+    ]
+
     /**
      * Creates an instance of current type.
      */
@@ -37,33 +34,7 @@ customElements.define('my-snake-app',
       this.#canvas = this.shadowRoot.querySelector('#game-canvas')
       this.#canvasContext = this.#canvas.getContext('2d')
 
-      document.addEventListener('keydown', event => {
-        event.preventDefault()
-        if (this.#snakeMoveX !== 0) {
-          switch (event.key) {
-            case 'ArrowUp':
-              this.#snakeMoveX = 0
-              this.#snakeMoveY = -this.#velocity
-              break
-            case 'ArrowDown':
-              this.#snakeMoveX = 0
-              this.#snakeMoveY = this.#velocity
-              break
-          }
-        }
-        if (this.#snakeMoveY !== 0) {
-          switch (event.key) {
-            case 'ArrowRight':
-              this.#snakeMoveX = this.#velocity
-              this.#snakeMoveY = 0
-              break
-            case 'ArrowLeft':
-              this.#snakeMoveX = -this.#velocity
-              this.#snakeMoveY = 0
-              break
-          }
-        }
-      })
+      document.addEventListener('keydown', event => this.#turnSnake(event))
     }
 
     /**
@@ -98,21 +69,39 @@ customElements.define('my-snake-app',
       const snakeHead = { x: this.#snake[0].x + this.#snakeMoveX, y: this.#snake[0].y + this.#snakeMoveY }
       this.#snake.unshift(snakeHead)
       this.#snake.pop()
-      // this.#snake.forEach(part => {
-      //   part.x += this.#snakeMoveX
-      //   part.y += this.#snakeMoveY
-      // })
-      // for (let i = 0; i < this.#snake.length; i++) {
-      //   const part = this.#snake[i]
-      //   if (part.moveX !== this.#snakeHead.moveX) {
-      //     while (part.x !== this.#snakeHead.x) {
-      //       part.x += part.moveX
-      //     }
-      //     part.y = this.#snakeHead.y - this.#snakeLength * (i + 1)
-      //   }
-      //   part.x += part.moveX
-      //   part.y += part.moveY
-      // }
+    }
+
+    /**
+     * Turns the snake depending on pressed arrow key.
+     *
+     * @param {Event} event The keydown event.
+     */
+    #turnSnake (event) {
+      event.preventDefault()
+      if (this.#snakeMoveX !== 0) {
+        switch (event.key) {
+          case 'ArrowUp':
+            this.#snakeMoveX = 0
+            this.#snakeMoveY = -this.#velocity
+            break
+          case 'ArrowDown':
+            this.#snakeMoveX = 0
+            this.#snakeMoveY = this.#velocity
+            break
+        }
+      }
+      if (this.#snakeMoveY !== 0) {
+        switch (event.key) {
+          case 'ArrowRight':
+            this.#snakeMoveX = this.#velocity
+            this.#snakeMoveY = 0
+            break
+          case 'ArrowLeft':
+            this.#snakeMoveX = -this.#velocity
+            this.#snakeMoveY = 0
+            break
+        }
+      }
     }
 
     /**
