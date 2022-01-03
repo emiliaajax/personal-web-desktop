@@ -4,6 +4,7 @@ import '../my-pwd-icon/index.js'
 import '../my-memory-game/index.js'
 import '../my-chat/index.js'
 import '../my-window/index.js'
+import '../my-snake-app/index.js'
 
 const template = document.createElement('template')
 

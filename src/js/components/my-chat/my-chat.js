@@ -1,5 +1,6 @@
 
 import '../nickname-form/index.js'
+import '../my-emojis/index.js'
 
 const template = document.createElement('template')
 
@@ -12,6 +13,7 @@ template.innerHTML = `
     <form id='chat-message' class='hidden'>
       <textarea id='message'></textarea>
       <input type='submit' value='Send'>
+      <my-emojis></my-emojis>
     </form>
   </div>
   <style>
@@ -82,13 +84,21 @@ template.innerHTML = `
       width: 330px;
       border: none;
       grid-column: 1/2;
+      grid-row: 1/3;
     }
     #chat-message input[type='submit'] {
       margin-left: 10px;
       grid-column: 2/3;
+      grid-row: 1/2;
       width: 60px;
-      height: 50px;
+      height: 40px;
+      margin-bottom: 0px;
+    }
+    my-emojis {
+      margin-left: 10px;
+      grid-column: 2/3;
       margin-bottom: 20px;
+      margin-top: -50px;
     }
     .hidden {
       display: none !important;
@@ -133,6 +143,7 @@ customElements.define('my-chat',
 
       this.#chatMessage.addEventListener('submit', (event) => this.#onSubmit(event))
       this.#nicknameForm.addEventListener('added', (event) => this.#startChat(event))
+      this.shadowRoot.querySelector('my-emojis').addEventListener('clicked', event => { this.#message.value = this.#message.value + event.detail.emojiValue })
     }
 
     /**
@@ -169,16 +180,24 @@ customElements.define('my-chat',
      */
     #onSubmit (event) {
       event.preventDefault()
+      let messageData = this.#message.value
+      const emojis = Object.keys(this.#emojis)
+      const emojiCodes = Object.values(this.#emojis)
+      for (let i = 0; i < emojis.length; i++) {
+        const emoji = emojis[i]
+        for (let j = 0; j < messageData.length - 1; j++) {
+          if (emoji[0] === messageData[j]) {
+            if (emoji[1] === messageData[j + 1]) {
+              messageData = messageData.replace(messageData[j] + messageData[j + 1], emojiCodes[i])
+            }
+          }
+        }
+      }
       if (this.#socket.readyState === 1) {
       // this.#socket.addEventListener('open', () => this.#socket.send(JSON.stringify({
-      //   type: 'message',
-      //   data: this.#message.value,
-      //   username: this.#username,
-      //   key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
-      // })))
         this.#socket.send(JSON.stringify({
           type: 'message',
-          data: this.#message.value,
+          data: messageData,
           username: this.#username,
           key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
           channel: 'emilias-channel'
@@ -196,19 +215,19 @@ customElements.define('my-chat',
       const data = JSON.parse(event.data)
       if (data.type === 'notification' || data.type === 'message') {
         const message = document.createElement('p')
-        let messageData = data.data
-        const emojis = Object.keys(this.#emojis)
-        const emojiCodes = Object.values(this.#emojis)
-        for (let i = 0; i < emojis.length; i++) {
-          const emoji = emojis[i]
-          for (let j = 0; j < messageData.length - 1; j++) {
-            if (emoji[0] === messageData[j]) {
-              if (emoji[1] === messageData[j + 1]) {
-                messageData = messageData.replace(messageData[j] + messageData[j + 1], emojiCodes[i])
-              }
-            }
-          }
-        }
+        const messageData = data.data
+        // const emojis = Object.keys(this.#emojis)
+        // const emojiCodes = Object.values(this.#emojis)
+        // for (let i = 0; i < emojis.length; i++) {
+        //   const emoji = emojis[i]
+        //   for (let j = 0; j < messageData.length - 1; j++) {
+        //     if (emoji[0] === messageData[j]) {
+        //       if (emoji[1] === messageData[j + 1]) {
+        //         messageData = messageData.replace(messageData[j] + messageData[j + 1], emojiCodes[i])
+        //       }
+        //     }
+        //   }
+        // }
         message.textContent = `${data.username}: ${messageData}`
         data.channel === 'emilias-channel' ? message.setAttribute('right', '') : message.setAttribute('left', '')
         this.#chatOutput.append(message)
