@@ -12,16 +12,16 @@ customElements.define('my-snake-app',
   class extends HTMLElement {
     #canvas
     #canvasContext
-    #velocity = 15
+    #velocity = 20
     #snakeMoveX = this.#velocity
     #snakeMoveY = 0
-    #snakeLength = 14
-    #snakeWidth = 14
+    #snakeLength = 19
+    #snakeWidth = 19
     #intervalID
     #foodPosition
     #snake = [
-      { x: 250, y: 200 }, { x: 235, y: 200 }, { x: 220, y: 200 },
-      { x: 205, y: 200 }, { x: 190, y: 200 }, { x: 175, y: 200 }
+      { x: 250, y: 200 }, { x: 230, y: 200 }, { x: 210, y: 200 },
+      { x: 190, y: 200 }, { x: 170, y: 200 }, { x: 150, y: 200 }
     ]
 
     /**
@@ -43,13 +43,14 @@ customElements.define('my-snake-app',
      */
     connectedCallback () {
       this.#foodPosition = {
-        x: Math.floor(Math.random() * this.#canvas.width),
-        y: Math.floor(Math.random() * this.#canvas.height)
+        x: Math.floor(Math.random() * (this.#canvas.width * 0.7)),
+        y: Math.floor(Math.random() * (this.#canvas.height * 0.7))
       }
       this.#intervalID = setInterval(() => {
         this.#moveSnake()
         this.#drawGameContent()
-      }, 100)
+        this.#snakeEatsFood()
+      }, 110)
     }
 
     /**
@@ -107,6 +108,24 @@ customElements.define('my-snake-app',
             this.#snakeMoveY = 0
             break
         }
+      }
+    }
+
+    /**
+     * Adds length to the snake if the coordinates of the food and the head of the snake match. When a food is eaten, a new appears at randomized coordinates.
+     */
+    #snakeEatsFood () {
+      if (this.#foodPosition.x >= this.#snake[0].x && this.#foodPosition.x <= this.#snake[0].x + (this.#snakeWidth) &&
+        this.#foodPosition.y >= this.#snake[0].y && this.#foodPosition.y <= this.#snake[0].y + this.#snakeLength) {
+        console.log('Mmmm, lite gottgott i magisen')
+        this.#foodPosition = {
+          x: Math.floor(Math.random() * this.#canvas.width * 0.7),
+          y: Math.floor(Math.random() * this.#canvas.height * 0.7)
+        }
+        this.#snake.push({
+          x: this.#snake[this.#snake.length - 1].x + this.#snakeWidth,
+          y: this.#snake[this.#snake.length - 1].y + this.#snakeLength
+        })
       }
     }
 
