@@ -13,17 +13,18 @@ customElements.define('my-snake-app',
     #canvas
     #canvasContext
     #snake = [
-      { x: 50, y: 200, moveX: 1, moveY: 0 },
-      { x: 40, y: 200, moveX: 1, moveY: 0 },
-      { x: 30, y: 200, moveX: 1, moveY: 0 },
-      { x: 20, y: 200, moveX: 1, moveY: 0 },
-      { x: 10, y: 200, moveX: 1, moveY: 0 }]
+      { x: 250, y: 200 },
+      { x: 235, y: 200 },
+      { x: 220, y: 200 },
+      { x: 205, y: 200 },
+      { x: 190, y: 200 },
+      { x: 175, y: 200 }]
 
-    #snakeHead = this.#snake[0]
-    #snakeMoveX = 1
+    #velocity = 15
+    #snakeMoveX = this.#velocity
     #snakeMoveY = 0
-    #snakeLength = 10
-    #snakeWidth = 10
+    #snakeLength = 14
+    #snakeWidth = 14
     #intervalID
     /**
      * Creates an instance of current type.
@@ -38,51 +39,27 @@ customElements.define('my-snake-app',
 
       document.addEventListener('keydown', event => {
         event.preventDefault()
-        if (this.#snakeHead.moveX > 0) {
+        if (this.#snakeMoveX !== 0) {
           switch (event.key) {
             case 'ArrowUp':
-              this.#snakeHead.moveX = this.#snakeMoveY
-              this.#snakeHead.moveY = -this.#snakeMoveX
+              this.#snakeMoveX = 0
+              this.#snakeMoveY = -this.#velocity
               break
             case 'ArrowDown':
-              this.#snakeHead.moveX = this.#snakeMoveY
-              this.#snakeHead.moveY = this.snakeMoveX
+              this.#snakeMoveX = 0
+              this.#snakeMoveY = this.#velocity
               break
           }
         }
-        if (this.#snakeHead.moveX < 0) {
-          switch (event.key) {
-            case 'ArrowUp':
-              this.#snakeHead.moveX = this.#snakeMoveY
-              this.#snakeHead.moveY = this.#snakeMoveX
-              break
-            case 'ArrowDown':
-              this.#snakeHead.moveX = this.#snakeMoveY
-              this.#snakeHead.moveY = -this.snakeMoveX
-              break
-          }
-        }
-        if (this.#snakeHead.moveY > 0) {
+        if (this.#snakeMoveY !== 0) {
           switch (event.key) {
             case 'ArrowRight':
-              this.#snakeHead.moveX = this.#snakeMoveY
-              this.#snakeHead.moveY = this.#snakeMoveX
+              this.#snakeMoveX = this.#velocity
+              this.#snakeMoveY = 0
               break
             case 'ArrowLeft':
-              this.#snakeHead.moveX = -this.#snakeMoveY
-              this.#snakeHead.moveY = this.snakeMoveX
-              break
-          }
-        }
-        if (this.#snakeHead.moveY < 0) {
-          switch (event.key) {
-            case 'ArrowRight':
-              this.#snakeHead.moveX = -this.#snakeMoveY
-              this.#snakeHead.moveY = this.#snakeMoveX
-              break
-            case 'ArrowLeft':
-              this.#snakeHead.moveX = this.#snakeMoveY
-              this.#snakeHead.moveY = this.snakeMoveX
+              this.#snakeMoveX = -this.#velocity
+              this.#snakeMoveY = 0
               break
           }
         }
@@ -96,7 +73,7 @@ customElements.define('my-snake-app',
       this.#intervalID = setInterval(() => {
         this.#moveSnake()
         this.#drawGameContent()
-      }, 30)
+      }, 1000)
     }
 
     /**
@@ -115,13 +92,27 @@ customElements.define('my-snake-app',
     }
 
     /**
-     * Moves the snake.
+     * Moves the snake. Inspired by: https://www.educative.io/blog/javascript-snake-game-tutorial.
      */
     #moveSnake () {
-      this.#snake.forEach(part => {
-        part.x += part.moveX
-        part.y += part.moveY
-      })
+      const snakeHead = { x: this.#snake[0].x + this.#snakeMoveX, y: this.#snake[0].y + this.#snakeMoveY }
+      this.#snake.unshift(snakeHead)
+      this.#snake.pop()
+      // this.#snake.forEach(part => {
+      //   part.x += this.#snakeMoveX
+      //   part.y += this.#snakeMoveY
+      // })
+      // for (let i = 0; i < this.#snake.length; i++) {
+      //   const part = this.#snake[i]
+      //   if (part.moveX !== this.#snakeHead.moveX) {
+      //     while (part.x !== this.#snakeHead.x) {
+      //       part.x += part.moveX
+      //     }
+      //     part.y = this.#snakeHead.y - this.#snakeLength * (i + 1)
+      //   }
+      //   part.x += part.moveX
+      //   part.y += part.moveY
+      // }
     }
 
     /**
