@@ -18,6 +18,7 @@ customElements.define('my-snake-app',
     #snakeLength = 14
     #snakeWidth = 14
     #intervalID
+    #foodPosition
     #snake = [
       { x: 250, y: 200 }, { x: 235, y: 200 }, { x: 220, y: 200 },
       { x: 205, y: 200 }, { x: 190, y: 200 }, { x: 175, y: 200 }
@@ -41,10 +42,14 @@ customElements.define('my-snake-app',
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
+      this.#foodPosition = {
+        x: Math.floor(Math.random() * this.#canvas.width),
+        y: Math.floor(Math.random() * this.#canvas.height)
+      }
       this.#intervalID = setInterval(() => {
         this.#moveSnake()
         this.#drawGameContent()
-      }, 1000)
+      }, 100)
     }
 
     /**
@@ -59,6 +64,7 @@ customElements.define('my-snake-app',
      */
     #drawGameContent () {
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
+      this.#drawRect(this.#foodPosition.x, this.#foodPosition.y, 5, 5, 'white')
       this.#snake.forEach(part => this.#drawRect(part.x, part.y, this.#snakeLength, this.#snakeWidth, 'green'))
     }
 
