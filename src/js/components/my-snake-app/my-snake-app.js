@@ -2,23 +2,28 @@
 const template = document.createElement('template')
 
 template.innerHTML = `
+  <button id='start'>Start game</button>
   <canvas id='game-canvas' width='500' height='500'></canvas>
-  <button class='hidden'>Restart game</button>
+  <button id='restart' class='hidden'>Restart game</button>
   <div id='game-over' class='hidden'>Game Over</div>
   <style>
     #game-over {
       font-size: 40px;
-      position: fixed;
-      left: 28%;
-      top: 35%;
+      position: absolute;
+      left: 150px;
+      top: 200px;
       z-index: 1000;
       color: white;
     }
-    button {
-      position: fixed;
-      /* left: 10px; */
-      left: 35%;
-      top: 45%;
+    #restart {
+      position: absolute;
+      left: 200px;
+      top: 270px;
+    }
+    #start {
+      position: absolute;
+      left: 200px;
+      top: 250px;
     }
     .hidden {
       display: none !important;
@@ -58,14 +63,19 @@ customElements.define('my-snake-app',
       this.#canvasContext = this.#canvas.getContext('2d')
 
       document.addEventListener('keydown', event => this.#turnSnake(event))
-      this.shadowRoot.querySelector('button').addEventListener('click', event => this.#restartGame(event))
+      this.shadowRoot.querySelector('#start').addEventListener('click', event => {
+        event.preventDefault()
+        this.shadowRoot.querySelector('#start').classList.add('hidden')
+        this.#startGame()
+      })
+      this.shadowRoot.querySelector('#restart').addEventListener('click', event => this.#restartGame(event))
     }
 
     /**
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
-      this.#startGame()
+      this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
     }
 
     /**
@@ -197,7 +207,7 @@ customElements.define('my-snake-app',
           this.#snake[i].y >= this.#snake[0].y &&
           this.#snake[i].y <= this.#snake[0].y + this.#snakeLength) {
           this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
-          this.shadowRoot.querySelector('button').classList.remove('hidden')
+          this.shadowRoot.querySelector('#restart').classList.remove('hidden')
           clearInterval(this.#intervalID)
         }
       }
@@ -218,7 +228,7 @@ customElements.define('my-snake-app',
         { x: 190, y: 200 }, { x: 170, y: 200 }, { x: 150, y: 200 }
       ]
       this.shadowRoot.querySelector('#game-over').classList.add('hidden')
-      this.shadowRoot.querySelector('button').classList.add('hidden')
+      this.shadowRoot.querySelector('#restart').classList.add('hidden')
       this.#startGame()
     }
 
