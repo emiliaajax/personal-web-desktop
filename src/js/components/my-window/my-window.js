@@ -8,7 +8,7 @@ template.innerHTML = `
   <div id='window-container'>
     <div id='window'>
       <div id='menu'>
-        <button id='close'>x</button>
+        <button id='close'><span>x</span></button>
       </div>
       <slot></slot>
     <div>
@@ -39,13 +39,24 @@ template.innerHTML = `
       border-radius: 100%;
       width: 13px;
       height: 13px;
-      line-height: 13px;
-      text-align: center;
+      line-height: 3px;
+      /* text-align: center; */
       font-size: 11px;
       background: red;
-      color: #333;
+      color: red;
       border: none;
       margin: 5px;
+      box-shadow: 1px 1px 1px #666;
+    }
+    #close:hover {
+      color: #530000;
+      font-weight: bolder;
+    }
+    #close span {
+      display: block;
+      position: absolute;
+      top: 10px;
+      right: 8px;
     }
     ::slotted(*) {
       display: block;
@@ -131,7 +142,8 @@ customElements.define('my-window',
       // }
       if (this.#dragging) {
         event.preventDefault()
-        if (event.pageX < 10 || event.pageY < 10 ||
+        // event.pageY < 10 ||
+        if (event.pageX < 10 ||
           event.pageX > window.innerWidth || event.pageY > window.innerHeight) {
           this.#endDragging()
         } else {
