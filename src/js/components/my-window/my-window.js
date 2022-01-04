@@ -99,11 +99,11 @@ customElements.define('my-window',
       //   this.#initX = 0
       //   this.#xOffset = 0
       // }
-      // if (this.#currY < -10) {
-      //   this.#currY = -10
-      //   this.#initY = 0
-      //   this.#yOffset = 0
-      // }
+      if (this.#currY < -10) {
+        this.#currY = -10
+        this.#initY = 0
+        this.#yOffset = 0
+      }
       // if (this.#currX < -10 && this.#currY < -10) {
       //   this.#currX = -10
       //   this.#initX = 0
@@ -135,11 +135,17 @@ customElements.define('my-window',
           event.pageX > window.innerWidth || event.pageY > window.innerHeight) {
           this.#endDragging()
         } else {
-          this.#currX = event.clientX - this.#initX
-          this.#currY = event.clientY - this.#initY
-          this.#xOffset = this.#currX
-          this.#yOffset = this.#currY
-          this.#setTranslate()
+          if (this.#currY < -10) {
+            this.#currX = event.clientX - this.#initX
+            this.#xOffset = this.#currX
+            this.#setTranslate()
+          } else {
+            this.#currX = event.clientX - this.#initX
+            this.#currY = event.clientY - this.#initY
+            this.#xOffset = this.#currX
+            this.#yOffset = this.#currY
+            this.#setTranslate()
+          }
         }
       }
     }
