@@ -155,7 +155,11 @@ customElements.define('my-chat',
       this.#chatOutput = this.shadowRoot.querySelector('#chat-output')
 
       this.#chatMessage.addEventListener('submit', (event) => this.#onSubmit(event))
-      this.#nicknameForm.addEventListener('added', (event) => this.#startChat(event))
+      this.#nicknameForm.addEventListener('added', (event) => {
+        this.#username = event.detail.nickname
+        sessionStorage.setItem('username', this.#username)
+        this.#startChat(event)
+      })
       this.shadowRoot.querySelector('my-emojis').addEventListener('clicked', event => { this.#message.value = this.#message.value + event.detail.emojiValue })
     }
 
@@ -165,6 +169,10 @@ customElements.define('my-chat',
     connectedCallback () {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
       this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
+      if (sessionStorage.getItem('username')) {
+        this.#username = sessionStorage.getItem('username')
+        this.#startChat()
+      }
     }
 
     /**
@@ -176,11 +184,8 @@ customElements.define('my-chat',
 
     /**
      * Creates an instance of current type.
-     *
-     * @param {Event} event The submit event.
      */
-    #startChat (event) {
-      this.#username = event.detail.nickname
+    #startChat () {
       this.#nicknameForm.classList.add('hidden')
       this.shadowRoot.querySelector('#chat-output').classList.remove('hidden')
       this.shadowRoot.querySelector('#chat-message').classList.remove('hidden')
