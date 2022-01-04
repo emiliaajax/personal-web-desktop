@@ -5,24 +5,105 @@ template.innerHTML = `
   <button id='emoji-button'>😊</button>
   <div id='emoji-container' class='hidden'>
     <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button' value='&#128540;'>&#128540;</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
-    <button id='emoji-button'>😊</button>
+    <button id='emoji-button'>😃</button>
+    <button id='emoji-button'>😆</button>
+    <button id='emoji-button'>😂</button>
+    <button id='emoji-button'>😞</button>
+    <button id='emoji-button'>😡</button>
+    <button id='emoji-button'>😢</button>
+    <button id='emoji-button'>😭</button>
+    <button id='emoji-button'>❤️</button>
+    <button id='emoji-button'>😜</button>
+    <button id='emoji-button'>😘</button>
+    <button id='emoji-button'>😇</button>
+    <button id='emoji-button'>😅</button>
+    <button id='emoji-button'>😍</button>
+    <button id='emoji-button'>🤩</button>
+    <button id='emoji-button'>😕</button>
+    <button id='emoji-button'>😉</button>
+    <button id='emoji-button'>😮</button>
+    <button id='emoji-button'>😎</button>
+    <button id='emoji-button'>😁</button>
+    <button id='emoji-button'>😑</button>
+    <button id='emoji-button'>😳</button>
+    <button id='emoji-button'>🙃</button>
+    <button id='emoji-button'>🥰</button>
+    <button id='emoji-button'>😋</button>
+    <button id='emoji-button'>🤪</button>
+    <button id='emoji-button'>🤗</button>
+    <button id='emoji-button'>🤔</button>
+    <button id='emoji-button'>😏</button>
+    <button id='emoji-button'>😒</button>
+    <button id='emoji-button'>🙄</button>
+    <button id='emoji-button'>😬</button>
+    <button id='emoji-button'>😪</button>
+    <button id='emoji-button'>😴</button>
+    <button id='emoji-button'>😷</button>
+    <button id='emoji-button'>🤢</button>
+    <button id='emoji-button'>🥴</button>
+    <button id='emoji-button'>🤯</button>
+    
+    <button id='emoji-button'>🥳</button>
+    <button id='emoji-button'>🤓</button>
+    <button id='emoji-button'>😰</button>
+    <button id='emoji-button'>😤</button>
+    <button id='emoji-button'>😓</button>
+    <button id='emoji-button'>🤬</button>
+    <button id='emoji-button'>💩</button>
+    <button id='emoji-button'>👋</button>
+    <button id='emoji-button'>👌</button>
+    <button id='emoji-button'>✌️</button>
+    <button id='emoji-button'>🤞</button>
+    <button id='emoji-button'>🤙</button>
+    <button id='emoji-button'>👍</button>
+    <button id='emoji-button'>👎</button>
+    <button id='emoji-button'>👏</button>
+    <button id='emoji-button'>🙌</button>
+    <button id='emoji-button'>🙏</button>
+    <button id='emoji-button'>💪</button>
+    <button id='emoji-button'>💁</button>
+    <button id='emoji-button'>🙋</button>
+    <button id='emoji-button'>🤷</button>
+    <button id='emoji-button'>🤴</button>
+    <button id='emoji-button'>👸</button>
+    <button id='emoji-button'>💃</button>
+    <button id='emoji-button'>🕺</button>
+    <button id='emoji-button'>💏</button>
+    <button id='emoji-button'>🙈</button>
+    <button id='emoji-button'>🙉</button>
+    <button id='emoji-button'>🙉</button>
+    <button id='emoji-button'>💦</button>
+    <button id='emoji-button'>🐶</button>
+    <button id='emoji-button'>🐷</button>
+    <button id='emoji-button'>🦠</button>
+    <button id='emoji-button'>🌺</button>
+    <button id='emoji-button'>🌍</button>
+    <button id='emoji-button'>☀️</button>
+    <button id='emoji-button'>⭐</button>
+    <button id='emoji-button'>🔥</button>
+    <button id='emoji-button'>🍆</button>
+    <button id='emoji-button'>🍔</button>
+    <button id='emoji-button'>🍟</button>
+    <button id='emoji-button'>🍕</button>
+    <button id='emoji-button'>🍿</button>
+    <button id='emoji-button'>🍾</button>
+    <button id='emoji-button'>🍻</button>
+
+    <button id='emoji-button'>🥂</button>
+    <button id='emoji-button'>🛹</button>
+    <button id='emoji-button'>🏆</button>
+    <button id='emoji-button'>✈️</button>
+    <button id='emoji-button'>🏔️</button>
+    <button id='emoji-button'>🏝️</button>
+    <button id='emoji-button'>🚀</button>
+    <button id='emoji-button'>🗺️</button>
+    <button id='emoji-button'>🎉</button>
+    <button id='emoji-button'>🧸</button>
+    <button id='emoji-button'>💻</button>
+    <button id='emoji-button'>💉</button>
+    <button id='emoji-button'>🇸🇪</button>
+    <button id='emoji-button'>🇳🇴</button>
+    <button id='emoji-button'>🪂</button>
   </div>
   <style>
     #emoji-button {
@@ -36,7 +117,7 @@ template.innerHTML = `
       border: 1px solid #666;
       border-width: thin;
       position: absolute;
-      width: 150px;
+      width: 450px;
       display: flex;
       flex-wrap: wrap;
       background-color: white;
@@ -78,7 +159,7 @@ customElements.define('my-emojis',
         }
         this.shadowRoot.querySelectorAll('#emoji-container button').forEach(emoji => emoji.addEventListener('click', event => {
           event.preventDefault()
-          this.dispatchEvent(new CustomEvent('clicked', { detail: { emojiValue: emoji.value } }))
+          this.dispatchEvent(new CustomEvent('clicked', { detail: { emojiValue: emoji.textContent } }))
         }))
       })
     }
