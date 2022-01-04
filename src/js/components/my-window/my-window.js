@@ -94,6 +94,24 @@ customElements.define('my-window',
      * @param {Event} event The mousedown event.
      */
     #startDragging (event) {
+      // if (this.#currX < -10) {
+      //   this.#currX = -10
+      //   this.#initX = 0
+      //   this.#xOffset = 0
+      // }
+      // if (this.#currY < -10) {
+      //   this.#currY = -10
+      //   this.#initY = 0
+      //   this.#yOffset = 0
+      // }
+      // if (this.#currX < -10 && this.#currY < -10) {
+      //   this.#currX = -10
+      //   this.#initX = 0
+      //   this.#xOffset = 0
+      //   this.#currY = -10
+      //   this.#initY = 0
+      //   this.#yOffset = 0
+      // }
       this.#initX = event.clientX - this.#xOffset
       this.#initY = event.clientY - this.#yOffset
       this.#dragging = true
@@ -106,13 +124,23 @@ customElements.define('my-window',
      * @param {Event} event The mousemove event.
      */
     #drag (event) {
+      // console.log(this.#currY)
+      // if (this.#currX < -10 || this.#currY < -10 ||
+      //   (this.#currX < -10 && this.#currY < -10)) {
+      //   this.#endDragging()
+      // }
       if (this.#dragging) {
         event.preventDefault()
-        this.#currX = event.clientX - this.#initX
-        this.#currY = event.clientY - this.#initY
-        this.#xOffset = this.#currX
-        this.#yOffset = this.#currY
-        this.#setTranslate()
+        if (event.pageX < 10 || event.pageY < 10 ||
+          event.pageX > window.innerWidth || event.pageY > window.innerHeight) {
+          this.#endDragging()
+        } else {
+          this.#currX = event.clientX - this.#initX
+          this.#currY = event.clientY - this.#initY
+          this.#xOffset = this.#currX
+          this.#yOffset = this.#currY
+          this.#setTranslate()
+        }
       }
     }
 
@@ -122,9 +150,13 @@ customElements.define('my-window',
      * @param {Event} event The mousemove event.
      */
     #endDragging (event) {
+      // if (this.#currX <= -10) {
+      //   this.#currX = 5
+      // }
       this.#initX = this.#currX
       this.#initY = this.#currY
       this.#dragging = false
+      this.style.transform = `translate3d(${this.#currX}px, ${this.#currY}px, 0)`
     }
 
     /**
