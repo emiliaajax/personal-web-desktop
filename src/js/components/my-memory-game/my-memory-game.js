@@ -18,7 +18,7 @@ template.innerHTML = `
   </div>
   <div id='game-over' class='hidden'>
     <div id='text'></div>
-    <high-score></high-score>
+    <div id='high-score'></div>
     <div id='buttons'>
       <button id='play-again'>Play again</button>
       <button id='new-player'>New player</button>
@@ -258,7 +258,7 @@ customElements.define('my-memory-game',
      */
     #checkIfAllTilesCollected () {
       if (Array.from(this.shadowRoot.querySelectorAll('.tile')).every(tile => tile.hasAttribute('invisible'))) {
-        this.shadowRoot.querySelector('high-score').addToHighScore(this.#nickname, this.#counter)
+        this.#setHighscore()
         this.#gameOver()
       }
     }
@@ -301,11 +301,43 @@ customElements.define('my-memory-game',
      * Displays when all tiles has been collected and game is over.
      */
     #gameOver () {
+      this.#createTiles()
       this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
       this.shadowRoot.querySelector('#text').textContent = `You made it in ${this.#counter} moves!`
       this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
       this.#counter = 0
       this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
+    }
+
+    /**
+     * Sets the high score.
+     */
+    #setHighscore () {
+      if (!localStorage.getItem('memoryHighscore')) {
+        localStorage.setItem('memoryHighscore', JSON.stringify({
+          easy: undefined,
+          medium: undefined,
+          difficult: undefined
+        }))
+      }
+      this.#compareScores()
+    }
+
+    /**
+     * Compares the current score with the high score. If the current score is better, it will be set as the new high score.
+     */
+    #compareScores () {
+      const memoryHighscore = JSON.parse(localStorage.getItem('memoryHighscore'))
+      if (this.getAttribute('level') === 'easy' && (this.#counter < memoryHighscore.easy || !memoryHighscore.easy)) {
+        memoryHighscore.easy = this.#counter
+      }
+      if (this.getAttribute('level') === 'medium' && (this.#counter < memoryHighscore.medium || !memoryHighscore.medium)) {
+        memoryHighscore.medium = this.#counter
+      }
+      if (this.getAttribute('level') === 'difficult' && (this.#counter < memoryHighscore.difficult || !memoryHighscore.difficult)) {
+        memoryHighscore.difficult = this.#counter
+      }
+      localStorage.setItem('memoryHighscore', JSON.stringify(memoryHighscore))
     }
 
     /**
