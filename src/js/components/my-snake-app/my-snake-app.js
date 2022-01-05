@@ -10,14 +10,6 @@ template.innerHTML = `
   <button id='restart' class='hidden'>Restart game</button>
   <div id='game-over' class='hidden'><img src='../../../images/game-over-text.png' width='300'></div>
   <style>
-    #game-over img {
-      /* font-size: 40px; */
-      /* position: absolute;
-      left: 150px;
-      top: 200px; */
-      /* z-index: 1000;
-      color: white; */
-    }
     #restart {
       position: absolute;
       left: 200px;

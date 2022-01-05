@@ -27,7 +27,7 @@ template.innerHTML = `
   </div>
   <style>
     :host {
-      --tile-size: 80px;
+      --tile-size: 110px;
       background: url('../../../images/memory-background.jpg');
       background-position: top;
       width: 500px;
@@ -54,7 +54,7 @@ template.innerHTML = `
     #board {
       display: grid;
       grid-template-columns: repeat(4, var(--tile-size));
-      gap: 10px;
+      gap: 5px;
       justify-content: center;
     }
     :host([level = 'easy']) #board {
@@ -67,16 +67,12 @@ template.innerHTML = `
       padding-top: 100px;
     }
     #counter {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       color: white;
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     }
-    /* my-flipping-tile {
-      width: var(--tile-size);
-      height: var(--tile-size);
-    } */
     #game-over {
       padding-top: 80px;
     }
@@ -330,7 +326,7 @@ customElements.define('my-memory-game',
       if (this.getAttribute('level') === 'medium' && (this.#counter < this.#memoryHighscore.medium || this.#memoryHighscore.medium === '-')) {
         this.#memoryHighscore.medium = this.#counter
       }
-      if (this.getAttribute('level') === 'difficult' && (this.#counter < this.#memoryHighscore.difficult || this.#memoryHighscore.difficult) === '-') {
+      if (this.getAttribute('level') === 'difficult' && (this.#counter < this.#memoryHighscore.difficult || this.#memoryHighscore.difficult === '-')) {
         this.#memoryHighscore.difficult = this.#counter
       }
       localStorage.setItem('memoryHighscore', JSON.stringify(this.#memoryHighscore))

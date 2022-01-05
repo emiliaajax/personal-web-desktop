@@ -18,7 +18,7 @@ template.innerHTML = `
   </div>
   <style>
     my-pwd-dock {
-      max-width 600px:
+      max-width: 500px;
     }
   </style>
 `

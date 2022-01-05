@@ -13,8 +13,8 @@ template.innerHTML = `
   <style>
     :host {
       display: inline-block;
-      max-height: 80px;
-      max-width: 80px;
+      height: 110px;
+      width: 110px;
       padding: 0;
       margin: 0;
       border-radius: 10px;
@@ -26,19 +26,23 @@ template.innerHTML = `
       margin: 0 auto;
     }
     ::slotted(*) {
-      width: 60px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 110px;
+      border-radius: 10px;
     }
     img {
       width: 40px;
     }
     #tile {
       background-color: white;
-      width: 80px;
-      height: 80px;
+      width: 110px;
+      height: 110px;
       padding-top: 10px;
       padding-bottom: 10px;
       border-radius: 10px;
-      box-shadow: -1px 1px 2px #333;
+      /* box-shadow: -1px 1px 2px #333; */
       border: 1px solid #666;
       border-width: thin;
       cursor: pointer;
@@ -47,10 +51,11 @@ template.innerHTML = `
     }
     #tile[back] {
       transform: rotateY(180deg);
-      background-color: #ccd9de !important;
+      background-color: #ffffff !important;
     }
     #tile[revealed] {
-      border: 1px dotted black;
+      /* border: 1px dotted black; */
+      border: none;
       box-shadow: none;
       pointer-events: none; 
     }

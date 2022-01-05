@@ -9,9 +9,9 @@ template.innerHTML = `
     :host {
       position: fixed;
       bottom: 0%;
-      left: 20%;
+      left: 30%;
       right: 10%;
-      max-width: 800px;
+      max-width: 1200px;
     }
     #dock {
       display: flex;
