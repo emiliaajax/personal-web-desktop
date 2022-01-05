@@ -2,18 +2,21 @@
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <button id='start'>Start game</button>
+  <div id='start-game'>
+    <img src='../../../images/snake-text.jpg' width='300'>
+    <button id='start'>Start game</button>
+  </div>
   <canvas id='game-canvas' width='500' height='500'></canvas>
   <button id='restart' class='hidden'>Restart game</button>
-  <div id='game-over' class='hidden'>Game Over</div>
+  <div id='game-over' class='hidden'><img src='../../../images/game-over-text.png' width='300'></div>
   <style>
-    #game-over {
-      font-size: 40px;
-      position: absolute;
+    #game-over img {
+      /* font-size: 40px; */
+      /* position: absolute;
       left: 150px;
-      top: 200px;
-      z-index: 1000;
-      color: white;
+      top: 200px; */
+      /* z-index: 1000;
+      color: white; */
     }
     #restart {
       position: absolute;
@@ -24,6 +27,11 @@ template.innerHTML = `
       position: absolute;
       left: 200px;
       top: 250px;
+    }
+    #start-game img, #game-over img {
+      position: absolute;
+      left: 100px;
+      top: 150px;
     }
     .hidden {
       display: none !important;
@@ -65,7 +73,7 @@ customElements.define('my-snake-app',
       document.addEventListener('keydown', event => this.#turnSnake(event))
       this.shadowRoot.querySelector('#start').addEventListener('click', event => {
         event.preventDefault()
-        this.shadowRoot.querySelector('#start').classList.add('hidden')
+        this.shadowRoot.querySelector('#start-game').classList.add('hidden')
         this.#startGame()
       })
       this.shadowRoot.querySelector('#restart').addEventListener('click', event => this.#restartGame(event))
@@ -206,9 +214,12 @@ customElements.define('my-snake-app',
           this.#snake[i].x <= this.#snake[0].x + this.#snakeWidth &&
           this.#snake[i].y >= this.#snake[0].y &&
           this.#snake[i].y <= this.#snake[0].y + this.#snakeLength) {
-          this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
-          this.shadowRoot.querySelector('#restart').classList.remove('hidden')
           clearInterval(this.#intervalID)
+          setTimeout(() => {
+            this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
+            this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
+            this.shadowRoot.querySelector('#restart').classList.remove('hidden')
+          }, 500)
         }
       }
     }

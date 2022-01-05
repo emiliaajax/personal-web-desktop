@@ -9,15 +9,16 @@ template.innerHTML = `
     :host {
       position: fixed;
       bottom: 0%;
-      left: 10%;
+      left: 20%;
       right: 10%;
+      max-width: 800px;
     }
     #dock {
       display: flex;
       flex-direction: row;
-      max-width: 1200px;
       height: 130px;
       background-color: rgb(0, 0, 0, 0.6);
+      /* background-color: rgb(105, 105, 105, 0.6); */
       border-radius: 5px;
       justify-content: center;
       align-items: center;
