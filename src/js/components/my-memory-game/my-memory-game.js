@@ -6,8 +6,7 @@ import '../high-score/high-score.js'
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <nickname-form></nickname-form>
-  <div id='levels' class='hidden'>
+  <div id='levels'>
     <button id='easy'>Easy</button>
     <button id='medium'>Medium</button>
     <button id='difficult'>Difficult</button>
@@ -18,10 +17,11 @@ template.innerHTML = `
   </div>
   <div id='game-over' class='hidden'>
     <div id='text'></div>
-    <div id='high-score'></div>
+    <table id='high-score'>
+      <tbody></tbody>
+    </table>
     <div id='buttons'>
       <button id='play-again'>Play again</button>
-      <button id='new-player'>New player</button>
       <button id='change-level'>Change level</button>
     </div>
   </div>
@@ -85,15 +85,26 @@ template.innerHTML = `
       color: white;
       font-size: 1.3rem;
     }
-    high-score {
+    #high-score {
+      margin: 0 auto;
+      margin-top: 20px;
       width: 250px;
-      height: 250px;
-      font-size: 1rem;
+      height: 150px;
+      background-color: white;
+      border: 1px solid black;
+      border-width: thin;
+      text-align: center;
+      text-transform: capitalize;
+      padding-bottom: 10px;
+      border-radius: 10px;
+    }
+    #high-score th, #high-score td {
+      width: 50%;
     }
     #buttons {
       margin-top: 20px;
       display: grid;
-      grid-template-columns: 0.8fr 1fr 1fr 1fr 0.8fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
     }
     #game-over button {
       display: inline-block;
@@ -105,11 +116,8 @@ template.innerHTML = `
     #play-again {
       grid-column: 2/3;
     }
-    #new-player {
-      grid-column: 3/4;
-    }
     #change-level {
-      grid-column: 4/5;
+      grid-column: 3/4;
     }
     .hidden {
       display: none;
@@ -128,7 +136,7 @@ customElements.define('my-memory-game',
     #easyLevel
     #mediumLevel
     #difficultLevel
-    #nickname
+    #memoryHighscore
     /**
      * Creates an instance of current type.
      */
@@ -141,13 +149,11 @@ customElements.define('my-memory-game',
       this.#mediumLevel = this.shadowRoot.querySelector('#medium')
       this.#difficultLevel = this.shadowRoot.querySelector('#difficult')
 
-      this.shadowRoot.querySelector('nickname-form').addEventListener('added', event => this.#addNickname(event))
       this.#easyLevel.addEventListener('click', event => this.#setLevel(event, 'easy'))
       this.#mediumLevel.addEventListener('click', event => this.#setLevel(event, 'medium'))
       this.#difficultLevel.addEventListener('click', event => this.#setLevel(event, 'difficult'))
 
       this.shadowRoot.querySelector('#play-again').addEventListener('click', event => this.#playAgain(event))
-      this.shadowRoot.querySelector('#new-player').addEventListener('click', event => this.#newPlayer(event))
       this.shadowRoot.querySelector('#change-level').addEventListener('click', event => this.#changeLevel(event))
     }
 
@@ -207,17 +213,6 @@ customElements.define('my-memory-game',
         })
         this.#board.append(tile)
       }
-    }
-
-    /**
-     * Starts the memory game.
-     *
-     * @param {Event} event The added event.
-     */
-    #addNickname (event) {
-      this.#nickname = event.detail.nickname
-      this.shadowRoot.querySelector('nickname-form').classList.add('hidden')
-      this.shadowRoot.querySelector('#levels').classList.remove('hidden')
     }
 
     /**
@@ -315,29 +310,74 @@ customElements.define('my-memory-game',
     #setHighscore () {
       if (!localStorage.getItem('memoryHighscore')) {
         localStorage.setItem('memoryHighscore', JSON.stringify({
-          easy: undefined,
-          medium: undefined,
-          difficult: undefined
+          easy: '-',
+          medium: '-',
+          difficult: '-'
         }))
       }
       this.#compareScores()
+      this.#updateScoreBoard()
     }
 
     /**
      * Compares the current score with the high score. If the current score is better, it will be set as the new high score.
      */
     #compareScores () {
-      const memoryHighscore = JSON.parse(localStorage.getItem('memoryHighscore'))
-      if (this.getAttribute('level') === 'easy' && (this.#counter < memoryHighscore.easy || !memoryHighscore.easy)) {
-        memoryHighscore.easy = this.#counter
+      this.#memoryHighscore = JSON.parse(localStorage.getItem('memoryHighscore'))
+      if (this.getAttribute('level') === 'easy' && (this.#counter < this.#memoryHighscore.easy || this.#memoryHighscore.easy === '-')) {
+        this.#memoryHighscore.easy = this.#counter
       }
-      if (this.getAttribute('level') === 'medium' && (this.#counter < memoryHighscore.medium || !memoryHighscore.medium)) {
-        memoryHighscore.medium = this.#counter
+      if (this.getAttribute('level') === 'medium' && (this.#counter < this.#memoryHighscore.medium || this.#memoryHighscore.medium === '-')) {
+        this.#memoryHighscore.medium = this.#counter
       }
-      if (this.getAttribute('level') === 'difficult' && (this.#counter < memoryHighscore.difficult || !memoryHighscore.difficult)) {
-        memoryHighscore.difficult = this.#counter
+      if (this.getAttribute('level') === 'difficult' && (this.#counter < this.#memoryHighscore.difficult || this.#memoryHighscore.difficult) === '-') {
+        this.#memoryHighscore.difficult = this.#counter
       }
-      localStorage.setItem('memoryHighscore', JSON.stringify(memoryHighscore))
+      localStorage.setItem('memoryHighscore', JSON.stringify(this.#memoryHighscore))
+    }
+
+    /**
+     * Creates a table containing the top scores for respective level.
+     */
+    #updateScoreBoard () {
+      const levels = Object.keys(this.#memoryHighscore)
+      const scores = Object.values(this.#memoryHighscore)
+      const table = this.shadowRoot.querySelector('#high-score tbody')
+      table.textContent = ''
+      const trHeader = document.createElement('tr')
+      trHeader.append(this.#createTableHeader('Level'))
+      trHeader.append(this.#createTableHeader('Score'))
+      table.append(this.#createTableHeader())
+      for (let i = 0; i < levels.length; i++) {
+        const tr = document.createElement('tr')
+        tr.append(this.#createTableContent(`${levels[i]}`))
+        tr.append(this.#createTableContent(`${scores[i]}`))
+        table.append(tr)
+      }
+    }
+
+    /**
+     * Returns th element with text content.
+     *
+     * @param {string} text A string to be inserted in a th element.
+     * @returns {HTMLElement} A tr element.
+     */
+    #createTableHeader (text) {
+      const header = document.createElement('th')
+      header.textContent = text
+      return header
+    }
+
+    /**
+     * Returns a td element with text content.
+     *
+     * @param {string} text A string to be inserted in a td element.
+     * @returns {HTMLElement} A td element.
+     */
+    #createTableContent (text) {
+      const content = document.createElement('td')
+      content.textContent = text
+      return content
     }
 
     /**
@@ -349,17 +389,6 @@ customElements.define('my-memory-game',
       event.preventDefault()
       this.shadowRoot.querySelector('#game-over').classList.add('hidden')
       this.shadowRoot.querySelector('#memory-game').classList.remove('hidden')
-    }
-
-    /**
-     * Restarts the game from the beginning with choosing nickname.
-     *
-     * @param {Event} event The click event.
-     */
-    #newPlayer (event) {
-      event.preventDefault()
-      this.shadowRoot.querySelector('#game-over').classList.add('hidden')
-      this.shadowRoot.querySelector('nickname-form').classList.remove('hidden')
     }
 
     /**
