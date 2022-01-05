@@ -2,26 +2,36 @@
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <div id='icon'>
-    <img id='image-icon'>
-  </div>
-  <!-- <my-window id='my-window' class='hidden'>  -->
-    <slot></slot>
-  <!-- </my-window> -->
+  <button id='icon'>
+    <img id='image-icon' />
+  </button>
+  <slot></slot>
   <style>
     :host {
       margin-left: 10px;
       margin-right: 10px;
       margin-top: 20px;
-    }
+      margin-bottom: 20px;
+    } 
     #icon {
-      display: block;
       width: 100px;
       height: 100px;
+      margin: 0;
+      padding: 0;
+      background: rgb(0, 0, 0, 0);
+      border: none;
+      outline: none;
+    }
+    #icon:focus {
+      opacity: 0.4;
+    }
+    #icon:hover {
+      cursor: pointer;
+      opacity: 0.5;
     }
     #image-icon {
       display: block;
-      max-width: 90%;
+      width: 100px;
       margin: 0 auto;
     }
     .hidden {
@@ -36,7 +46,7 @@ customElements.define('my-pwd-icon',
    */
   class extends HTMLElement {
     #imageIcon
-    // #window
+    #icon
     /**
      * Creates an instance of current type.
      */
@@ -46,9 +56,9 @@ customElements.define('my-pwd-icon',
         .appendChild(template.content.cloneNode(true))
 
       this.#imageIcon = this.shadowRoot.querySelector('#image-icon')
-      // this.#window = this.shadowRoot.querySelector('my-window')
+      this.#icon = this.shadowRoot.querySelector('#icon')
 
-      this.#imageIcon.addEventListener('click', event => this.#openApp(event))
+      this.#icon.addEventListener('click', event => this.#openApp(event))
     }
 
     /**
@@ -80,7 +90,6 @@ customElements.define('my-pwd-icon',
      */
     #openApp (event) {
       event.preventDefault()
-      // this.#window.classList.remove('hidden')
       this.dispatchEvent(new CustomEvent('clicked'))
     }
   }

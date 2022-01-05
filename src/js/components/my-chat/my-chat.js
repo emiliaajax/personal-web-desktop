@@ -85,6 +85,7 @@ template.innerHTML = `
       border: none;
       grid-column: 1/2;
       grid-row: 1/3;
+      outline: none;
     }
     #chat-message input[type='submit'] {
       margin-left: 10px;

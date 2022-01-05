@@ -12,6 +12,7 @@ template.innerHTML = `
       left: 30%;
       right: 10%;
       max-width: 1200px;
+      min-width: 500px;
     }
     #dock {
       display: flex;
