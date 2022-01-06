@@ -12,16 +12,17 @@ template.innerHTML = `
     <label part='name-text' for='name'>Username</label>
     <input id='name' type='text' name='name' autofocus>
     <div id='wrong-input'></div>
-    <input id='submit' type='submit' value='Start'>
+    <input id='submit' type='submit' value='Enter'>
   </form>
   <style>
     label {
       display: block;
       font-size: 1.5rem;
-      /* text-transform: uppercase; */
+      text-transform: uppercase;
       font-weight: bold;
       text-align: center;
-      color: black;
+      color: #333;
+      font-family: Georgia;
     }
     #name {
       display: block;
@@ -30,21 +31,22 @@ template.innerHTML = `
       height: 50px;
       font-size: 1.2rem;
       margin-top: 20px;
-      border-radius: 2px;
+      border-radius: 10px;
       padding-left: 20px;
-      border-width: thin;
+      border: none;
     }
     #submit {
       display: block;
       margin: 0 auto;
       margin-top: 20px;
-      width: 150px;
+      width: 100px;
+      border-radius: 10px;
       height: 50px;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
       color: white;
-      background-color: black;
-      border-width: thin;
+      background-color: #333;
+      border: none;
     }
     #name:focus, #submit:focus {
       outline: 2px solid #666;

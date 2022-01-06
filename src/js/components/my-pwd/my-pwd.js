@@ -57,7 +57,6 @@ customElements.define('my-pwd',
         event.target.style.zIndex = this.#zIndex.toString()
         this.#zIndex += 1
       })
-      app.focus()
       event.target.append(window)
     }
 

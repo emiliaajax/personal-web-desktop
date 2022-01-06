@@ -20,10 +20,24 @@ template.innerHTML = `
     #chat {
       width: 500px;
       height: 500px;
-      background-image: linear-gradient(180deg, #edf1fa, #e4ebf6, #d3def0, #cad9ef, #d9e2f3, white);
-      background-color: white;
+      /* background-image: linear-gradient(180deg, #edf1fa, #e4ebf6, #d3def0, #cad9ef, #d9e2f3, white); */
+      /* background-color: #bdd4e7;
+      background-image: linear-gradient(315deg, #bdd4e7 0%, #8693ab 74%); */
+      /* background-color: #045de9;
+      background-image: linear-gradient(315deg, #045de9 0%, #09c6f9 74%); */
+      /* background-color: #b1bfd8;
+      background-image: linear-gradient(315deg, #b1bfd8 0%, #6782b4 74%); */
+      background-color: #e7eff9;
+      background-image: linear-gradient(315deg, #e7eff9 0%, #cfd6e6 74%);
+      background-color: #eec0c6;
+      background-image: linear-gradient(315deg, #eec0c6 0%, #7ee8fa 74%);
+      background-color: #5de6de;
+      background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);
+      /* background-color: #05e8ba;
+      background-image: linear-gradient(315deg, #05e8ba 0%, #087ee1 74%); */
+
       display: grid;
-      grid-template-columns: 0.5fr 1fr 1fr 0.5fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       grid-template-rows: auto;
     }
     #username {
@@ -54,6 +68,8 @@ template.innerHTML = `
       margin-top: 5px;
       margin-bottom: 5px;
       word-break: break-all;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
     }
     #chat-output p[left] {
       display: table;
@@ -67,6 +83,7 @@ template.innerHTML = `
       margin-right: 0px;
       margin-left: auto;
       background-color: cornflowerblue;
+      background-color: #0096FF;
     }
     #chat-message {
       grid-column: 2/4;
@@ -86,20 +103,23 @@ template.innerHTML = `
       grid-column: 1/2;
       grid-row: 1/3;
       outline: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+    }
+    
+    my-emojis {
+      margin-left: 10px;
+      grid-column: 2/3;
+      grid-row: 1/2;
     }
     #chat-message input[type='submit'] {
       margin-left: 10px;
       grid-column: 2/3;
-      grid-row: 1/2;
+      margin-bottom: 20px;
+      border-radius: 10px;
       width: 60px;
       height: 40px;
-      margin-bottom: 0px;
-    }
-    my-emojis {
-      margin-left: 10px;
-      grid-column: 2/3;
-      margin-bottom: 20px;
-      margin-top: -50px;
+      border: none;
     }
     .hidden {
       display: none !important;
