@@ -4,7 +4,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <button id='tile' back>
     <div id='back'> 
-      <img src='../../images/lnu-symbol.png'>
+      <img src='../../images/tile-back.jpg'>
     </div>
     <div id='front' class='hidden'>
       <slot></slot>
@@ -13,8 +13,8 @@ template.innerHTML = `
   <style>
     :host {
       display: inline-block;
-      height: 110px;
-      width: 110px;
+      height: 90px;
+      width: 90px;
       padding: 0;
       margin: 0;
       border-radius: 10px;
@@ -25,25 +25,22 @@ template.innerHTML = `
     #back, #front {
       margin: 0 auto;
     }
-    ::slotted(*) {
+    ::slotted(*), img {
       position: absolute;
       top: 0px;
       left: 0px;
-      width: 110px;
+      width: 90px;
       border-radius: 10px;
     }
-    img {
-      width: 40px;
-    }
     #tile {
-      background-color: white;
-      width: 110px;
-      height: 110px;
+      background-color: rgb(0, 0, 0, 0);
+      width: 90px;
+      height: 90px;
       padding-top: 10px;
       padding-bottom: 10px;
       border-radius: 10px;
-      /* box-shadow: -1px 1px 2px #333; */
-      border: 1px solid #666;
+      /* border: 1px solid #666; */
+      border: none;
       border-width: thin;
       cursor: pointer;
       transition: 0.5s;
@@ -51,7 +48,6 @@ template.innerHTML = `
     }
     #tile[back] {
       transform: rotateY(180deg);
-      background-color: #ffffff !important;
     }
     #tile[revealed] {
       /* border: 1px dotted black; */
@@ -62,14 +58,15 @@ template.innerHTML = `
     #tile[disabled] {
       cursor: default;
       pointer-events: none;
+      border: none;
     }
     #tile[invisible] {
       visibility: hidden;
-      border: 1px dotted black;
+      /* border: 1px dotted black; */
       box-shadow: none;
     }
     :host([invisible]) {
-      border: 1px dotted black;
+      /* border: 1px dotted black; */
       box-shadow: none;
     }
     .hidden {

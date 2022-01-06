@@ -235,18 +235,6 @@ customElements.define('my-chat',
       if (data.type === 'notification' || data.type === 'message') {
         const message = document.createElement('p')
         const messageData = data.data
-        // const emojis = Object.keys(this.#emojis)
-        // const emojiCodes = Object.values(this.#emojis)
-        // for (let i = 0; i < emojis.length; i++) {
-        //   const emoji = emojis[i]
-        //   for (let j = 0; j < messageData.length - 1; j++) {
-        //     if (emoji[0] === messageData[j]) {
-        //       if (emoji[1] === messageData[j + 1]) {
-        //         messageData = messageData.replace(messageData[j] + messageData[j + 1], emojiCodes[i])
-        //       }
-        //     }
-        //   }
-        // }
         message.textContent = `${data.username}: ${messageData}`
         data.channel === 'emilias-channel' ? message.setAttribute('right', '') : message.setAttribute('left', '')
         this.#chatOutput.append(message)

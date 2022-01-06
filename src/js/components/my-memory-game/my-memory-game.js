@@ -12,7 +12,7 @@ template.innerHTML = `
     <button id='difficult'>Difficult</button>
   </div>
   <div id='memory-game' class='hidden'>
-    <div id='counter'>Moves: 0</div>
+    <div id='counter'>0</div>
     <div id='board'></div>
   </div>
   <div id='game-over' class='hidden'>
@@ -27,50 +27,53 @@ template.innerHTML = `
   </div>
   <style>
     :host {
-      --tile-size: 110px;
-      background: url('../../../images/memory-background.jpg');
+      --tile-size: 100px;
+      background: url('../../../images/memory-background-2.jpg');
       background-position: top;
       width: 500px;
       height: 500px;
     }
-    nickname-form {
-      display: block;
-      padding-top: 130px;
-    }
-    nickname-form::part(name-text) {
-      color: white;
-      text-transform: uppercase;
-    }
     #levels {
-      padding-top: 130px;
+      padding-top: 170px;
     }
     button {
       display: block;
       margin: 0 auto;
       margin-top: 10px;
-      width: 200px;
-      height: 50px;
+      width: 100px;
+      height: 30px;
+      background-color: #333;
+      color: white;
+      border: 1px solid #000;
+      border-radius: 5px;
     }
     #board {
       display: grid;
       grid-template-columns: repeat(4, var(--tile-size));
-      gap: 5px;
+      gap: 10px;
       justify-content: center;
     }
     :host([level = 'easy']) #board {
       grid-template-columns: repeat(2, var(--tile-size)) !important;
+      padding-top: 90px;
     }
-    :host([level = 'easy']) #memory-game {
-      padding-top: 100px;
+    :host([level = 'medium']) #board {
+      padding-top: 90px;
     }
-    :host([level = 'medium']) #memory-game {
-      padding-top: 100px;
+    :host([level = 'difficult']) #board {
+      padding-top: 20px;
     }
     #counter {
       font-size: 1.1rem;
       text-align: center;
-      margin-bottom: 10px;
+      padding-top: 5px;
+      padding-bottom: 6px;
       color: white;
+      max-width: 40px;
+      height: 20px;
+      margin: 0 auto;
+      border-radius: 0px 0px 10px 10px;
+      background-color: rgb(0, 0, 0, 0.8);
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
     }
     #game-over {
@@ -86,7 +89,8 @@ template.innerHTML = `
       margin-top: 20px;
       width: 250px;
       height: 150px;
-      background-color: white;
+      background-color: rgb(0, 0, 0, 0.6);
+      color: white;
       border: 1px solid black;
       border-width: thin;
       text-align: center;
@@ -100,13 +104,13 @@ template.innerHTML = `
     #buttons {
       margin-top: 20px;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 0.9fr 0.9fr 1fr;
     }
     #game-over button {
       display: inline-block;
       text-align: center;
       width: 100px;
-      height: 40px;
+      height: 30px;
       margin: 0 auto;
     }
     #play-again {
@@ -133,6 +137,9 @@ customElements.define('my-memory-game',
     #mediumLevel
     #difficultLevel
     #memoryHighscore
+    #imagesAltText = ['Earth', 'Mars', 'Mercury',
+      'Venus', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+
     /**
      * Creates an instance of current type.
      */
@@ -201,7 +208,8 @@ customElements.define('my-memory-game',
         const tile = document.createElement('my-flipping-tile')
         tile.classList.add('tile')
         const img = document.createElement('img')
-        img.setAttribute('src', shuffledImageArray[i])
+        img.setAttribute('src', shuffledImageArray[i].src)
+        img.setAttribute('alt', shuffledImageArray[i].alt)
         tile.append(img)
         tile.addEventListener('flip', () => {
           tile.setAttribute('revealed', '')
@@ -220,7 +228,7 @@ customElements.define('my-memory-game',
         this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.setAttribute('disabled', ''))
         setTimeout(() => {
           this.#counter += 1
-          this.shadowRoot.querySelector('#counter').textContent = `Moves: ${this.#counter}`
+          this.shadowRoot.querySelector('#counter').textContent = `${this.#counter}`
         }, 400)
         this.#checkIfMatch(tiles)
       }
@@ -262,8 +270,12 @@ customElements.define('my-memory-game',
     #collectAndShuffleImages () {
       const imageArray = []
       for (let j = 1; j <= this.#size / 2; j++) {
-        imageArray.push(`../../images/${j}.png`)
-        imageArray.push(`../../images/${j}.png`)
+        const imageObject = {
+          src: `../../images/${j}.png`,
+          alt: this.#imagesAltText[j - 1]
+        }
+        imageArray.push(imageObject)
+        imageArray.push(imageObject)
       }
       let i = imageArray.length
       while (i) {
@@ -294,9 +306,10 @@ customElements.define('my-memory-game',
     #gameOver () {
       this.#createTiles()
       this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
-      this.shadowRoot.querySelector('#text').textContent = `You made it in ${this.#counter} moves!`
+      this.shadowRoot.querySelector('#text').textContent = `YOUR SCORE: ${this.#counter}`
       this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
       this.#counter = 0
+      this.shadowRoot.querySelector('#counter').textContent = `${this.#counter}`
       this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
     }
 
@@ -340,28 +353,12 @@ customElements.define('my-memory-game',
       const scores = Object.values(this.#memoryHighscore)
       const table = this.shadowRoot.querySelector('#high-score tbody')
       table.textContent = ''
-      const trHeader = document.createElement('tr')
-      trHeader.append(this.#createTableHeader('Level'))
-      trHeader.append(this.#createTableHeader('Score'))
-      table.append(this.#createTableHeader())
       for (let i = 0; i < levels.length; i++) {
         const tr = document.createElement('tr')
         tr.append(this.#createTableContent(`${levels[i]}`))
-        tr.append(this.#createTableContent(`${scores[i]}`))
+        tr.append(this.#createTableContent(`🌟 ${scores[i]}`))
         table.append(tr)
       }
-    }
-
-    /**
-     * Returns th element with text content.
-     *
-     * @param {string} text A string to be inserted in a th element.
-     * @returns {HTMLElement} A tr element.
-     */
-    #createTableHeader (text) {
-      const header = document.createElement('th')
-      header.textContent = text
-      return header
     }
 
     /**
