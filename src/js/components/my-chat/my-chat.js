@@ -156,6 +156,7 @@ customElements.define('my-chat',
    * Represents a my-memory-game element.
    */
   class extends HTMLElement {
+    #channel = '1dsD-A444-Dfa0-sd43-0d32-P0we'
     #chatMessage
     #sendButton
     #message
@@ -285,7 +286,7 @@ customElements.define('my-chat',
             data: messageData,
             username: this.#username,
             key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
-            channel: 'emilias-channel'
+            channel: this.#channel
           }))
         }
         this.#chatMessage.reset()
@@ -305,8 +306,8 @@ customElements.define('my-chat',
         const message = document.createElement('p')
         const messageData = data.data
         message.textContent = `${data.username}: ${messageData}`
-        data.channel === 'emilias-channel' ? message.setAttribute('right', '') : message.setAttribute('left', '')
-        if (data.type === 'message' && data.channel !== 'emilias-channel' && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
+        data.channel === this.#channel ? message.setAttribute('right', '') : message.setAttribute('left', '')
+        if (data.type === 'message' && data.channel !== this.#channel && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
           this.shadowRoot.querySelector('audio').play()
         }
         this.#chatOutput.append(message)
