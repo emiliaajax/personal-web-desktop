@@ -12,7 +12,7 @@ template.innerHTML = `
     <div id='chat-output' class='hidden'></div>
     <form id='chat-message' class='hidden'>
       <textarea id='message'></textarea>
-      <input type='submit' value='Send'>
+      <button type='submit'><img src='../../../images/send-icon.png'></button>
       <my-emojis></my-emojis>
     </form>
   </div>
@@ -20,22 +20,8 @@ template.innerHTML = `
     #chat {
       width: 500px;
       height: 500px;
-      /* background-image: linear-gradient(180deg, #edf1fa, #e4ebf6, #d3def0, #cad9ef, #d9e2f3, white); */
-      /* background-color: #bdd4e7;
-      background-image: linear-gradient(315deg, #bdd4e7 0%, #8693ab 74%); */
-      /* background-color: #045de9;
-      background-image: linear-gradient(315deg, #045de9 0%, #09c6f9 74%); */
-      /* background-color: #b1bfd8;
-      background-image: linear-gradient(315deg, #b1bfd8 0%, #6782b4 74%); */
-      background-color: #e7eff9;
-      background-image: linear-gradient(315deg, #e7eff9 0%, #cfd6e6 74%);
-      background-color: #eec0c6;
-      background-image: linear-gradient(315deg, #eec0c6 0%, #7ee8fa 74%);
       background-color: #5de6de;
       background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);
-      /* background-color: #05e8ba;
-      background-image: linear-gradient(315deg, #05e8ba 0%, #087ee1 74%); */
-
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
       grid-template-rows: auto;
@@ -48,7 +34,7 @@ template.innerHTML = `
     #chat-output {
       background-color: white;
       width: 400px;
-      height: 250px;
+      height: 280px;
       border-radius: 10px 10px 0px 0px; 
       grid-column: 2/4;
       grid-row: 1/2;
@@ -67,7 +53,8 @@ template.innerHTML = `
       max-width: 250px !important;
       margin-top: 5px;
       margin-bottom: 5px;
-      word-break: break-all;
+      overflow-wrap: break-word;
+      /* word-break: break-all; */
       font-family: 'Montserrat', sans-serif;
       font-size: 0.9rem;
     }
@@ -97,7 +84,7 @@ template.innerHTML = `
       padding-top: 20px;
       resize: none;
       display: block;
-      height: 100px;
+      height: 70px;
       width: 330px;
       border: none;
       grid-column: 1/2;
@@ -105,21 +92,35 @@ template.innerHTML = `
       outline: none;
       font-family: 'Montserrat', sans-serif;
       font-size: 0.9rem;
-    }
-    
+      overflow: scroll;
+    } 
     my-emojis {
-      margin-left: 10px;
+      margin-left: 15px;
       grid-column: 2/3;
-      grid-row: 1/2;
+      margin-top: -45px;
     }
-    #chat-message input[type='submit'] {
-      margin-left: 10px;
+    #chat-message button {
+      margin-left: 15px;
       grid-column: 2/3;
-      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
       border-radius: 10px;
-      width: 60px;
+      width: 40px;
       height: 40px;
       border: none;
+      background-color: rgb(255, 255, 255, 0);
+    }
+    #chat-message button:hover {
+      cursor: pointer;
+      background-color: #aef2ee;
+    }
+    #chat-message button:focus {
+      outline: none;
+      background-color: #aef2ee;
+    }
+    #chat-message button img {
+      width: 35px;
+      display: block;
     }
     .hidden {
       display: none !important;
@@ -133,6 +134,7 @@ customElements.define('my-chat',
    */
   class extends HTMLElement {
     #chatMessage
+    #sendButton
     #message
     #username
     #nicknameForm
@@ -171,17 +173,23 @@ customElements.define('my-chat',
         .appendChild(template.content.cloneNode(true))
 
       this.#chatMessage = this.shadowRoot.querySelector('#chat-message')
+      this.#sendButton = this.shadowRoot.querySelector('#chat-message button')
       this.#message = this.shadowRoot.querySelector('#message')
       this.#nicknameForm = this.shadowRoot.querySelector('nickname-form')
       this.#chatOutput = this.shadowRoot.querySelector('#chat-output')
 
-      this.#chatMessage.addEventListener('submit', (event) => this.#onSubmit(event))
+      // this.#chatMessage.addEventListener('submit', (event) => this.#onSubmit(event))
+      this.#sendButton.addEventListener('click', event => this.#onSubmit(event))
       this.#nicknameForm.addEventListener('added', (event) => {
         this.#username = event.detail.nickname
         sessionStorage.setItem('username', this.#username)
         this.#startChat(event)
       })
-      this.shadowRoot.querySelector('my-emojis').addEventListener('clicked', event => { this.#message.value = this.#message.value + event.detail.emojiValue })
+      this.shadowRoot.querySelector('my-emojis').addEventListener('clicked', event => {
+        this.#message.focus()
+        this.#message.value = this.#message.value + event.detail.emojiValue
+      })
+      this.shadowRoot.querySelector('my-emojis').addEventListener('closed', () => this.#message.focus())
     }
 
     /**
@@ -209,7 +217,8 @@ customElements.define('my-chat',
     #startChat () {
       this.#nicknameForm.classList.add('hidden')
       this.shadowRoot.querySelector('#chat-output').classList.remove('hidden')
-      this.shadowRoot.querySelector('#chat-message').classList.remove('hidden')
+      this.#chatMessage.classList.remove('hidden')
+      this.#message.focus()
     }
 
     /**
@@ -220,29 +229,33 @@ customElements.define('my-chat',
     #onSubmit (event) {
       event.preventDefault()
       let messageData = this.#message.value
-      const emojis = Object.keys(this.#emojis)
-      const emojiCodes = Object.values(this.#emojis)
-      for (let i = 0; i < emojis.length; i++) {
-        const emoji = emojis[i]
-        for (let j = 0; j < messageData.length - 1; j++) {
-          if (emoji[0] === messageData[j]) {
-            if (emoji[1] === messageData[j + 1]) {
-              messageData = messageData.replace(messageData[j] + messageData[j + 1], emojiCodes[i])
+      if (messageData.length !== 0) {
+        const emojis = Object.keys(this.#emojis)
+        const emojiCodes = Object.values(this.#emojis)
+        for (let i = 0; i < emojis.length; i++) {
+          const emoji = emojis[i]
+          for (let j = 0; j < messageData.length - 1; j++) {
+            if (emoji[0] === messageData[j]) {
+              if (emoji[1] === messageData[j + 1]) {
+                messageData = messageData.replace(messageData[j] + messageData[j + 1], emojiCodes[i])
+              }
             }
           }
         }
+        if (this.#socket.readyState === 1) {
+          // this.#socket.addEventListener('open', () => this.#socket.send(JSON.stringify({
+          this.#socket.send(JSON.stringify({
+            type: 'message',
+            data: messageData,
+            username: this.#username,
+            key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
+            channel: 'emilias-channel'
+          }))
+        }
+        this.#chatMessage.reset()
       }
-      if (this.#socket.readyState === 1) {
-      // this.#socket.addEventListener('open', () => this.#socket.send(JSON.stringify({
-        this.#socket.send(JSON.stringify({
-          type: 'message',
-          data: messageData,
-          username: this.#username,
-          key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
-          channel: 'emilias-channel'
-        }))
-      }
-      this.#chatMessage.reset()
+      this.#sendButton.blur()
+      this.#message.focus()
     }
 
     /**

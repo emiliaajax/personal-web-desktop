@@ -46,6 +46,11 @@ template.innerHTML = `
       color: white;
       border: 1px solid #000;
       border-radius: 5px;
+      cursor: pointer;
+    }
+    button:focus {
+      outline: none;
+      background: grey;
     }
     #board {
       display: grid;

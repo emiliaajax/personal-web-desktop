@@ -46,11 +46,17 @@ template.innerHTML = `
       color: red;
       border: none;
       margin: 5px;
-      box-shadow: 1px 1px 1px #666;
     }
     #close:hover {
       color: #530000;
       font-weight: bolder;
+    }
+    #close:focus {
+      outline: none;
+      color: #530000;
+      font-weight: bolder;
+      box-shadow: 1px 1px 3px #333;
+      border-width: thin;
     }
     #close span {
       display: block;

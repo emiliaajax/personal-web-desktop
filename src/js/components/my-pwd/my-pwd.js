@@ -46,6 +46,7 @@ customElements.define('my-pwd',
      * @param {Event} event The clicked event.
      */
     #openApp (event) {
+      event.target.blur()
       const appName = event.target.getAttribute('id')
       const app = document.createElement(appName)
       const window = document.createElement('my-window')

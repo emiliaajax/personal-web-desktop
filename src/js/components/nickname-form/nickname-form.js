@@ -49,7 +49,7 @@ template.innerHTML = `
       border: none;
     }
     #name:focus, #submit:focus {
-      outline: 2px solid #666;
+      outline: none;
       border: none;
     }
     #wrong-input {
@@ -82,6 +82,13 @@ customElements.define('nickname-form',
       this.#nicknameForm = this.shadowRoot.querySelector('#form')
 
       this.#nicknameForm.addEventListener('submit', (event) => this.#onSubmit(event))
+    }
+
+    /**
+     * Called after the element is inserted in the DOM.
+     */
+    connectedCallback () {
+      this.shadowRoot.querySelector('input#name').focus()
     }
 
     /**
