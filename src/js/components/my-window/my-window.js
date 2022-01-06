@@ -50,6 +50,7 @@ template.innerHTML = `
     #close:hover {
       color: #530000;
       font-weight: bolder;
+      cursor: pointer;
     }
     #close:focus {
       outline: none;

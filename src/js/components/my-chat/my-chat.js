@@ -12,9 +12,14 @@ template.innerHTML = `
     <div id='chat-output' class='hidden'></div>
     <form id='chat-message' class='hidden'>
       <textarea id='message'></textarea>
-      <button type='submit'><img src='../../../images/send-icon.png'></button>
+      <button id='send-button' type='submit'><img src='../../../images/send-icon.png'></button>
       <my-emojis></my-emojis>
+      <button id='sound-control' mode='on'>
+        <img src='../../../images/sound-on.png' alt='Sound on' id='sound-on' >
+        <img src='../../../images/sound-off.png' alt='Sound on' id='sound-off' class='hidden'>
+      </button>
     </form>
+    <audio src='../../../audio/235911__yfjesse__notification-sound.wav' controls class='hidden'>
   </div>
   <style>
     #chat {
@@ -70,7 +75,7 @@ template.innerHTML = `
       margin-right: 0px;
       margin-left: auto;
       background-color: cornflowerblue;
-      background-color: #0096FF;
+      /* background-color: #0096FF; */
     }
     #chat-message {
       grid-column: 2/4;
@@ -99,7 +104,7 @@ template.innerHTML = `
       grid-column: 2/3;
       margin-top: -45px;
     }
-    #chat-message button {
+    #send-button {
       margin-left: 15px;
       grid-column: 2/3;
       display: flex;
@@ -110,17 +115,35 @@ template.innerHTML = `
       border: none;
       background-color: rgb(255, 255, 255, 0);
     }
-    #chat-message button:hover {
+    #send-button:hover {
       cursor: pointer;
       background-color: #aef2ee;
     }
-    #chat-message button:focus {
+    #send-button:focus {
       outline: none;
       background-color: #aef2ee;
+    }
+    #sound-control {
+      margin-left: 15px;
+      grid-column: 2/3;
+      display: flex;
+      justify-content: center;
+      border-radius: 10px;
+      width: 35px;
+      height: 35px;
+      margin-top: -50px;
+      border: none;
+      background-color: rgb(255, 255, 255, 0);
+    }
+    #sound-control:hover {
+      cursor: pointer;
     }
     #chat-message button img {
       width: 35px;
       display: block;
+    }
+    #sound-control img {
+      width: 30px !important;
     }
     .hidden {
       display: none !important;
@@ -173,12 +196,25 @@ customElements.define('my-chat',
         .appendChild(template.content.cloneNode(true))
 
       this.#chatMessage = this.shadowRoot.querySelector('#chat-message')
-      this.#sendButton = this.shadowRoot.querySelector('#chat-message button')
+      this.#sendButton = this.shadowRoot.querySelector('#send-button')
       this.#message = this.shadowRoot.querySelector('#message')
       this.#nicknameForm = this.shadowRoot.querySelector('nickname-form')
       this.#chatOutput = this.shadowRoot.querySelector('#chat-output')
 
-      // this.#chatMessage.addEventListener('submit', (event) => this.#onSubmit(event))
+      this.shadowRoot.querySelector('#sound-control').addEventListener('click', event => {
+        event.preventDefault()
+        this.#message.focus()
+        if (this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
+          this.shadowRoot.querySelector('#sound-control').setAttribute('mode', 'off')
+          this.shadowRoot.querySelector('#sound-on').classList.add('hidden')
+          this.shadowRoot.querySelector('#sound-off').classList.remove('hidden')
+        } else {
+          this.shadowRoot.querySelector('#sound-control').setAttribute('mode', 'on')
+          this.shadowRoot.querySelector('#sound-off').classList.add('hidden')
+          this.shadowRoot.querySelector('#sound-on').classList.remove('hidden')
+        }
+      })
+
       this.#sendButton.addEventListener('click', event => this.#onSubmit(event))
       this.#nicknameForm.addEventListener('added', (event) => {
         this.#username = event.detail.nickname
@@ -270,6 +306,9 @@ customElements.define('my-chat',
         const messageData = data.data
         message.textContent = `${data.username}: ${messageData}`
         data.channel === 'emilias-channel' ? message.setAttribute('right', '') : message.setAttribute('left', '')
+        if (data.type === 'message' && data.channel !== 'emilias-channel' && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
+          this.shadowRoot.querySelector('audio').play()
+        }
         this.#chatOutput.append(message)
       }
       this.#chatOutput.scrollTop = this.#chatOutput.scrollHeight
