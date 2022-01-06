@@ -14,9 +14,9 @@ template.innerHTML = `
       <textarea id='message'></textarea>
       <button id='send-button' type='submit'><img src='../../../images/send-icon.png'></button>
       <my-emojis></my-emojis>
-      <button id='sound-control' mode='on'>
-        <img src='../../../images/sound-on.png' alt='Sound on' id='sound-on' >
-        <img src='../../../images/sound-off.png' alt='Sound on' id='sound-off' class='hidden'>
+      <button id='sound-control' mode='off'>
+        <img src='../../../images/sound-on.png' alt='Sound on' id='sound-on' class='hidden'>
+        <img src='../../../images/sound-off.png' alt='Sound on' id='sound-off'>
       </button>
     </form>
     <audio src='../../../audio/235911__yfjesse__notification-sound.wav' controls class='hidden'>
