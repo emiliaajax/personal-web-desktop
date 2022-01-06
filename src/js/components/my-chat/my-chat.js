@@ -28,7 +28,7 @@ template.innerHTML = `
       background-color: #5de6de;
       background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      /* grid-template-columns: 1fr 1fr 1fr 1fr; */
       grid-template-rows: auto;
     }
     #username {
@@ -41,11 +41,12 @@ template.innerHTML = `
       width: 400px;
       height: 280px;
       border-radius: 10px 10px 0px 0px; 
-      grid-column: 2/4;
+      grid-column: 1/4;
       grid-row: 1/2;
-      margin-top: 20px;
       padding: 20px;
       overflow: scroll;
+      margin: 0 auto;
+      margin-top: 20px;
     }
     #chat-output p {
       background-color: #e8e8e8;
@@ -78,7 +79,7 @@ template.innerHTML = `
       /* background-color: #0096FF; */
     }
     #chat-message {
-      grid-column: 2/4;
+      grid-column: 3/4;
       grid-row: 2/3;
       justify-content: center;
       display: grid;
@@ -307,7 +308,7 @@ customElements.define('my-chat',
         const messageData = data.data
         message.textContent = `${data.username}: ${messageData}`
         data.channel === this.#channel ? message.setAttribute('right', '') : message.setAttribute('left', '')
-        if (data.type === 'message' && data.channel !== this.#channel && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
+        if (data.type === 'message' && data.channel !== this.channel && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
           this.shadowRoot.querySelector('audio').play()
         }
         this.#chatOutput.append(message)
