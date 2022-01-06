@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans:wght@300&display=swap');
 
 body {
-	max-width: 1600px;
-	min-height: 800px;
+	max-width: 100vw;
+	min-height: 100vh;
 	background: url('../images/background2.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;

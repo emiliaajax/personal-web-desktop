@@ -36,6 +36,7 @@ customElements.define('my-snake-app',
    * Represents a my-snake-app element.
    */
   class extends HTMLElement {
+    #active
     #canvas
     #canvasContext
     #velocity = 20
@@ -91,7 +92,8 @@ customElements.define('my-snake-app',
         this.#drawGameContent()
         this.#snakeEatsFood()
         this.#collisionDetection()
-      }, 110)
+        this.#active = false
+      }, 80)
     }
 
     /**
@@ -138,31 +140,35 @@ customElements.define('my-snake-app',
      * @param {Event} event The keydown event.
      */
     #turnSnake (event) {
-      if (this.#snakeMoveX !== 0) {
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown' ||
+        event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault()
+      }
+      if (this.#snakeMoveX !== 0 && !this.#active) {
         switch (event.key) {
           case 'ArrowUp':
-            event.preventDefault()
             this.#snakeMoveX = 0
             this.#snakeMoveY = -this.#velocity
+            this.#active = true
             break
           case 'ArrowDown':
-            event.preventDefault()
             this.#snakeMoveX = 0
             this.#snakeMoveY = this.#velocity
+            this.#active = true
             break
         }
       }
-      if (this.#snakeMoveY !== 0) {
+      if (this.#snakeMoveY !== 0 && !this.#active) {
         switch (event.key) {
           case 'ArrowRight':
-            event.preventDefault()
             this.#snakeMoveX = this.#velocity
             this.#snakeMoveY = 0
+            this.#active = true
             break
           case 'ArrowLeft':
-            event.preventDefault()
             this.#snakeMoveX = -this.#velocity
             this.#snakeMoveY = 0
+            this.#active = true
             break
         }
       }
