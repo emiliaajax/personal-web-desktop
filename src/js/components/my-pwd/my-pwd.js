@@ -1,3 +1,9 @@
+/**
+ * The my-pwd web component module.
+ *
+ * @author Emilia Hansson <eh222yn@student.lnu.se>
+ * @version 1.0.0
+ */
 
 import '../my-pwd-dock/index.js'
 import '../my-pwd-icon/index.js'

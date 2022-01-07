@@ -1,3 +1,9 @@
+/**
+ * The my-memory-game web component module.
+ *
+ * @author Emilia Hansson <eh222yn@student.lnu.se>
+ * @version 1.0.0
+ */
 
 import '../my-flipping-tile/index.js'
 import '../my-username-form/my-username-form.js'

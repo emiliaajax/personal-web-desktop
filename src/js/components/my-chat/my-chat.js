@@ -1,3 +1,9 @@
+/**
+ * The my-chat web component module.
+ *
+ * @author Emilia Hansson <eh222yn@student.lnu.se>
+ * @version 1.0.0
+ */
 
 import '../my-username-form/index.js'
 import '../my-emojis/index.js'

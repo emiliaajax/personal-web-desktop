@@ -1,5 +1,5 @@
 /**
- * The nickname-form web component module.
+ * The my-username-form web component module.
  *
  * @author Emilia Hansson <eh222yn@student.lnu.se>
  * @version 1.1.0

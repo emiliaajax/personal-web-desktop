@@ -1,3 +1,9 @@
+/**
+ * The my-window web component module.
+ *
+ * @author Emilia Hansson <eh222yn@student.lnu.se>
+ * @version 1.0.0
+ */
 
 // The code for dragging window is inspired by https://www.kirupa.com/html5/drag.htm (31/12-21).
 
