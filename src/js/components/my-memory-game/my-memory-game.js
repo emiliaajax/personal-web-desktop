@@ -1,6 +1,6 @@
 
 import '../my-flipping-tile/index.js'
-import '../nickname-form/nickname-form.js'
+import '../my-username-form/my-username-form.js'
 
 const template = document.createElement('template')
 

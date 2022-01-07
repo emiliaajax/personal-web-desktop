@@ -34,6 +34,7 @@ template.innerHTML = `
       border-radius: 10px;
       padding-left: 20px;
       border: none;
+      cursor: text;
     }
     #submit {
       display: block;
@@ -48,9 +49,13 @@ template.innerHTML = `
       background-color: #333;
       border: none;
     }
-    #name:focus, #submit:focus {
+    #name:focus {
       outline: none;
       border: none;
+    }
+    #submit:focus {
+      border: none;
+      outline: 1px solid white;
     }
     #wrong-input {
       text-align: center;
@@ -60,7 +65,7 @@ template.innerHTML = `
   </style>
 `
 
-customElements.define('nickname-form',
+customElements.define('my-username-form',
   /**
    * Represents a nickname-form element.
    */

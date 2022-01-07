@@ -1,5 +1,5 @@
 
-import '../nickname-form/index.js'
+import '../my-username-form/index.js'
 import '../my-emojis/index.js'
 
 const template = document.createElement('template')
@@ -7,7 +7,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <div id='chat'>
     <div id='username'>
-      <nickname-form></nickname-form>
+      <my-username-form></my-username-form>
     </div>
     <div id='chat-output' class='hidden'></div>
     <form id='chat-message' class='hidden'>
@@ -200,7 +200,7 @@ customElements.define('my-chat',
       this.#chatMessage = this.shadowRoot.querySelector('#chat-message')
       this.#sendButton = this.shadowRoot.querySelector('#send-button')
       this.#message = this.shadowRoot.querySelector('#message')
-      this.#nicknameForm = this.shadowRoot.querySelector('nickname-form')
+      this.#nicknameForm = this.shadowRoot.querySelector('my-username-form')
       this.#chatOutput = this.shadowRoot.querySelector('#chat-output')
 
       this.shadowRoot.querySelector('#sound-control').addEventListener('click', event => {
@@ -218,7 +218,7 @@ customElements.define('my-chat',
       })
 
       this.#sendButton.addEventListener('click', event => this.#onSubmit(event))
-      this.addEventListener('keydown', event => {
+      this.#message.addEventListener('keydown', event => {
         if (event.key === 'Enter') {
           this.#onSubmit(event)
         }

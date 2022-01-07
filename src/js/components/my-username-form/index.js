@@ -5,4 +5,4 @@
  * @version 1.1.0
  */
 
-import './nickname-form.js'
+import './my-username-form.js'
