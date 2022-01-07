@@ -1,7 +1,6 @@
 
 import '../my-flipping-tile/index.js'
 import '../nickname-form/nickname-form.js'
-import '../high-score/high-score.js'
 
 const template = document.createElement('template')
 
