@@ -38,6 +38,7 @@ customElements.define('my-pwd',
         .appendChild(template.content.cloneNode(true))
 
       this.shadowRoot.querySelectorAll('my-pwd-icon').forEach(icon => icon.addEventListener('clicked', event => this.#openApp(event)))
+      this.shadowRoot.querySelector('#my-snake-app').addEventListener('quit', event => event.target.parentNode.remove())
     }
 
     /**
@@ -54,7 +55,7 @@ customElements.define('my-pwd',
       this.#zIndex += 1
       window.append(app)
       window.addEventListener('closed', event => this.#closeApp(event))
-      window.addEventListener('focus', event => {
+      window.addEventListener('focused', event => {
         event.target.style.zIndex = this.#zIndex.toString()
         this.#zIndex += 1
       })

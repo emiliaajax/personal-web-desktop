@@ -3,27 +3,50 @@ const template = document.createElement('template')
 
 template.innerHTML = `
   <div id='start-game'>
-    <img src='../../../images/snake-text.jpg' width='300'>
-    <button id='start'>Start game</button>
+    <img id='snake-text' src='../../../images/snake-text.jpg' alt='Snake' width='300'>
+    <button id='start'><img id='start-button'src='../../../images/snake-start-button.png' alt='Start game button'></button>
   </div>
   <canvas id='game-canvas' width='500' height='500'></canvas>
-  <button id='restart' class='hidden'>Restart game</button>
-  <div id='game-over' class='hidden'><img src='../../../images/game-over-text.png' width='300'></div>
+  <button id='restart' class='hidden' focused><img src='../../../images/yes-highlighted.png' alt='Yes button'></button>
+  <button id='quit' class='hidden'><img src='../../../images/no.png' alt='No button'></button>
+  <div id='game-over' class='hidden'><img src='../../../images/game-over.png' alt='Game Over! Play again?' width='300'></div>
   <style>
     #restart {
       position: absolute;
-      left: 200px;
-      top: 270px;
+      left: 165px;
+      top: 280px;
+    }
+    #quit {
+      position: absolute;
+      left: 265px;
+      top: 280px;
+    }
+    #restart, #quit {
+      background-color: rgb(0, 0, 0, 0);
+      border: none;
+      outline: none;
     }
     #start {
       position: absolute;
       left: 200px;
-      top: 250px;
+      top: 270px;
+      background-color: rgb(0, 0, 0, 0);
+      border: none;
+      outline: none;
+      cursor: pointer;
     }
-    #start-game img, #game-over img {
+    #snake-text {
+      position: absolute;
+      left: 100px;
+      top: 170px;
+    }
+    #game-over img {
       position: absolute;
       left: 100px;
       top: 150px;
+    }
+    #start-button {
+      width: 90px;
     }
     .hidden {
       display: none !important;
@@ -47,6 +70,7 @@ customElements.define('my-snake-app',
     #intervalID
     #foodPosition
     #score = 0
+    #highScore = 0
     #snake = [
       { x: 250, y: 200 }, { x: 230, y: 200 }, { x: 210, y: 200 },
       { x: 190, y: 200 }, { x: 170, y: 200 }, { x: 150, y: 200 }
@@ -70,6 +94,32 @@ customElements.define('my-snake-app',
         this.#startGame()
       })
       this.shadowRoot.querySelector('#restart').addEventListener('click', event => this.#restartGame(event))
+      this.shadowRoot.querySelector('#quit').addEventListener('click', event => {
+        event.preventDefault()
+        this.dispatchEvent(new CustomEvent('quit', { bubbles: true }))
+      })
+
+      this.shadowRoot.querySelector('#quit').addEventListener('mouseover', () => {
+        this.#focusOnNoButton()
+      })
+      this.shadowRoot.querySelector('#quit').addEventListener('mouseleave', () => {
+        this.#removeFocusOnNoButton()
+      })
+      this.shadowRoot.querySelector('#restart').addEventListener('mouseover', () => {
+        this.#focusOnYesButton()
+      })
+      this.shadowRoot.querySelector('#restart').addEventListener('mouseleave', () => {
+        this.#removeFocusOnYesButton()
+      })
+
+      this.shadowRoot.querySelector('#quit').addEventListener('focus', () => {
+        this.#focusOnNoButton()
+        this.#removeFocusOnYesButton()
+      })
+      this.shadowRoot.querySelector('#restart').addEventListener('focus', () => {
+        this.#focusOnYesButton()
+        this.#removeFocusOnNoButton()
+      })
     }
 
     /**
@@ -77,6 +127,10 @@ customElements.define('my-snake-app',
      */
     connectedCallback () {
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
+      if (!localStorage.getItem('snakeHighScore')) {
+        localStorage.setItem('snakeHighScore', JSON.stringify({ score: this.#highScore }))
+      }
+      this.#highScore = JSON.parse(localStorage.getItem('snakeHighScore')).score
     }
 
     /**
@@ -110,7 +164,8 @@ customElements.define('my-snake-app',
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
       this.#drawRect(this.#foodPosition.x, this.#foodPosition.y, 5, 5, 'white')
       this.#snake.forEach(part => this.#drawRect(part.x, part.y, this.#snakeLength, this.#snakeWidth, 'green'))
-      this.#drawScore()
+      this.#drawScore(`${this.#score}`, 10, 25)
+      this.#drawScore(`⭐ ${this.#highScore}`, 420, 25)
     }
 
     /**
@@ -195,12 +250,16 @@ customElements.define('my-snake-app',
     }
 
     /**
-     * Draws the score at the top left corner of the canvas.
+     * Draws a score at the canvas.
+     *
+     * @param {string} scoreText The text to be drawn.
+     * @param {number} x The x position.
+     * @param {number} y The y positon.
      */
-    #drawScore () {
+    #drawScore (scoreText, x, y) {
       this.#canvasContext.font = '16px Arial'
       this.#canvasContext.fillStyle = 'white'
-      this.#canvasContext.fillText(`Score: ${this.#score}`, 10, 25)
+      this.#canvasContext.fillText(scoreText, x, y)
     }
 
     /**
@@ -214,9 +273,8 @@ customElements.define('my-snake-app',
           this.#snake[i].y <= this.#snake[0].y + this.#snakeLength) {
           clearInterval(this.#intervalID)
           setTimeout(() => {
-            this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
-            this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
-            this.shadowRoot.querySelector('#restart').classList.remove('hidden')
+            this.#gameOver()
+            this.#setHighScore()
           }, 500)
         }
       }
@@ -238,7 +296,60 @@ customElements.define('my-snake-app',
       ]
       this.shadowRoot.querySelector('#game-over').classList.add('hidden')
       this.shadowRoot.querySelector('#restart').classList.add('hidden')
+      this.shadowRoot.querySelector('#quit').classList.add('hidden')
       this.#startGame()
+    }
+
+    /**
+     * Sets focus on the yes button.
+     */
+    #focusOnYesButton () {
+      this.shadowRoot.querySelector('#restart img').setAttribute('src', '../../../images/yes-highlighted.png')
+    }
+
+    /**
+     * Removes focus on the yes button.
+     */
+    #removeFocusOnYesButton () {
+      this.shadowRoot.querySelector('#restart img').setAttribute('src', '../../../images/yes.png')
+    }
+
+    /**
+     * Sets focus on the no button.
+     */
+    #focusOnNoButton () {
+      this.shadowRoot.querySelector('#quit img').setAttribute('src', '../../../images/no-highlighted.png')
+      this.shadowRoot.querySelector('#restart img').setAttribute('src', '../../../images/yes.png')
+    }
+
+    /**
+     * Removes focus on the no button.
+     */
+    #removeFocusOnNoButton () {
+      this.shadowRoot.querySelector('#quit img').setAttribute('src', '../../../images/no.png')
+    }
+
+    /**
+     * Sets game over.
+     */
+    #gameOver () {
+      this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
+      this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
+      this.shadowRoot.querySelector('#restart').classList.remove('hidden')
+      this.shadowRoot.querySelector('#quit').classList.remove('hidden')
+      this.shadowRoot.querySelector('#restart').focus()
+    }
+
+    /**
+     * Sets the high score.
+     */
+    #setHighScore () {
+      const highScore = JSON.parse(localStorage.getItem('snakeHighScore'))
+      if (this.#score > highScore.score) {
+        highScore.score = this.#score
+        localStorage.setItem('snakeHighScore', JSON.stringify(highScore))
+        this.#highScore = this.#score
+      }
     }
 
     /**

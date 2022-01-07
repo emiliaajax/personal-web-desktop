@@ -42,11 +42,12 @@ template.innerHTML = `
       margin-top: 10px;
       width: 100px;
       height: 30px;
-      background-color: #333;
+      background-color: #000;
       color: white;
       border: 1px solid #000;
       border-radius: 5px;
       cursor: pointer;
+      opacity: 0.9;
     }
     button:focus {
       outline: none;
@@ -96,7 +97,7 @@ template.innerHTML = `
       height: 150px;
       background-color: rgb(0, 0, 0, 0.6);
       color: white;
-      border: 1px solid black;
+      /* border: 1px solid black; */
       border-width: thin;
       text-align: center;
       text-transform: capitalize;

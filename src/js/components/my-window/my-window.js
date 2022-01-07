@@ -133,7 +133,7 @@ customElements.define('my-window',
       this.#initX = event.clientX - this.#xOffset
       this.#initY = event.clientY - this.#yOffset
       this.#dragging = true
-      this.dispatchEvent(new CustomEvent('focus'))
+      this.dispatchEvent(new CustomEvent('focused'))
     }
 
     /**
