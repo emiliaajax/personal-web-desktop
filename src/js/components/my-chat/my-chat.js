@@ -18,11 +18,11 @@ template.innerHTML = `
     <div id='chat-output' class='hidden'></div>
     <form id='chat-message' class='hidden'>
       <textarea id='message'></textarea>
-      <button id='send-button' type='submit'><img src='../../../images/send-icon.png'></button>
+      <button id='send-button' type='submit'><img src='../../../images/send-icon.png' alt='Send'></button>
       <my-emojis></my-emojis>
-      <button id='sound-control' mode='off'>
+      <button id='notification-sound' mode='off'>
         <img src='../../../images/sound-on.png' alt='Sound on' id='sound-on' class='hidden'>
-        <img src='../../../images/sound-off.png' alt='Sound on' id='sound-off'>
+        <img src='../../../images/sound-off.png' alt='Sound off' id='sound-off'>
       </button>
     </form>
     <audio src='../../../audio/235911__yfjesse__notification-sound.wav' controls class='hidden'>
@@ -34,7 +34,6 @@ template.innerHTML = `
       background-color: #5de6de;
       background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);
       display: grid;
-      /* grid-template-columns: 1fr 1fr 1fr 1fr; */
       grid-template-rows: auto;
     }
     #username {
@@ -65,8 +64,7 @@ template.innerHTML = `
       max-width: 250px !important;
       margin-top: 5px;
       margin-bottom: 5px;
-      overflow-wrap: break-word;
-      /* word-break: break-all; */
+      word-break: break-all;
       font-family: 'Montserrat', sans-serif;
       font-size: 0.9rem;
     }
@@ -82,7 +80,6 @@ template.innerHTML = `
       margin-right: 0px;
       margin-left: auto;
       background-color: cornflowerblue;
-      /* background-color: #0096FF; */
     }
     #chat-message {
       grid-column: 3/4;
@@ -130,7 +127,7 @@ template.innerHTML = `
       outline: none;
       background-color: #aef2ee;
     }
-    #sound-control {
+    #notification-sound {
       margin-left: 15px;
       grid-column: 2/3;
       display: flex;
@@ -142,14 +139,14 @@ template.innerHTML = `
       border: none;
       background-color: rgb(255, 255, 255, 0);
     }
-    #sound-control:hover {
+    #notification-sound:hover {
       cursor: pointer;
     }
     #chat-message button img {
       width: 35px;
       display: block;
     }
-    #sound-control img {
+    #notification-sound img {
       width: 30px !important;
     }
     .hidden {
@@ -160,17 +157,68 @@ template.innerHTML = `
 
 customElements.define('my-chat',
   /**
-   * Represents a my-memory-game element.
+   * Represents a my-chat element.
    */
   class extends HTMLElement {
+    /**
+     * The channel property of the message.
+     *
+     * @type {string}
+     */
     #channel = '1dsD-A444-Dfa0-sd43-0d32-P0we'
+    /**
+     * Represents the chat message form.
+     *
+     * @type {HTMLFormElement}
+     */
     #chatMessage
+    /**
+     * Represents the send message button.
+     *
+     * @type {HTMLButtonElement}
+     */
     #sendButton
+    /**
+     * Represents the message textarea.
+     *
+     * @type {HTMLTextAreaElement}
+     */
     #message
+    /**
+     * The username used in the chat.
+     *
+     * @type {string}
+     */
     #username
-    #nicknameForm
+    /**
+     * Represents the custom username form element.
+     *
+     * @type {HTMLElement}
+     */
+    #usernameForm
+    /**
+     * The WebSocket object.
+     *
+     * @type {WebSocket}
+     */
     #socket
+    /**
+     * Represents the output where the messages will be display.
+     *
+     * @type {HTMLDivElement}
+     */
     #chatOutput
+    /**
+     * Represents the notification sound on/off button.
+     *
+     * @type {HTMLButtonElement}
+     */
+    #notificationSound
+    /**
+     * An object of emojis.
+     *
+     * @type {object}
+     */
     #emojis = {
       ':)': '😊',
       ':D': '😃',
@@ -206,39 +254,24 @@ customElements.define('my-chat',
       this.#chatMessage = this.shadowRoot.querySelector('#chat-message')
       this.#sendButton = this.shadowRoot.querySelector('#send-button')
       this.#message = this.shadowRoot.querySelector('#message')
-      this.#nicknameForm = this.shadowRoot.querySelector('my-username-form')
+      this.#usernameForm = this.shadowRoot.querySelector('my-username-form')
       this.#chatOutput = this.shadowRoot.querySelector('#chat-output')
+      this.#notificationSound = this.shadowRoot.querySelector('#notification-sound')
 
-      this.shadowRoot.querySelector('#sound-control').addEventListener('click', event => {
-        event.preventDefault()
-        this.#message.focus()
-        if (this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
-          this.shadowRoot.querySelector('#sound-control').setAttribute('mode', 'off')
-          this.shadowRoot.querySelector('#sound-on').classList.add('hidden')
-          this.shadowRoot.querySelector('#sound-off').classList.remove('hidden')
-        } else {
-          this.shadowRoot.querySelector('#sound-control').setAttribute('mode', 'on')
-          this.shadowRoot.querySelector('#sound-off').classList.add('hidden')
-          this.shadowRoot.querySelector('#sound-on').classList.remove('hidden')
-        }
+      // Event handlers
+      this.#usernameForm.addEventListener('added', (event) => {
+        this.#storeUsername(event)
+        this.#startChat(event)
       })
-
       this.#sendButton.addEventListener('click', event => this.#onSubmit(event))
       this.#message.addEventListener('keydown', event => {
         if (event.key === 'Enter') {
           this.#onSubmit(event)
         }
       })
-      this.#nicknameForm.addEventListener('added', (event) => {
-        this.#username = event.detail.nickname
-        sessionStorage.setItem('username', this.#username)
-        this.#startChat(event)
-      })
-      this.shadowRoot.querySelector('my-emojis').addEventListener('clicked', event => {
-        this.#message.focus()
-        this.#message.value = this.#message.value + event.detail.emojiValue
-      })
+      this.shadowRoot.querySelector('my-emojis').addEventListener('clicked', event => this.#addEmojiToMessage(event))
       this.shadowRoot.querySelector('my-emojis').addEventListener('closed', () => this.#message.focus())
+      this.#notificationSound.addEventListener('click', event => this.#soundControl(event))
     }
 
     /**
@@ -261,41 +294,28 @@ customElements.define('my-chat',
     }
 
     /**
-     * Creates an instance of current type.
+     * Displays the chat.
      */
     #startChat () {
-      this.#nicknameForm.classList.add('hidden')
-      this.shadowRoot.querySelector('#chat-output').classList.remove('hidden')
+      this.#usernameForm.classList.add('hidden')
+      this.#chatOutput.classList.remove('hidden')
       this.#chatMessage.classList.remove('hidden')
       this.#message.focus()
     }
 
     /**
-     * Creates an instance of current type.
+     * Sends the submitted message to the server over the WebSocket connection.
      *
-     * @param {Event} event The submit event.
+     * @param {Event} event The click event.
      */
     #onSubmit (event) {
       event.preventDefault()
-      let messageData = this.#message.value
-      if (messageData.length !== 0) {
-        const emojis = Object.keys(this.#emojis)
-        const emojiCodes = Object.values(this.#emojis)
-        for (let i = 0; i < emojis.length; i++) {
-          const emoji = emojis[i]
-          for (let j = 0; j < messageData.length - 1; j++) {
-            if (emoji[0] === messageData[j]) {
-              if (emoji[1] === messageData[j + 1]) {
-                messageData = messageData.replace(messageData[j] + messageData[j + 1], emojiCodes[i])
-              }
-            }
-          }
-        }
+      if (this.#message.value.length !== 0) {
+        this.#searchMessageForEmojis()
         if (this.#socket.readyState === 1) {
-          // this.#socket.addEventListener('open', () => this.#socket.send(JSON.stringify({
           this.#socket.send(JSON.stringify({
             type: 'message',
-            data: messageData,
+            data: this.#message.value,
             username: this.#username,
             key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
             channel: this.#channel
@@ -308,23 +328,79 @@ customElements.define('my-chat',
     }
 
     /**
-     * Creates an instance of current type.
+     * Displays the chat messages in the chat output area.
      *
-     * @param {Event} event The submit event.
+     * @param {Event} event The message event.
      */
     #displayChatMessage (event) {
-      const data = JSON.parse(event.data)
-      if (data.type === 'notification' || data.type === 'message') {
-        const message = document.createElement('p')
-        const messageData = data.data
-        message.textContent = `${data.username}: ${messageData}`
-        data.channel === this.#channel ? message.setAttribute('right', '') : message.setAttribute('left', '')
-        if (data.type === 'message' && data.channel !== this.#channel && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
+      const messageData = JSON.parse(event.data)
+      if (messageData.type === 'notification' || messageData.type === 'message') {
+        const pElem = document.createElement('p')
+        pElem.textContent = `${messageData.username}: ${messageData.data}`
+        messageData.channel === this.#channel ? pElem.setAttribute('right', '') : pElem.setAttribute('left', '')
+        if (messageData.type === 'message' && messageData.channel !== this.#channel && this.#notificationSound.getAttribute('mode') === 'on') {
           this.shadowRoot.querySelector('audio').play()
         }
-        this.#chatOutput.append(message)
+        this.#chatOutput.append(pElem)
       }
       this.#chatOutput.scrollTop = this.#chatOutput.scrollHeight
+    }
+
+    /**
+     * Controls the sound of the notification. If the mode is set to on, the sound is turned off. If the mode is set to off, the sound is turned on.
+     *
+     * @param {Event} event The click event.
+     */
+    #soundControl (event) {
+      event.preventDefault()
+      this.#message.focus()
+      if (this.#notificationSound.getAttribute('mode') === 'on') {
+        this.#notificationSound.setAttribute('mode', 'off')
+        this.shadowRoot.querySelector('#sound-on').classList.add('hidden')
+        this.shadowRoot.querySelector('#sound-off').classList.remove('hidden')
+      } else {
+        this.#notificationSound.setAttribute('mode', 'on')
+        this.shadowRoot.querySelector('#sound-off').classList.add('hidden')
+        this.shadowRoot.querySelector('#sound-on').classList.remove('hidden')
+      }
+    }
+
+    /**
+     * Stores the username in sessionStorage.
+     *
+     * @param {Event} event The added event.
+     */
+    #storeUsername (event) {
+      this.#username = event.detail.nickname
+      sessionStorage.setItem('username', this.#username)
+    }
+
+    /**
+     * Adds the emoji to the message textarea.
+     *
+     * @param {Event} event The clicked event.
+     */
+    #addEmojiToMessage (event) {
+      this.#message.focus()
+      this.#message.value = this.#message.value + event.detail.emojiValue
+    }
+
+    /**
+     * Searches the message for certain character combinations (emoticons) and replaces matches with emojis.
+     */
+    #searchMessageForEmojis () {
+      const emoticons = Object.keys(this.#emojis)
+      const emojis = Object.values(this.#emojis)
+      for (let i = 0; i < emoticons.length; i++) {
+        const emoticon = emoticons[i]
+        for (let j = 0; j < this.#message.value.length - 1; j++) {
+          if (emoticon[0] === this.#message.value[j]) {
+            if (emoticon[1] === this.#message.value[j + 1]) {
+              this.#message.value = this.#message.value.replace(this.#message.value[j] + this.#message.value[j + 1], emojis[i])
+            }
+          }
+        }
+      }
     }
   }
 )
