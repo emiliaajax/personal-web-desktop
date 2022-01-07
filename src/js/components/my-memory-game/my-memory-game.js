@@ -55,7 +55,7 @@ template.innerHTML = `
     #board {
       display: grid;
       grid-template-columns: repeat(4, var(--tile-size));
-      gap: 20px;
+      gap: 10px;
       justify-content: center;
     }
     :host([level = 'easy']) #board {

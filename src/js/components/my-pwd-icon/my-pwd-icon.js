@@ -5,7 +5,6 @@ template.innerHTML = `
   <button id='icon'>
     <img id='image-icon' />
   </button>
-  <slot></slot>
   <style>
     :host {
       margin-left: 10px;

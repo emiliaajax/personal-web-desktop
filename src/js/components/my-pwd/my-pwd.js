@@ -59,7 +59,10 @@ customElements.define('my-pwd',
         event.target.style.zIndex = this.#zIndex.toString()
         this.#zIndex += 1
       })
-      event.target.append(window)
+      this.shadowRoot.querySelector('#pwd').append(window)
+      if (appName === 'my-snake-app') {
+        window.addEventListener('quit', event => event.target.parentNode.remove())
+      }
     }
 
     /**
