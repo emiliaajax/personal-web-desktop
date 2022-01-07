@@ -54,9 +54,9 @@ template.innerHTML = `
   </style>
 `
 
-customElements.define('my-snake-app',
+customElements.define('my-snake-game',
   /**
-   * Represents a my-snake-app element.
+   * Represents a my-snake-game element.
    */
   class extends HTMLElement {
     #active

@@ -4,7 +4,7 @@ import '../my-pwd-icon/index.js'
 import '../my-memory-game/index.js'
 import '../my-chat/index.js'
 import '../my-window/index.js'
-import '../my-snake-app/index.js'
+import '../my-snake-game/index.js'
 
 const template = document.createElement('template')
 
@@ -13,7 +13,7 @@ template.innerHTML = `
     <my-pwd-dock>
       <my-pwd-icon id='my-memory-game' src='../../../images/memory-icon.png'></my-pwd-icon>
       <my-pwd-icon id='my-chat' src='../../../images/chat-icon.png'></my-pwd-icon>
-      <my-pwd-icon id='my-snake-app' src='../../../images/snake-icon.png'></my-pwd-icon>
+      <my-pwd-icon id='my-snake-game' src='../../../images/snake-icon.png'></my-pwd-icon>
     </my-pwd-dock>
   </div>
   <style>
@@ -38,7 +38,6 @@ customElements.define('my-pwd',
         .appendChild(template.content.cloneNode(true))
 
       this.shadowRoot.querySelectorAll('my-pwd-icon').forEach(icon => icon.addEventListener('clicked', event => this.#openApp(event)))
-      this.shadowRoot.querySelector('#my-snake-app').addEventListener('quit', event => event.target.parentNode.remove())
     }
 
     /**
@@ -60,7 +59,7 @@ customElements.define('my-pwd',
         this.#zIndex += 1
       })
       this.shadowRoot.querySelector('#pwd').append(window)
-      if (appName === 'my-snake-app') {
+      if (appName === 'my-snake-game') {
         window.addEventListener('quit', event => event.target.parentNode.remove())
       }
     }
