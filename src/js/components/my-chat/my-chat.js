@@ -308,7 +308,7 @@ customElements.define('my-chat',
         const messageData = data.data
         message.textContent = `${data.username}: ${messageData}`
         data.channel === this.#channel ? message.setAttribute('right', '') : message.setAttribute('left', '')
-        if (data.type === 'message' && data.channel !== this.channel && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
+        if (data.type === 'message' && data.channel !== this.#channel && this.shadowRoot.querySelector('#sound-control').getAttribute('mode') === 'on') {
           this.shadowRoot.querySelector('audio').play()
         }
         this.#chatOutput.append(message)
