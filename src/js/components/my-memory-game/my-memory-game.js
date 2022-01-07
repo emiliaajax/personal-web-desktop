@@ -7,10 +7,11 @@ const template = document.createElement('template')
 template.innerHTML = `
   <div id='levels'>
     <button id='easy'>Easy</button>
-    <button id='medium'>Medium</button>
+    <button id='intermediate'>Intermediate</button>
     <button id='difficult'>Difficult</button>
   </div>
   <div id='memory-game' class='hidden'>
+    <button>Change level</button>
     <div id='counter'>0</div>
     <div id='board'></div>
   </div>
@@ -49,20 +50,19 @@ template.innerHTML = `
       opacity: 0.9;
     }
     button:focus {
-      outline: none;
-      background: grey;
+      outline: 2px solid white;
     }
     #board {
       display: grid;
       grid-template-columns: repeat(4, var(--tile-size));
-      gap: 10px;
+      gap: 20px;
       justify-content: center;
     }
     :host([level = 'easy']) #board {
       grid-template-columns: repeat(2, var(--tile-size)) !important;
       padding-top: 90px;
     }
-    :host([level = 'medium']) #board {
+    :host([level = 'intermediate']) #board {
       padding-top: 90px;
     }
     :host([level = 'difficult']) #board {
@@ -79,7 +79,7 @@ template.innerHTML = `
       margin: 0 auto;
       border-radius: 0px 0px 10px 10px;
       background-color: rgb(0, 0, 0, 0.8);
-      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; 
+      font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     }
     #game-over {
       padding-top: 80px;
@@ -110,6 +110,12 @@ template.innerHTML = `
       margin-top: 20px;
       display: grid;
       grid-template-columns: 1fr 0.9fr 0.9fr 1fr;
+    }
+    #memory-game button {
+      float: left;
+      margin-top: 0;
+      background-color: rgb(0, 0, 0, 0.8);
+      border: none;
     }
     #game-over button {
       display: inline-block;
@@ -154,13 +160,18 @@ customElements.define('my-memory-game',
         .appendChild(template.content.cloneNode(true))
       this.#board = this.shadowRoot.querySelector('#board')
       this.#easyLevel = this.shadowRoot.querySelector('#easy')
-      this.#mediumLevel = this.shadowRoot.querySelector('#medium')
+      this.#mediumLevel = this.shadowRoot.querySelector('#intermediate')
       this.#difficultLevel = this.shadowRoot.querySelector('#difficult')
 
       this.#easyLevel.addEventListener('click', event => this.#setLevel(event, 'easy'))
-      this.#mediumLevel.addEventListener('click', event => this.#setLevel(event, 'medium'))
+      this.#mediumLevel.addEventListener('click', event => this.#setLevel(event, 'intermediate'))
       this.#difficultLevel.addEventListener('click', event => this.#setLevel(event, 'difficult'))
 
+      this.shadowRoot.querySelector('#memory-game button').addEventListener('click', event => {
+        event.preventDefault()
+        this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
+        this.shadowRoot.querySelector('#levels').classList.remove('hidden')
+      })
       this.shadowRoot.querySelector('#play-again').addEventListener('click', event => this.#playAgain(event))
       this.shadowRoot.querySelector('#change-level').addEventListener('click', event => this.#changeLevel(event))
     }
@@ -186,7 +197,7 @@ customElements.define('my-memory-game',
         if (newValue === 'easy') {
           this.#size = 4
         }
-        if (newValue === 'medium') {
+        if (newValue === 'intermediate') {
           this.#size = 8
         }
         if (newValue === 'difficult') {
@@ -325,7 +336,7 @@ customElements.define('my-memory-game',
       if (!localStorage.getItem('memoryHighscore')) {
         localStorage.setItem('memoryHighscore', JSON.stringify({
           easy: '-',
-          medium: '-',
+          intermediate: '-',
           difficult: '-'
         }))
       }
@@ -341,8 +352,8 @@ customElements.define('my-memory-game',
       if (this.getAttribute('level') === 'easy' && (this.#counter < this.#memoryHighscore.easy || this.#memoryHighscore.easy === '-')) {
         this.#memoryHighscore.easy = this.#counter
       }
-      if (this.getAttribute('level') === 'medium' && (this.#counter < this.#memoryHighscore.medium || this.#memoryHighscore.medium === '-')) {
-        this.#memoryHighscore.medium = this.#counter
+      if (this.getAttribute('level') === 'intermediate' && (this.#counter < this.#memoryHighscore.intermediate || this.#memoryHighscore.intermediate === '-')) {
+        this.#memoryHighscore.intermediate = this.#counter
       }
       if (this.getAttribute('level') === 'difficult' && (this.#counter < this.#memoryHighscore.difficult || this.#memoryHighscore.difficult === '-')) {
         this.#memoryHighscore.difficult = this.#counter

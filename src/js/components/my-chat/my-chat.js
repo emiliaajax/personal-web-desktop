@@ -32,7 +32,7 @@ template.innerHTML = `
       grid-template-rows: auto;
     }
     #username {
-      grid-column: 2/4;
+      grid-column: 1/4;
       grid-row: 2/3;
       margin: 0 auto;
     }
@@ -218,6 +218,11 @@ customElements.define('my-chat',
       })
 
       this.#sendButton.addEventListener('click', event => this.#onSubmit(event))
+      this.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          this.#onSubmit(event)
+        }
+      })
       this.#nicknameForm.addEventListener('added', (event) => {
         this.#username = event.detail.nickname
         sessionStorage.setItem('username', this.#username)
