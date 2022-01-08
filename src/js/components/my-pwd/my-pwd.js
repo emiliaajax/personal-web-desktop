@@ -34,6 +34,11 @@ customElements.define('my-pwd',
    * Represents a my-pwd element.
    */
   class extends HTMLElement {
+    /**
+     * The current z-index.
+     *
+     * @type {number}
+     */
     #zIndex = 1
     /**
      * Creates an instance of current type.
@@ -47,7 +52,7 @@ customElements.define('my-pwd',
     }
 
     /**
-     * Opens up a sub app.
+     * Opens up a sub app in a new window.
      *
      * @param {Event} event The clicked event.
      */
@@ -71,7 +76,7 @@ customElements.define('my-pwd',
     }
 
     /**
-     * Closes a sub app.
+     * Closes a sub app window.
      *
      * @param {Event} event The closed event.
      */

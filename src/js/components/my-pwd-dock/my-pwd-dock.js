@@ -25,7 +25,6 @@ template.innerHTML = `
       flex-direction: row;
       height: 130px;
       background-color: rgb(0, 0, 0, 0.6);
-      /* background-color: rgb(105, 105, 105, 0.6); */
       border-radius: 5px;
       justify-content: center;
       align-items: center;
@@ -35,7 +34,7 @@ template.innerHTML = `
 
 customElements.define('my-pwd-dock',
   /**
-   * Represents a my-memory-game element.
+   * Represents a my-pwd-dock element.
    */
   class extends HTMLElement {
     /**

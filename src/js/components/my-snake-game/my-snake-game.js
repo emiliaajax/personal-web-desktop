@@ -8,29 +8,38 @@
 const template = document.createElement('template')
 
 template.innerHTML = `
+  <canvas id='game-canvas' width='500' height='500'></canvas>
   <div id='start-game'>
     <img id='snake-text' src='../../../images/snake-text.jpg' alt='Snake' width='300'>
-    <button id='start'><img id='start-button'src='../../../images/snake-start-button.png' alt='Start game button'></button>
+    <button id='start'>
+      <img id='start-button'src='../../../images/snake-start-button.png' alt='Start game button'>
+    </button>
   </div>
-  <canvas id='game-canvas' width='500' height='500'></canvas>
-  <button id='restart' class='hidden' focused><img src='../../../images/yes-highlighted.png' alt='Yes button'></button>
-  <button id='quit' class='hidden'><img src='../../../images/no.png' alt='No button'></button>
-  <div id='game-over' class='hidden'><img src='../../../images/game-over.png' alt='Game Over! Play again?' width='300'></div>
+  <div id='game-over' class='hidden'>
+    <img src='../../../images/game-over.png' alt='Game Over! Play again?' width='300'>
+    <button id='restart' focused>
+      <img src='../../../images/yes-highlighted.png' alt='Yes button'>
+    </button>
+    <button id='quit'>
+      <img src='../../../images/no.png' alt='No button'>
+    </button>
+  </div>
   <style>
     #restart {
       position: absolute;
-      left: 165px;
-      top: 280px;
+      left: 65px;
+      top: 140px;
     }
     #quit {
       position: absolute;
-      left: 265px;
-      top: 280px;
+      left: 175px;
+      top: 140px;
     }
     #restart, #quit {
       background-color: rgb(0, 0, 0, 0);
       border: none;
       outline: none;
+      cursor: pointer;
     }
     #start {
       position: absolute;
@@ -301,8 +310,6 @@ customElements.define('my-snake-game',
         { x: 190, y: 200 }, { x: 170, y: 200 }, { x: 150, y: 200 }
       ]
       this.shadowRoot.querySelector('#game-over').classList.add('hidden')
-      this.shadowRoot.querySelector('#restart').classList.add('hidden')
-      this.shadowRoot.querySelector('#quit').classList.add('hidden')
       this.#startGame()
     }
 
@@ -341,8 +348,6 @@ customElements.define('my-snake-game',
     #gameOver () {
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
       this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
-      this.shadowRoot.querySelector('#restart').classList.remove('hidden')
-      this.shadowRoot.querySelector('#quit').classList.remove('hidden')
       this.shadowRoot.querySelector('#restart').focus()
     }
 

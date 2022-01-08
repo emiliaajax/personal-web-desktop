@@ -47,11 +47,21 @@ template.innerHTML = `
 
 customElements.define('my-pwd-icon',
   /**
-   * Represents a my-memory-game element.
+   * Represents a my-pwd element.
    */
   class extends HTMLElement {
-    #imageIcon
+    /**
+     * Represents the icon.
+     *
+     * @type {HTMLButtonElement}
+     */
     #icon
+    /**
+     * Represents the icon image.
+     *
+     * @type {HTMLImageElement}
+     */
+    #imageIcon
     /**
      * Creates an instance of current type.
      */
@@ -89,9 +99,9 @@ customElements.define('my-pwd-icon',
     }
 
     /**
-     * Hello.
+     * Indicates that the app can be opened.
      *
-     * @param {HTMLElement} event Hej.
+     * @param {Event} event The click event.
      */
     #openApp (event) {
       event.preventDefault()

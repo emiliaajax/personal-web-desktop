@@ -168,7 +168,7 @@ template.innerHTML = `
 
 customElements.define('my-emojis',
   /**
-   * Represents a my-pwd element.
+   * Represents a my-emojis element.
    */
   class extends HTMLElement {
     /**
