@@ -71,7 +71,7 @@ customElements.define('my-pwd',
       })
       this.shadowRoot.querySelector('#pwd').append(window)
       if (appName === 'my-snake-game') {
-        window.addEventListener('quit', event => event.target.parentNode.remove())
+        app.addEventListener('quit', event => event.target.parentNode.remove())
       }
     }
 

@@ -12,7 +12,7 @@ template.innerHTML = `
   <div id='start-game'>
     <img id='snake-text' src='../../../images/snake-text.jpg' alt='Snake' width='300'>
     <button id='start'>
-      <img id='start-button'src='../../../images/snake-start-button.png' alt='Start game button'>
+      <img src='../../../images/snake-start-button.png' alt='Start game button'>
     </button>
   </div>
   <div id='game-over' class='hidden'>
@@ -60,7 +60,7 @@ template.innerHTML = `
       left: 100px;
       top: 150px;
     }
-    #start-button {
+    #start img {
       width: 90px;
     }
     .hidden {
@@ -74,18 +74,107 @@ customElements.define('my-snake-game',
    * Represents a my-snake-game element.
    */
   class extends HTMLElement {
+    /**
+     * A boolean value indicating that a keydown event is active.
+     *
+     * @type {boolean}
+     */
     #active
+    /**
+     * Represents the start button element.
+     *
+     * @type {HTMLButtonElement}
+     */
+    #startButton
+    /**
+     * Represents the restart button element.
+     *
+     * @type {HTMLButtonElement}
+     */
+    #restartButton
+    /**
+     * Represents the quit button element.
+     *
+     * @type {HTMLButtonElement}
+     */
+    #quitButton
+    /**
+     * Represents the start game element.
+     *
+     * @type {HTMLDivElement}
+     */
+    #start
+    /**
+     * Represents the canvas.
+     *
+     * @type {HTMLCanvasElement}
+     */
     #canvas
+    /**
+     * The 2d drawing context on the canvas.
+     *
+     * @type {HTMLCanvasElement}
+     */
     #canvasContext
+    /**
+     * The velocity of the snake.
+     *
+     * @type {number}
+     */
     #velocity = 20
+    /**
+     * The start velocity of the snake in x-direction.
+     *
+     * @type {number}
+     */
     #snakeMoveX = this.#velocity
+    /**
+     * The start velocity of the snake in y-direction.
+     *
+     * @type {number}
+     */
     #snakeMoveY = 0
+    /**
+     * The length of one part of the snake.
+     *
+     * @type {number}
+     */
     #snakeLength = 19
+    /**
+     * The width of one part of the snake.
+     *
+     * @type {number}
+     */
     #snakeWidth = 19
+    /**
+     * The interval identifier.
+     *
+     * @type {number}
+     */
     #intervalID
-    #foodPosition
+    /**
+     * Representation of the food.
+     *
+     * @type {object}
+     */
+    #food
+    /**
+     * The score of current game.
+     *
+     * @type {number}
+     */
     #score = 0
+    /**
+     * The high score.
+     *
+     * @type {number}
+     */
     #highScore = 0
+    /**
+     * Representation of the snake.
+     *
+     * @type {object}
+     */
     #snake = [
       { x: 250, y: 200 }, { x: 230, y: 200 }, { x: 210, y: 200 },
       { x: 190, y: 200 }, { x: 170, y: 200 }, { x: 150, y: 200 }
@@ -101,37 +190,32 @@ customElements.define('my-snake-game',
 
       this.#canvas = this.shadowRoot.querySelector('#game-canvas')
       this.#canvasContext = this.#canvas.getContext('2d')
+      this.#startButton = this.shadowRoot.querySelector('#start')
+      this.#restartButton = this.shadowRoot.querySelector('#restart')
+      this.#quitButton = this.shadowRoot.querySelector('#quit')
+      this.#start = this.shadowRoot.querySelector('#start-game')
 
-      document.addEventListener('keydown', event => this.#turnSnake(event))
-      this.shadowRoot.querySelector('#start').addEventListener('click', event => {
+      // Event handlers
+      this.#startButton.addEventListener('click', event => {
         event.preventDefault()
-        this.shadowRoot.querySelector('#start-game').classList.add('hidden')
+        this.#start.classList.add('hidden')
         this.#startGame()
       })
-      this.shadowRoot.querySelector('#restart').addEventListener('click', event => this.#restartGame(event))
-      this.shadowRoot.querySelector('#quit').addEventListener('click', event => {
-        event.preventDefault()
-        this.dispatchEvent(new CustomEvent('quit', { bubbles: true }))
-      })
 
-      this.shadowRoot.querySelector('#quit').addEventListener('mouseover', () => {
-        this.#focusOnNoButton()
-      })
-      this.shadowRoot.querySelector('#quit').addEventListener('mouseleave', () => {
-        this.#removeFocusOnNoButton()
-      })
-      this.shadowRoot.querySelector('#restart').addEventListener('mouseover', () => {
-        this.#focusOnYesButton()
-      })
-      this.shadowRoot.querySelector('#restart').addEventListener('mouseleave', () => {
-        this.#removeFocusOnYesButton()
-      })
+      document.addEventListener('keydown', event => this.#turnSnake(event))
 
-      this.shadowRoot.querySelector('#quit').addEventListener('focus', () => {
+      this.#quitButton.addEventListener('click', event => this.#quitGame(event))
+      this.#quitButton.addEventListener('mouseover', () => this.#focusOnNoButton())
+      this.#quitButton.addEventListener('mouseleave', () => this.#removeFocusOnNoButton())
+      this.#quitButton.addEventListener('focus', () => {
         this.#focusOnNoButton()
         this.#removeFocusOnYesButton()
       })
-      this.shadowRoot.querySelector('#restart').addEventListener('focus', () => {
+
+      this.#restartButton.addEventListener('click', event => this.#restartGame(event))
+      this.#restartButton.addEventListener('mouseover', () => this.#focusOnYesButton())
+      this.#restartButton.addEventListener('mouseleave', () => this.#removeFocusOnYesButton())
+      this.#restartButton.addEventListener('focus', () => {
         this.#focusOnYesButton()
         this.#removeFocusOnNoButton()
       })
@@ -149,12 +233,19 @@ customElements.define('my-snake-game',
     }
 
     /**
+     * Called after the element is removed from the DOM.
+     */
+    disconnectedCallback () {
+      clearInterval(this.#intervalID)
+    }
+
+    /**
      * Starts the game.
      */
     #startGame () {
-      this.#foodPosition = {
-        x: Math.floor(Math.random() * (this.#canvas.width * 0.7)),
-        y: Math.floor(Math.random() * (this.#canvas.height * 0.7))
+      this.#food = {
+        x: Math.floor(Math.random() * ((this.#canvas.width * 0.8) - 35) + 35),
+        y: Math.floor(Math.random() * ((this.#canvas.height * 0.8) - 35) + 35)
       }
       this.#intervalID = setInterval(() => {
         this.#moveSnake()
@@ -166,18 +257,11 @@ customElements.define('my-snake-game',
     }
 
     /**
-     * Called after the element is removed from the DOM.
-     */
-    disconnectedCallback () {
-      clearInterval(this.#intervalID)
-    }
-
-    /**
      * Draws the game content.
      */
     #drawGameContent () {
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
-      this.#drawRect(this.#foodPosition.x, this.#foodPosition.y, 5, 5, 'white')
+      this.#drawRect(this.#food.x, this.#food.y, 5, 5, 'white')
       this.#snake.forEach(part => this.#drawRect(part.x, part.y, this.#snakeLength, this.#snakeWidth, 'green'))
       this.#drawScore(`${this.#score}`, 10, 25)
       this.#drawScore(`⭐ ${this.#highScore}`, 420, 25)
@@ -248,13 +332,13 @@ customElements.define('my-snake-game',
      * Adds length to the snake if the coordinates of the food and the head of the snake match. When a food is eaten, a new appears at randomized coordinates.
      */
     #snakeEatsFood () {
-      if (this.#foodPosition.x >= this.#snake[0].x &&
-        this.#foodPosition.x <= this.#snake[0].x + this.#snakeWidth &&
-        this.#foodPosition.y >= this.#snake[0].y &&
-        this.#foodPosition.y <= this.#snake[0].y + this.#snakeLength) {
-        this.#foodPosition = {
-          x: Math.floor(Math.random() * this.#canvas.width * 0.7),
-          y: Math.floor(Math.random() * this.#canvas.height * 0.7)
+      if (this.#food.x >= this.#snake[0].x &&
+        this.#food.x <= this.#snake[0].x + this.#snakeWidth &&
+        this.#food.y >= this.#snake[0].y &&
+        this.#food.y <= this.#snake[0].y + this.#snakeLength) {
+        this.#food = {
+          x: Math.floor(Math.random() * ((this.#canvas.width * 0.9) - 5) + 5),
+          y: Math.floor(Math.random() * ((this.#canvas.height * 0.9) - 35) + 35)
         }
         this.#score += 100
         this.#snake.push({
@@ -278,7 +362,7 @@ customElements.define('my-snake-game',
     }
 
     /**
-     * Sets game over when snake collides with itself.
+     * Checks if game has collided with itself. If it has, the game is over.
      */
     #collisionDetection () {
       for (let i = 1; i < this.#snake.length; i++) {
@@ -296,7 +380,7 @@ customElements.define('my-snake-game',
     }
 
     /**
-     * Restarts game.
+     * Restarts the game.
      *
      * @param {Event} event The click event.
      */
@@ -343,12 +427,22 @@ customElements.define('my-snake-game',
     }
 
     /**
-     * Sets game over.
+     * Displays game over.
      */
     #gameOver () {
       this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
       this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
-      this.shadowRoot.querySelector('#restart').focus()
+      this.#restartButton.focus()
+    }
+
+    /**
+     * Indicates that the game should be ended.
+     *
+     * @param {Event} event The click event.
+     */
+    #quitGame (event) {
+      event.preventDefault()
+      this.dispatchEvent(new CustomEvent('quit'))
     }
 
     /**
@@ -366,8 +460,8 @@ customElements.define('my-snake-game',
     /**
      * A template for drawing a rectangle.
      *
-     * @param {number} posX The x position where the rectangle will begin.
-     * @param {number} posY The y position where the rectangle will begin.
+     * @param {number} posX The x position where the rectangle will be drawn.
+     * @param {number} posY The y position where the rectangle will be drawn.
      * @param {number} width The width of the rectangle.
      * @param {number} height The height of the rectangle.
      * @param {string} color The color of the rectangle.
