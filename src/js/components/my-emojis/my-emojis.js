@@ -117,7 +117,6 @@ template.innerHTML = `
     #emoji-button {
       width: 40px;
       height: 40px;
-      /* border: 1px solid #666; */
       border: none;
       padding-top: 3px;
       border-radius: 2px;
@@ -173,6 +172,12 @@ customElements.define('my-emojis',
    */
   class extends HTMLElement {
     /**
+     * Represents the element containing the emojis.
+     *
+     * @type {HTMLDivElement}
+     */
+    #emojiContainer
+    /**
      * Creates an instance of current type.
      */
     constructor () {
@@ -180,23 +185,32 @@ customElements.define('my-emojis',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      this.shadowRoot.querySelector('#emoji-button').addEventListener('click', event => {
-        event.preventDefault()
-        if (!this.shadowRoot.querySelector('#emoji-container').hasAttribute('active')) {
-          this.shadowRoot.querySelector('#emoji-container').setAttribute('active', '')
-          this.shadowRoot.querySelector('#emoji-container').classList.remove('hidden')
-        } else {
-          this.shadowRoot.querySelector('#emoji-container').removeAttribute('active')
-          this.shadowRoot.querySelector('#emoji-container').classList.add('hidden')
-          event.target.blur()
-          this.dispatchEvent(new CustomEvent('closed'))
-        }
-      })
+      this.#emojiContainer = this.shadowRoot.querySelector('#emoji-container')
 
+      // Event handlers
+      this.shadowRoot.querySelector('#emoji-button').addEventListener('click', event => this.#openAndCloseEmojiContainer(event))
       this.shadowRoot.querySelectorAll('.emoji').forEach(emoji => emoji.addEventListener('click', event => {
         event.preventDefault()
         this.dispatchEvent(new CustomEvent('clicked', { detail: { emojiValue: emoji.textContent } }))
       }))
+    }
+
+    /**
+     * Opens the emoji container if the container is not active, otherwise closes it.
+     *
+     * @param {Event} event The click event.
+     */
+    #openAndCloseEmojiContainer (event) {
+      event.preventDefault()
+      if (!this.#emojiContainer.hasAttribute('active')) {
+        this.#emojiContainer.setAttribute('active', '')
+        this.#emojiContainer.classList.remove('hidden')
+      } else {
+        this.#emojiContainer.removeAttribute('active')
+        this.#emojiContainer.classList.add('hidden')
+        event.target.blur()
+        this.dispatchEvent(new CustomEvent('closed'))
+      }
     }
   }
 )

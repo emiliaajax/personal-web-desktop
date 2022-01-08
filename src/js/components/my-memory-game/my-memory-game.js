@@ -22,10 +22,8 @@ template.innerHTML = `
     <div id='board'></div>
   </div>
   <div id='game-over' class='hidden'>
-    <div id='text'></div>
-    <table id='high-score'>
-      <tbody></tbody>
-    </table>
+    <div id='score-text'></div>
+    <table id='high-score'><tbody></tbody></table>
     <div id='buttons'>
       <button id='play-again'>Play again</button>
       <button id='change-level'>Change level</button>
@@ -90,7 +88,7 @@ template.innerHTML = `
     #game-over {
       padding-top: 80px;
     }
-    #text {
+    #score-text {
       text-align: center;
       color: white;
       font-size: 1.3rem;
@@ -102,7 +100,6 @@ template.innerHTML = `
       height: 150px;
       background-color: rgb(0, 0, 0, 0.6);
       color: white;
-      /* border: 1px solid black; */
       border-width: thin;
       text-align: center;
       text-transform: capitalize;
@@ -147,13 +144,77 @@ customElements.define('my-memory-game',
    * Represents a my-memory-game element.
    */
   class extends HTMLElement {
-    #counter = 0
+    /**
+     * Represents all the level button elements.
+     *
+     * @type {HTMLDivElement}
+     */
+    #levels
+    /**
+     * The number of moves done in the game.
+     *
+     * @type {number}
+     */
+    #moves = 0
+    /**
+     * The size of the grid.
+     *
+     * @type {number}
+     */
     #size = 16
+    /**
+     * Represents the memory game area.
+     *
+     * @type {HTMLDivElement}
+     */
+    #memoryGame
+    /**
+     * Represents the game board.
+     *
+     * @type {HTMLDivElement}
+     */
     #board
+    /**
+     * Represents the counter.
+     *
+     * @type {HTMLDivElement}
+     */
+    #counter
+    /**
+     * Represents the easy level button.
+     *
+     * @type {HTMLButtonElement}
+     */
     #easyLevel
-    #mediumLevel
+    /**
+     * Represents the intermediate level button.
+     *
+     * @type {HTMLButtonElement}
+     */
+    #intermediateLevel
+    /**
+     * Represents the difficult level button.
+     *
+     * @type {HTMLButtonElement}
+     */
     #difficultLevel
-    #memoryHighscore
+    /**
+     * Represents the game over element.
+     *
+     * @type {HTMLDivElement}
+     */
+    #gameOver
+    /**
+     * The highscore object retrieved from localStorage.
+     *
+     * @type {object}
+     */
+    #highScore
+    /**
+     * An array with alt text for the memory images.
+     *
+     * @type {string[]}
+     */
     #imagesAltText = ['Earth', 'Mars', 'Mercury',
       'Venus', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
 
@@ -164,20 +225,29 @@ customElements.define('my-memory-game',
       super()
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      this.#board = this.shadowRoot.querySelector('#board')
-      this.#easyLevel = this.shadowRoot.querySelector('#easy')
-      this.#mediumLevel = this.shadowRoot.querySelector('#intermediate')
-      this.#difficultLevel = this.shadowRoot.querySelector('#difficult')
 
+      this.#easyLevel = this.shadowRoot.querySelector('#easy')
+      this.#intermediateLevel = this.shadowRoot.querySelector('#intermediate')
+      this.#difficultLevel = this.shadowRoot.querySelector('#difficult')
+      this.#memoryGame = this.shadowRoot.querySelector('#memory-game')
+      this.#board = this.shadowRoot.querySelector('#board')
+      this.#counter = this.shadowRoot.querySelector('#counter')
+      this.#gameOver = this.shadowRoot.querySelector('#game-over')
+      this.#levels = this.shadowRoot.querySelector('#levels')
+
+      // Event handlers
       this.#easyLevel.addEventListener('click', event => this.#setLevel(event, 'easy'))
-      this.#mediumLevel.addEventListener('click', event => this.#setLevel(event, 'intermediate'))
+      this.#intermediateLevel.addEventListener('click', event => this.#setLevel(event, 'intermediate'))
       this.#difficultLevel.addEventListener('click', event => this.#setLevel(event, 'difficult'))
 
       this.shadowRoot.querySelector('#memory-game button').addEventListener('click', event => {
         event.preventDefault()
-        this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
-        this.shadowRoot.querySelector('#levels').classList.remove('hidden')
+        this.#memoryGame.classList.add('hidden')
+        this.#levels.classList.remove('hidden')
+        this.#moves = 0
+        this.#counter.textContent = 0
       })
+
       this.shadowRoot.querySelector('#play-again').addEventListener('click', event => this.#playAgain(event))
       this.shadowRoot.querySelector('#change-level').addEventListener('click', event => this.#changeLevel(event))
     }
@@ -221,7 +291,7 @@ customElements.define('my-memory-game',
     }
 
     /**
-     * Create tiles depending on size.
+     * Creates tiles depending on size of the grid.
      */
     #createTiles () {
       this.#board.textContent = ''
@@ -249,8 +319,8 @@ customElements.define('my-memory-game',
       if (tiles.length === 2) {
         this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.setAttribute('disabled', ''))
         setTimeout(() => {
-          this.#counter += 1
-          this.shadowRoot.querySelector('#counter').textContent = `${this.#counter}`
+          this.#moves += 1
+          this.#counter.textContent = `${this.#moves}`
         }, 400)
         this.#checkIfMatch(tiles)
       }
@@ -280,7 +350,7 @@ customElements.define('my-memory-game',
     #checkIfAllTilesCollected () {
       if (Array.from(this.shadowRoot.querySelectorAll('.tile')).every(tile => tile.hasAttribute('invisible'))) {
         this.#setHighscore()
-        this.#gameOver()
+        this.#displayGameOver()
       }
     }
 
@@ -318,20 +388,20 @@ customElements.define('my-memory-game',
     #setLevel (event, level) {
       event.preventDefault()
       this.setAttribute('level', level)
-      this.shadowRoot.querySelector('#levels').classList.add('hidden')
-      this.shadowRoot.querySelector('#memory-game').classList.remove('hidden')
+      this.#levels.classList.add('hidden')
+      this.#memoryGame.classList.remove('hidden')
     }
 
     /**
      * Displays when all tiles has been collected and game is over.
      */
-    #gameOver () {
+    #displayGameOver () {
       this.#createTiles()
-      this.shadowRoot.querySelector('#memory-game').classList.add('hidden')
-      this.shadowRoot.querySelector('#text').textContent = `YOUR SCORE: ${this.#counter}`
-      this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
-      this.#counter = 0
-      this.shadowRoot.querySelector('#counter').textContent = `${this.#counter}`
+      this.#memoryGame.classList.add('hidden')
+      this.shadowRoot.querySelector('#score-text').textContent = `YOUR SCORE: ${this.#moves}`
+      this.#gameOver.classList.remove('hidden')
+      this.#moves = 0
+      this.#counter.textContent = `${this.#moves}`
       this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('invisible'))
     }
 
@@ -354,31 +424,31 @@ customElements.define('my-memory-game',
      * Compares the current score with the high score. If the current score is better, it will be set as the new high score.
      */
     #compareScores () {
-      this.#memoryHighscore = JSON.parse(localStorage.getItem('memoryHighscore'))
-      if (this.getAttribute('level') === 'easy' && (this.#counter < this.#memoryHighscore.easy || this.#memoryHighscore.easy === '-')) {
-        this.#memoryHighscore.easy = this.#counter
+      this.#highScore = JSON.parse(localStorage.getItem('memoryHighscore'))
+      if (this.getAttribute('level') === 'easy' && (this.#moves < this.#highScore.easy || this.#highScore.easy === '-')) {
+        this.#highScore.easy = this.#moves
       }
-      if (this.getAttribute('level') === 'intermediate' && (this.#counter < this.#memoryHighscore.intermediate || this.#memoryHighscore.intermediate === '-')) {
-        this.#memoryHighscore.intermediate = this.#counter
+      if (this.getAttribute('level') === 'intermediate' && (this.#moves < this.#highScore.intermediate || this.#highScore.intermediate === '-')) {
+        this.#highScore.intermediate = this.#moves
       }
-      if (this.getAttribute('level') === 'difficult' && (this.#counter < this.#memoryHighscore.difficult || this.#memoryHighscore.difficult === '-')) {
-        this.#memoryHighscore.difficult = this.#counter
+      if (this.getAttribute('level') === 'difficult' && (this.#moves < this.#highScore.difficult || this.#highScore.difficult === '-')) {
+        this.#highScore.difficult = this.#moves
       }
-      localStorage.setItem('memoryHighscore', JSON.stringify(this.#memoryHighscore))
+      localStorage.setItem('memoryHighscore', JSON.stringify(this.#highScore))
     }
 
     /**
      * Creates a table containing the top scores for respective level.
      */
     #updateScoreBoard () {
-      const levels = Object.keys(this.#memoryHighscore)
-      const scores = Object.values(this.#memoryHighscore)
+      const levels = Object.keys(this.#highScore)
+      const scores = Object.values(this.#highScore)
       const table = this.shadowRoot.querySelector('#high-score tbody')
       table.textContent = ''
       for (let i = 0; i < levels.length; i++) {
         const tr = document.createElement('tr')
         tr.append(this.#createTableContent(`${levels[i]}`))
-        tr.append(this.#createTableContent(`🌟 ${scores[i]}`))
+        tr.append(this.#createTableContent(`${scores[i]}`))
         table.append(tr)
       }
     }
@@ -402,8 +472,8 @@ customElements.define('my-memory-game',
      */
     #playAgain (event) {
       event.preventDefault()
-      this.shadowRoot.querySelector('#game-over').classList.add('hidden')
-      this.shadowRoot.querySelector('#memory-game').classList.remove('hidden')
+      this.#gameOver.classList.add('hidden')
+      this.#memoryGame.classList.remove('hidden')
     }
 
     /**
@@ -413,8 +483,8 @@ customElements.define('my-memory-game',
      */
     #changeLevel (event) {
       event.preventDefault()
-      this.shadowRoot.querySelector('#game-over').classList.add('hidden')
-      this.shadowRoot.querySelector('#levels').classList.remove('hidden')
+      this.#gameOver.classList.add('hidden')
+      this.#levels.classList.remove('hidden')
     }
   }
 )

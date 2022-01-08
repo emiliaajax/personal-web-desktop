@@ -45,9 +45,7 @@ template.innerHTML = `
       padding-top: 10px;
       padding-bottom: 10px;
       border-radius: 10px;
-      /* border: 1px solid #666; */
       border: none;
-      border-width: thin;
       cursor: pointer;
       transition: 0.5s;
       transform-style: preserve-3d;
@@ -56,7 +54,6 @@ template.innerHTML = `
       transform: rotateY(180deg);
     }
     #tile[revealed] {
-      /* border: 1px dotted black; */
       border: none;
       box-shadow: none;
       pointer-events: none; 
@@ -68,11 +65,9 @@ template.innerHTML = `
     }
     #tile[invisible] {
       visibility: hidden;
-      /* border: 1px dotted black; */
       box-shadow: none;
     }
     :host([invisible]) {
-      /* border: 1px dotted black; */
       box-shadow: none;
     }
     .hidden {
@@ -93,13 +88,13 @@ customElements.define('my-flipping-tile',
      */
     #tile
     /**
-     * The element representing the front of tile.
+     * The element representing the front of the tile.
      *
      * @type {HTMLImageElement}
      */
     #front
     /**
-     * The element representing the back of tile.
+     * The element representing the back of the tile.
      *
      * @type {HTMLImageElement}
      */
@@ -166,7 +161,6 @@ customElements.define('my-flipping-tile',
 
     /**
      * Flips the tile.
-     *
      */
     #flip () {
       if (this.#tile.hasAttribute('back')) {
