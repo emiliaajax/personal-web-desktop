@@ -5,26 +5,20 @@
  * @version 1.0.0
  */
 
-// The code for dragging window is inspired by https://www.kirupa.com/html5/drag.htm (31/12-21).
+// The code for dragging the window is partly inspired by https://www.kirupa.com/html5/drag.htm (retrieved 2021-12-31).
 
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <div id='container'>
-  <div id='window-container'>
-    <div id='window'>
-      <div id='menu'>
-        <button id='close'><span>x</span></button>
-      </div>
-      <slot></slot>
-    <div>
-  </div>
-</div>
+  <div id='window'>
+    <div id='menu'>
+      <button id='close'><span>x</span></button>
+    </div>
+    <slot></slot>
+  <div>
   <style>
     :host {
       position: fixed;
-      top: 10px;
-      left: 10px;
     }
     #window {
       width: 500px;
@@ -32,6 +26,7 @@ template.innerHTML = `
       background-color: white;
       border-radius: 5px;
       box-shadow: 1px 1px 5px #666;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     }
     #menu {
       width: 500px;
@@ -46,7 +41,6 @@ template.innerHTML = `
       width: 13px;
       height: 13px;
       line-height: 3px;
-      /* text-align: center; */
       font-size: 11px;
       background: red;
       color: red;
@@ -83,15 +77,53 @@ customElements.define('my-window',
    * Represents a my-memory-game element.
    */
   class extends HTMLElement {
+    /**
+     * Represents a close button.
+     *
+     * @type {HTMLButtonElement}
+     */
     #close
-    #windowContainer
-    #window
-    #initX
-    #initY
-    #currX
-    #currY
+    /**
+     * The x position of the mouse pointer within the window.
+     *
+     * @type {number}
+     */
+    #xInitial
+    /**
+     * The y position of the mouse pointer within the window.
+     *
+     * @type {number}
+     */
+    #yInitial
+    /**
+     * The current x position for the window.
+     *
+     * @type {number}
+     */
+    #xPosition
+    /**
+     * The current y position for the window.
+     *
+     * @type {number}
+     */
+    #yPosition
+    /**
+     * The offset from the start x position.
+     *
+     * @type {number}
+     */
     #xOffset = 0
+    /**
+     * The offset from the start y position.
+     *
+     * @type {number}
+     */
     #yOffset = 0
+    /**
+     * A boolean indicating if a window is being dragged.
+     *
+     * @type {boolean}
+     */
     #dragging = false
 
     /**
@@ -102,103 +134,102 @@ customElements.define('my-window',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      this.#windowContainer = this.shadowRoot.querySelector('#window-container')
-      this.#window = this.shadowRoot.querySelector('#window')
       this.#close = this.shadowRoot.querySelector('#close')
 
-      this.#windowContainer.addEventListener('mousedown', event => this.#startDragging(event))
+      this.addEventListener('mousedown', event => this.#startDragging(event))
       document.addEventListener('mousemove', event => this.#drag(event))
-      this.#windowContainer.addEventListener('mouseup', event => this.#endDragging(event))
+      window.addEventListener('mouseup', event => this.#endDragging(event))
       this.#close.addEventListener('click', event => this.#closeWindow(event))
     }
 
     /**
-     * Executes when the pointer is pressed down within the #container element. Sets that the element can be dragged.
+     * Indicates that the window can be dragged.
      *
      * @param {Event} event The mousedown event.
      */
     #startDragging (event) {
-      // if (this.#currX < -10) {
-      //   this.#currX = -10
-      //   this.#initX = 0
-      //   this.#xOffset = 0
-      // }
-      if (this.#currY < -10) {
-        this.#currY = -10
-        this.#initY = 0
+      if (this.#yPosition < 0) {
+        this.#yPosition = 0
+        this.#yInitial = 0
         this.#yOffset = 0
       }
-      // if (this.#currX < -10 && this.#currY < -10) {
-      //   this.#currX = -10
-      //   this.#initX = 0
-      //   this.#xOffset = 0
-      //   this.#currY = -10
-      //   this.#initY = 0
-      //   this.#yOffset = 0
-      // }
-      this.#initX = event.clientX - this.#xOffset
-      this.#initY = event.clientY - this.#yOffset
+      this.#xInitial = event.clientX - this.#xOffset
+      this.#yInitial = event.clientY - this.#yOffset
+      console.log(this.#xOffset)
+      console.log(event.clientX)
+      console.log(this.#xInitial)
       this.#dragging = true
       this.dispatchEvent(new CustomEvent('focused'))
     }
 
     /**
-     * Executes when the pointer is within the #container element and when the element can be dragged.
+     * Drags the window when the cursor is pressed down within the window container.
      *
      * @param {Event} event The mousemove event.
      */
     #drag (event) {
-      // console.log(this.#currY)
-      // if (this.#currX < -10 || this.#currY < -10 ||
-      //   (this.#currX < -10 && this.#currY < -10)) {
-      //   this.#endDragging()
-      // }
       if (this.#dragging) {
         event.preventDefault()
-        // event.pageY < 10 ||
-        if (event.pageX < 10 ||
-          event.pageX > window.innerWidth || event.pageY > window.innerHeight) {
-          this.#endDragging()
-        } else {
-          if (this.#currY < -10) {
-            this.#currX = event.clientX - this.#initX
-            this.#xOffset = this.#currX
+        if (!(event.clientX < 10 || event.clientX > window.innerWidth - 10 || event.clientY > window.innerHeight - 10)) {
+          if (this.#yPosition < 0) {
+            this.#updateXPos(event)
+            if (event.clientY > this.#yInitial) {
+              this.#updateYPos(event)
+            }
             this.#setTranslate()
           } else {
-            this.#currX = event.clientX - this.#initX
-            this.#currY = event.clientY - this.#initY
-            this.#xOffset = this.#currX
-            this.#yOffset = this.#currY
+            this.#updateXPos(event)
+            this.#updateYPos(event)
             this.#setTranslate()
+            console.log(this.#xPosition)
+            console.log(this.#xOffset)
+            console.log(event.clientX)
+            console.log(this.#xInitial)
           }
         }
       }
     }
 
     /**
-     * Executes when the pointer is let up.
+     * Updates the x position.
      *
      * @param {Event} event The mousemove event.
      */
-    #endDragging (event) {
-      // if (this.#currX <= -10) {
-      //   this.#currX = 5
-      // }
-      this.#initX = this.#currX
-      this.#initY = this.#currY
-      this.#dragging = false
-      this.style.transform = `translate3d(${this.#currX}px, ${this.#currY}px, 0)`
+    #updateXPos (event) {
+      this.#xPosition = event.clientX - this.#xInitial
+      this.#xOffset = this.#xPosition
     }
 
     /**
-     * Sets the position of the element.
+     * Updates the y position.
+     *
+     * @param {Event} event The mousemove event.
+     */
+    #updateYPos (event) {
+      this.#yPosition = event.clientY - this.#yInitial
+      this.#yOffset = this.#yPosition
+    }
+
+    /**
+     * The dragging of the window ends and the initial position is updated.
+     *
+     * @param {Event} event The mouseup event.
+     */
+    #endDragging (event) {
+      this.#xInitial = this.#xPosition
+      this.#yInitial = this.#yPosition
+      this.#dragging = false
+    }
+
+    /**
+     * Repositions the window.
      */
     #setTranslate () {
-      this.style.transform = `translate3d(${this.#currX}px, ${this.#currY}px, 0)`
+      this.style.transform = `translate3d(${this.#xPosition}px, ${this.#yPosition}px, 0)`
     }
 
     /**
-     * Saying that window should close.
+     * Indicates that the window should close.
      *
      * @param {Event} event The click event.
      */

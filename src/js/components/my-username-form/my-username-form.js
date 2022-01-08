@@ -8,9 +8,9 @@
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <form id='form' autocomplete='off' method='POST' action=''>
-    <label part='name-text' for='name'>Username</label>
-    <input id='name' type='text' name='name' autofocus>
+  <form id='username-form' autocomplete='off' method='POST' action=''>
+    <label for='username'>Username</label>
+    <input id='username' type='text' name='username' autofocus>
     <div id='wrong-input'></div>
     <input id='submit' type='submit' value='Enter'>
   </form>
@@ -24,7 +24,7 @@ template.innerHTML = `
       color: #333;
       font-family: Georgia;
     }
-    #name {
+    #username {
       display: block;
       margin: 0 auto;
       width: 200px;
@@ -49,7 +49,7 @@ template.innerHTML = `
       background-color: #333;
       border: none;
     }
-    #name:focus {
+    #username:focus {
       outline: none;
       border: none;
     }
@@ -67,15 +67,15 @@ template.innerHTML = `
 
 customElements.define('my-username-form',
   /**
-   * Represents a nickname-form element.
+   * Represents a my-username-form element.
    */
   class extends HTMLElement {
     /**
-     * The element representing the nickname.
+     * The element representing the username.
      *
      * @type {HTMLFormElement}
      */
-    #nicknameForm
+    #usernameForm
 
     /**
      * Creates an instance of current type.
@@ -84,27 +84,27 @@ customElements.define('my-username-form',
       super()
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      this.#nicknameForm = this.shadowRoot.querySelector('#form')
+      this.#usernameForm = this.shadowRoot.querySelector('#username-form')
 
-      this.#nicknameForm.addEventListener('submit', (event) => this.#onSubmit(event))
+      this.#usernameForm.addEventListener('submit', (event) => this.#onSubmit(event))
     }
 
     /**
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
-      this.shadowRoot.querySelector('input#name').focus()
+      this.shadowRoot.querySelector('input#username').focus()
     }
 
     /**
-     * Executes when the nickname form is submitted.
+     * Executes when the username form is submitted.
      *
      * @param {Event} event The submit event.
      */
     #onSubmit (event) {
       event.preventDefault()
-      if (this.shadowRoot.querySelector('input#name').value.length > 2) {
-        this.dispatchEvent(new CustomEvent('added', { detail: { nickname: this.shadowRoot.querySelector('input#name').value } }))
+      if (this.shadowRoot.querySelector('input#username').value.length > 2) {
+        this.dispatchEvent(new CustomEvent('added', { detail: { nickname: this.shadowRoot.querySelector('input#username').value } }))
       } else {
         this.shadowRoot.querySelector('#wrong-input').textContent = '* Username must be at least three characters'
       }

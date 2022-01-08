@@ -143,7 +143,8 @@ template.innerHTML = `
       background-color: white;
       border-radius: 0px 10px 10px 10px;
       overflow: scroll;
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      /* Box-shadow code from https://getcssscan.com/css-box-shadow-examples (retrieved 2022-01-08)*/
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     }
     .emoji {
       width: 30px;
