@@ -16,4 +16,4 @@ Default value: difficult
 <my-memory-game></my-memory-game>
 ```
 
-![Example](../../../images/my-memory-game.gif)
+![Example](./images/my-memory-game.gif)
