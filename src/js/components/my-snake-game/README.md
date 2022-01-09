@@ -8,4 +8,4 @@ A web component representing a game of Snake.
 <my-snake-game></my-snake-game>
 ```
 
-![Example](../../../images/my-snake-game.gif)
+![Example](./images/my-snake-game.gif)

@@ -7,21 +7,29 @@
 
 const template = document.createElement('template')
 
+const snakeTextImage = (new URL('images/snake-text.jpg', import.meta.url)).href
+const snakeStartButtonImage = (new URL('images/snake-start-button.png', import.meta.url)).href
+const gameOverTextImage = (new URL('images/game-over.png', import.meta.url)).href
+const yesButtonImage = (new URL('images/yes.png', import.meta.url)).href
+const highlightedYesButtonImage = (new URL('images/yes-highlighted.png', import.meta.url)).href
+const noButtonImage = (new URL('images/no.png', import.meta.url)).href
+const highlightedNoButtonImage = (new URL('images/no-highlighted.png', import.meta.url)).href
+
 template.innerHTML = `
   <canvas id='game-canvas' width='500' height='500'></canvas>
   <div id='start-game'>
-    <img id='snake-text' src='../../../images/snake-text.jpg' alt='Snake' width='300'>
+    <img id='snake-text' src="${snakeTextImage}" alt='Snake' width='300'>
     <button id='start'>
-      <img src='../../../images/snake-start-button.png' alt='Start game button'>
+      <img src="${snakeStartButtonImage}" alt='Start game button'>
     </button>
   </div>
   <div id='game-over' class='hidden'>
-    <img src='../../../images/game-over.png' alt='Game Over! Play again?' width='300'>
+    <img src="${gameOverTextImage}" alt='Game Over! Play again?' width='300'>
     <button id='restart' focused>
-      <img src='../../../images/yes-highlighted.png' alt='Yes button'>
+      <img src="${highlightedYesButtonImage}" alt='Yes button'>
     </button>
     <button id='quit'>
-      <img src='../../../images/no.png' alt='No button'>
+      <img src="${noButtonImage}" alt='No button'>
     </button>
   </div>
   <style>
@@ -401,29 +409,29 @@ customElements.define('my-snake-game',
      * Sets focus on the yes button.
      */
     #focusOnYesButton () {
-      this.shadowRoot.querySelector('#restart img').setAttribute('src', '../../../images/yes-highlighted.png')
+      this.shadowRoot.querySelector('#restart img').setAttribute('src', highlightedYesButtonImage)
     }
 
     /**
      * Removes focus on the yes button.
      */
     #removeFocusOnYesButton () {
-      this.shadowRoot.querySelector('#restart img').setAttribute('src', '../../../images/yes.png')
+      this.shadowRoot.querySelector('#restart img').setAttribute('src', yesButtonImage)
     }
 
     /**
      * Sets focus on the no button.
      */
     #focusOnNoButton () {
-      this.shadowRoot.querySelector('#quit img').setAttribute('src', '../../../images/no-highlighted.png')
-      this.shadowRoot.querySelector('#restart img').setAttribute('src', '../../../images/yes.png')
+      this.shadowRoot.querySelector('#quit img').setAttribute('src', highlightedNoButtonImage)
+      this.shadowRoot.querySelector('#restart img').setAttribute('src', yesButtonImage)
     }
 
     /**
      * Removes focus on the no button.
      */
     #removeFocusOnNoButton () {
-      this.shadowRoot.querySelector('#quit img').setAttribute('src', '../../../images/no.png')
+      this.shadowRoot.querySelector('#quit img').setAttribute('src', noButtonImage)
     }
 
     /**
