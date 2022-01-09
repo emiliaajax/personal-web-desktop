@@ -23,8 +23,20 @@ template.innerHTML = `
     </my-pwd-dock>
   </div>
   <style>
+    #pwd {
+      max-width: 100vw;
+      min-height: 100vh;
+      background: url('../../../images/background2.jpg');
+      background-position: top;
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin: 0;
+    }
     my-pwd-dock {
       max-width: 500px;
+    }
+    my-window {
+      position: fixed;
     }
   </style>
 `
@@ -40,6 +52,12 @@ customElements.define('my-pwd',
      * @type {number}
      */
     #zIndex = 1
+    /**
+     * The current my-window element.
+     *
+     * @type {HTMLElement}
+     */
+    #window
     /**
      * Creates an instance of current type.
      */
@@ -60,19 +78,41 @@ customElements.define('my-pwd',
       event.target.blur()
       const appName = event.target.getAttribute('id')
       const app = document.createElement(appName)
-      const window = document.createElement('my-window')
-      window.style.zIndex = this.#zIndex.toString()
+      this.#window = document.createElement('my-window')
+      this.#window.style.zIndex = this.#zIndex.toString()
       this.#zIndex += 1
-      window.append(app)
-      window.addEventListener('closed', event => this.#closeApp(event))
-      window.addEventListener('focused', event => {
-        event.target.style.zIndex = this.#zIndex.toString()
-        this.#zIndex += 1
-      })
-      this.shadowRoot.querySelector('#pwd').append(window)
+      this.#window.append(app)
+      this.#addEventHandlers()
+      this.#positionWindow()
+      this.shadowRoot.querySelector('#pwd').append(this.#window)
       if (appName === 'my-snake-game') {
         app.addEventListener('quit', event => event.target.parentNode.remove())
       }
+    }
+
+    /**
+     * Positions the window.
+     */
+    #positionWindow () {
+      if (this.shadowRoot.querySelectorAll('my-window').length !== 0) {
+        const howManyWindows = this.shadowRoot.querySelectorAll('my-window').length + 1
+        this.#window.style.left = `${howManyWindows * 10}px`
+        this.#window.style.top = `${howManyWindows * 10}px`
+      } else {
+        this.#window.style.left = '10px'
+        this.#window.style.top = '10px'
+      }
+    }
+
+    /**
+     * Adds event listeners to the window.
+     */
+    #addEventHandlers () {
+      this.#window.addEventListener('closed', event => this.#closeApp(event))
+      this.#window.addEventListener('focused', event => {
+        event.target.style.zIndex = this.#zIndex.toString()
+        this.#zIndex += 1
+      })
     }
 
     /**

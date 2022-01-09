@@ -112,13 +112,13 @@ customElements.define('my-window',
      *
      * @type {number}
      */
-    #xOffset = 0
+    #xOffset
     /**
      * The offset from the start y position.
      *
      * @type {number}
      */
-    #yOffset = 0
+    #yOffset
     /**
      * A boolean indicating if a window is being dragged.
      *
@@ -143,6 +143,14 @@ customElements.define('my-window',
     }
 
     /**
+     * Called after the element is inserted in the DOM.
+     */
+    connectedCallback () {
+      this.#xOffset = Number(this.style.left.match(/(\d+)/gm)[0])
+      this.#yOffset = Number(this.style.top.match(/(\d+)/gm)[0])
+    }
+
+    /**
      * Indicates that the window can be dragged.
      *
      * @param {Event} event The mousedown event.
@@ -155,9 +163,6 @@ customElements.define('my-window',
       }
       this.#xInitial = event.clientX - this.#xOffset
       this.#yInitial = event.clientY - this.#yOffset
-      console.log(this.#xOffset)
-      console.log(event.clientX)
-      console.log(this.#xInitial)
       this.#dragging = true
       this.dispatchEvent(new CustomEvent('focused'))
     }
@@ -181,10 +186,6 @@ customElements.define('my-window',
             this.#updateXPos(event)
             this.#updateYPos(event)
             this.#setTranslate()
-            console.log(this.#xPosition)
-            console.log(this.#xOffset)
-            console.log(event.clientX)
-            console.log(this.#xInitial)
           }
         }
       }
@@ -225,7 +226,8 @@ customElements.define('my-window',
      * Repositions the window.
      */
     #setTranslate () {
-      this.style.transform = `translate3d(${this.#xPosition}px, ${this.#yPosition}px, 0)`
+      this.style.left = `${this.#xPosition}px`
+      this.style.top = `${this.#yPosition}px`
     }
 
     /**

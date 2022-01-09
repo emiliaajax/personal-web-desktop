@@ -17,7 +17,7 @@ template.innerHTML = `
     <button id='difficult'>Difficult</button>
   </div>
   <div id='memory-game' class='hidden'>
-    <button>Change level</button>
+    <!-- <button>Change level</button> -->
     <div id='counter'>0</div>
     <div id='board'></div>
   </div>
@@ -32,7 +32,7 @@ template.innerHTML = `
   <style>
     :host {
       --tile-size: 100px;
-      background: url('../../../images/memory-background-2.jpg');
+      background: url('../../../images/memory-background-3.jpg');
       background-position: top;
       width: 500px;
       height: 500px;
@@ -64,10 +64,10 @@ template.innerHTML = `
     }
     :host([level = 'easy']) #board {
       grid-template-columns: repeat(2, var(--tile-size)) !important;
-      padding-top: 90px;
+      padding-top: 110px;
     }
     :host([level = 'intermediate']) #board {
-      padding-top: 90px;
+      padding-top: 110px;
     }
     :host([level = 'difficult']) #board {
       padding-top: 20px;
@@ -86,7 +86,7 @@ template.innerHTML = `
       font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     }
     #game-over {
-      padding-top: 80px;
+      padding-top: 110px;
     }
     #score-text {
       text-align: center;
@@ -240,13 +240,13 @@ customElements.define('my-memory-game',
       this.#intermediateLevel.addEventListener('click', event => this.#setLevel(event, 'intermediate'))
       this.#difficultLevel.addEventListener('click', event => this.#setLevel(event, 'difficult'))
 
-      this.shadowRoot.querySelector('#memory-game button').addEventListener('click', event => {
-        event.preventDefault()
-        this.#memoryGame.classList.add('hidden')
-        this.#levels.classList.remove('hidden')
-        this.#moves = 0
-        this.#counter.textContent = 0
-      })
+      // this.shadowRoot.querySelector('#memory-game button').addEventListener('click', event => {
+      //   event.preventDefault()
+      //   this.#memoryGame.classList.add('hidden')
+      //   this.#levels.classList.remove('hidden')
+      //   this.#moves = 0
+      //   this.#counter.textContent = 0
+      // })
 
       this.shadowRoot.querySelector('#play-again').addEventListener('click', event => this.#playAgain(event))
       this.shadowRoot.querySelector('#change-level').addEventListener('click', event => this.#changeLevel(event))
@@ -341,7 +341,7 @@ customElements.define('my-memory-game',
         tiles[1].removeAttribute('revealed')
         this.shadowRoot.querySelectorAll('.tile').forEach(tile => tile.removeAttribute('disabled'))
         this.#checkIfAllTilesCollected()
-      }, 1000)
+      }, 500)
     }
 
     /**
