@@ -5,8 +5,9 @@
  * @version 1.0.0
  */
 
-const template = document.createElement('template')
-
+/**
+ * Images used in component.
+ */
 const snakeTextImage = (new URL('images/snake-text.jpg', import.meta.url)).href
 const snakeStartButtonImage = (new URL('images/snake-start-button.png', import.meta.url)).href
 const gameOverTextImage = (new URL('images/game-over.png', import.meta.url)).href
@@ -15,21 +16,23 @@ const highlightedYesButtonImage = (new URL('images/yes-highlighted.png', import.
 const noButtonImage = (new URL('images/no.png', import.meta.url)).href
 const highlightedNoButtonImage = (new URL('images/no-highlighted.png', import.meta.url)).href
 
+const template = document.createElement('template')
+
 template.innerHTML = `
   <canvas id='game-canvas' width='500' height='500'></canvas>
   <div id='start-game'>
-    <img id='snake-text' src="${snakeTextImage}" alt='Snake' width='300'>
+    <img id='snake-text' src='${snakeTextImage}' alt='Snake' width='300'>
     <button id='start'>
       <img src="${snakeStartButtonImage}" alt='Start game button'>
     </button>
   </div>
   <div id='game-over' class='hidden'>
-    <img src="${gameOverTextImage}" alt='Game Over! Play again?' width='300'>
+    <img src='${gameOverTextImage}' alt='Game Over! Play again?' width='300'>
     <button id='restart' focused>
-      <img src="${highlightedYesButtonImage}" alt='Yes button'>
+      <img src='${highlightedYesButtonImage}' alt='Yes button'>
     </button>
     <button id='quit'>
-      <img src="${noButtonImage}" alt='No button'>
+      <img src='${noButtonImage}' alt='No button'>
     </button>
   </div>
   <style>

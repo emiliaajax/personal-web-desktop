@@ -8,6 +8,18 @@
 import '../my-username-form/index.js'
 import '../my-emojis/index.js'
 
+/**
+ * Images used in the component.
+ */
+const sendIconImage = (new URL('images/send-icon.png', import.meta.url)).href
+const soundOffImage = (new URL('images/sound-off.png', import.meta.url)).href
+const soundOnImage = (new URL('images/sound-on.png', import.meta.url)).href
+
+/**
+ * Audio used in the component.
+ */
+const notificationAudio = (new URL('audio/235911__yfjesse__notification-sound.wav', import.meta.url)).href
+
 const template = document.createElement('template')
 
 template.innerHTML = `
@@ -18,14 +30,14 @@ template.innerHTML = `
     <div id='chat-output' class='hidden'></div>
     <form id='chat-message' class='hidden'>
       <textarea id='message'></textarea>
-      <button id='send-button' type='submit'><img src='../../../images/send-icon.png' alt='Send'></button>
+      <button id='send-button' type='submit'><img src='${sendIconImage}' alt='Send'></button>
       <my-emojis></my-emojis>
       <button id='notification-sound' mode='off'>
-        <img src='../../../images/sound-on.png' alt='Sound on' id='sound-on' class='hidden'>
-        <img src='../../../images/sound-off.png' alt='Sound off' id='sound-off'>
+        <img src='${soundOnImage}' alt='Sound on' id='sound-on' class='hidden'>
+        <img src='${soundOffImage}' alt='Sound off' id='sound-off'>
       </button>
     </form>
-    <audio src='../../../audio/235911__yfjesse__notification-sound.wav' controls class='hidden'>
+    <audio src='${notificationAudio}' controls class='hidden'>
   </div>
   <style>
     #chat {

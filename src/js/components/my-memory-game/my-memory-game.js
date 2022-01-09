@@ -9,7 +9,7 @@ import '../my-flipping-tile/index.js'
 import '../my-username-form/my-username-form.js'
 
 /**
- * Number of tile images to be used in the game.
+ * Tile images used in component.
  */
 const images = 8
 const imageUrls = []
