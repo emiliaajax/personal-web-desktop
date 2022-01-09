@@ -9,7 +9,7 @@ import '../my-flipping-tile/index.js'
 import '../my-username-form/my-username-form.js'
 
 /**
- * Gets urls to images used in component.
+ * Gets urls to images used in component. Tile images retrieved from NASA Image Gallery at https://images.nasa.gov/.
  */
 const tileImages = 8
 const tileImageUrls = []
