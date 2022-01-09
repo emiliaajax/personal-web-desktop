@@ -8,6 +8,18 @@
 import '../my-flipping-tile/index.js'
 import '../my-username-form/my-username-form.js'
 
+/**
+ * Number of tile images to be used in the game.
+ */
+const images = 8
+const imageUrls = []
+for (let i = 0; i < images; i++) {
+  imageUrls[i] = (new URL(`images/${i + 1}.png`, import.meta.url)).href
+}
+
+/**
+ * Defines template.
+ */
 const template = document.createElement('template')
 
 template.innerHTML = `
@@ -17,7 +29,6 @@ template.innerHTML = `
     <button id='difficult'>Difficult</button>
   </div>
   <div id='memory-game' class='hidden'>
-    <!-- <button>Change level</button> -->
     <div id='counter'>0</div>
     <div id='board'></div>
   </div>
@@ -32,7 +43,7 @@ template.innerHTML = `
   <style>
     :host {
       --tile-size: 100px;
-      background: url('../../../images/memory-background-3.jpg');
+      background: url("${(new URL('images/memory-background.jpg', import.meta.url)).href}");
       background-position: top;
       width: 500px;
       height: 500px;
@@ -239,15 +250,6 @@ customElements.define('my-memory-game',
       this.#easyLevel.addEventListener('click', event => this.#setLevel(event, 'easy'))
       this.#intermediateLevel.addEventListener('click', event => this.#setLevel(event, 'intermediate'))
       this.#difficultLevel.addEventListener('click', event => this.#setLevel(event, 'difficult'))
-
-      // this.shadowRoot.querySelector('#memory-game button').addEventListener('click', event => {
-      //   event.preventDefault()
-      //   this.#memoryGame.classList.add('hidden')
-      //   this.#levels.classList.remove('hidden')
-      //   this.#moves = 0
-      //   this.#counter.textContent = 0
-      // })
-
       this.shadowRoot.querySelector('#play-again').addEventListener('click', event => this.#playAgain(event))
       this.shadowRoot.querySelector('#change-level').addEventListener('click', event => this.#changeLevel(event))
     }
@@ -283,12 +285,12 @@ customElements.define('my-memory-game',
       }
     }
 
-    /**
-     * Called after the element is inserted in the DOM.
-     */
-    connectedCallback () {
-      this.#createTiles()
-    }
+    // /**
+    //  * Called after the element is inserted in the DOM.
+    //  */
+    // connectedCallback () {
+    //   this.#createTiles()
+    // }
 
     /**
      * Creates tiles depending on size of the grid.
@@ -361,10 +363,10 @@ customElements.define('my-memory-game',
      */
     #collectAndShuffleImages () {
       const imageArray = []
-      for (let j = 1; j <= this.#size / 2; j++) {
+      for (let j = 0; j < this.#size / 2; j++) {
         const imageObject = {
-          src: `../../images/${j}.png`,
-          alt: this.#imagesAltText[j - 1]
+          src: imageUrls[j],
+          alt: this.#imagesAltText[j]
         }
         imageArray.push(imageObject)
         imageArray.push(imageObject)
