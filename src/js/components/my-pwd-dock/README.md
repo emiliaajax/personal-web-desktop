@@ -12,4 +12,4 @@ A web component representing a dock.
 </my-pwd-dock>
 ```
 
-![Example](../../../images/my-pwd-dock.gif)
+![Example](./images/my-pwd-dock.gif)

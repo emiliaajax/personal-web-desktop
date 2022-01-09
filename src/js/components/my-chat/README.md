@@ -8,4 +8,4 @@ A web component representing a chat.
 <my-chat></my-chat>
 ```
 
-![Example](../../../images/my-chat.gif)
+![Example](./images/my-chat.gif)

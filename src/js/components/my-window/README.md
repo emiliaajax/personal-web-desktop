@@ -17,4 +17,4 @@ A web component representing a draggable and closeable window.
 </my-window>
 ```
 
-![Example](../../../images/my-window.gif)
+![Example](./images/my-window.gif)

@@ -5,12 +5,14 @@
  * @version 1.0.0
  */
 
+const backOfTileImage = (new URL('images/tile-back.jpg', import.meta.url)).href
+
 const template = document.createElement('template')
 
 template.innerHTML = `
   <button id='tile' back>
     <div id='back'> 
-      <img src='../../images/tile-back.jpg'>
+      <img src='${backOfTileImage}'>
     </div>
     <div id='front' class='hidden'>
       <slot></slot>

@@ -36,4 +36,4 @@ Default value: undefined
 </my-flipping-tile>
 ```
 
-![Example](../../../images/my-flipping-tile.gif)
+![Example](./images/my-flipping-tile.gif)

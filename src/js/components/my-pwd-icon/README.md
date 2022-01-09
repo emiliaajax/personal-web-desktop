@@ -22,4 +22,4 @@ Default value: undefined
 <my-pwd-icon src=''><my-pwd-icon>
 ```
 
-![Example](../../../images/my-pwd-icon.gif)
+![Example](./images/my-pwd-icon.gif)

@@ -15,4 +15,4 @@ A web component representing an emoji container that displays emojis when opened
 <my-emojis></my-emojis>
 ```
 
-![Example](../../../images/my-emojis.gif)
+![Example](./images/my-emojis.gif)

@@ -14,4 +14,4 @@ A web component that represents a nickname form.
    <my-nickname-form></my-nickname-form>
 ```
 
-![Example](../../../images/my-username-form.gif)
+![Example](./images/my-username-form.gif)
