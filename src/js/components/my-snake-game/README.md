@@ -2,6 +2,12 @@
 
 A web component representing a game of Snake.
 
+## Events
+
+| Event Name | Fired When           |
+| ---------- | -------------------- |
+| `quit` | The player press on no button when asked to play again. |
+
 ## Example
 
 ```html
