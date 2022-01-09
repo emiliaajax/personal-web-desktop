@@ -5,8 +5,10 @@
  * @version 1.0.0
  */
 
+/**
+ * Defines template
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <div id='dock'>
     <slot></slot>
@@ -32,6 +34,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-pwd-dock',
   /**
    * Represents a my-pwd-dock element.

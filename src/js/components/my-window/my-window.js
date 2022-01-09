@@ -7,8 +7,10 @@
 
 // The code for dragging the window is partly inspired by https://www.kirupa.com/html5/drag.htm (retrieved 2021-12-31).
 
+/**
+ * Defines template.
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <div id='window'>
     <div id='menu'>
@@ -72,6 +74,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-window',
   /**
    * Represents a my-memory-game element.

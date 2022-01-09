@@ -5,10 +5,15 @@
  * @version 1.0.0
  */
 
+/**
+ * Gets url to image used in component.
+ */
 const backOfTileImage = (new URL('images/tile-back.jpg', import.meta.url)).href
 
+/**
+ * Defines template.
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <button id='tile' back>
     <div id='back'> 
@@ -78,6 +83,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-flipping-tile',
   /**
    * Represents a my-flipping-tile element.

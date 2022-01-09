@@ -5,8 +5,10 @@
  * @version 1.0.0
  */
 
+/**
+ * Defines template.
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <div id='emojis'>
     <button id='emoji-button'>😊</button>
@@ -167,6 +169,9 @@ template.innerHTML = `
   </style>
 `
 
+/*
+ * Defines custom element.
+ */
 customElements.define('my-emojis',
   /**
    * Represents a my-emojis element.

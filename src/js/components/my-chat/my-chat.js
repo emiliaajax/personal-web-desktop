@@ -9,19 +9,21 @@ import '../my-username-form/index.js'
 import '../my-emojis/index.js'
 
 /**
- * Images used in the component.
+ * Gets urls to images used in component.
  */
 const sendIconImage = (new URL('images/send-icon.png', import.meta.url)).href
 const soundOffImage = (new URL('images/sound-off.png', import.meta.url)).href
 const soundOnImage = (new URL('images/sound-on.png', import.meta.url)).href
 
 /**
- * Audio used in the component.
+ * Gets url to audio used in component.
  */
 const notificationAudio = (new URL('audio/235911__yfjesse__notification-sound.wav', import.meta.url)).href
 
+/**
+ * Defines template.
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <div id='chat'>
     <div id='username'>
@@ -167,6 +169,9 @@ template.innerHTML = `
   </style>
 `
 
+/*
+ * Defines custom element.
+ */
 customElements.define('my-chat',
   /**
    * Represents a my-chat element.

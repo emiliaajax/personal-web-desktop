@@ -9,19 +9,19 @@ import '../my-flipping-tile/index.js'
 import '../my-username-form/my-username-form.js'
 
 /**
- * Tile images used in component.
+ * Gets urls to images used in component.
  */
-const images = 8
-const imageUrls = []
-for (let i = 0; i < images; i++) {
-  imageUrls[i] = (new URL(`images/${i + 1}.png`, import.meta.url)).href
+const tileImages = 8
+const tileImageUrls = []
+for (let i = 0; i < tileImages; i++) {
+  tileImageUrls[i] = (new URL(`images/${i + 1}.png`, import.meta.url)).href
 }
+const backgroundImage = (new URL('images/memory-background.jpg', import.meta.url)).href
 
 /**
  * Defines template.
  */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <div id='levels'>
     <button id='easy'>Easy</button>
@@ -43,7 +43,7 @@ template.innerHTML = `
   <style>
     :host {
       --tile-size: 100px;
-      background: url("${(new URL('images/memory-background.jpg', import.meta.url)).href}");
+      background: url('${backgroundImage}');
       background-position: top;
       width: 500px;
       height: 500px;
@@ -81,7 +81,7 @@ template.innerHTML = `
       padding-top: 110px;
     }
     :host([level = 'difficult']) #board {
-      padding-top: 20px;
+      padding-top: 40px;
     }
     #counter {
       font-size: 1.1rem;
@@ -150,6 +150,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-memory-game',
   /**
    * Represents a my-memory-game element.
@@ -365,7 +368,7 @@ customElements.define('my-memory-game',
       const imageArray = []
       for (let j = 0; j < this.#size / 2; j++) {
         const imageObject = {
-          src: imageUrls[j],
+          src: tileImageUrls[j],
           alt: this.#imagesAltText[j]
         }
         imageArray.push(imageObject)

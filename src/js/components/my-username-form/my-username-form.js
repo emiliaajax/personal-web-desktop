@@ -5,8 +5,10 @@
  * @version 1.1.0
  */
 
+/**
+ * Defines template.
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <form id='username-form' autocomplete='off' method='POST' action=''>
     <label for='username'>Username</label>
@@ -65,6 +67,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-username-form',
   /**
    * Represents a my-username-form element.

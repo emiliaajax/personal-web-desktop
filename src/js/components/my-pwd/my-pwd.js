@@ -12,21 +12,31 @@ import '../my-chat/index.js'
 import '../my-window/index.js'
 import '../my-snake-game/index.js'
 
-const template = document.createElement('template')
+/**
+ * Gets urls to images used in component.
+ */
+const wallpaperImage = (new URL('images/wallpaper.jpg', import.meta.url)).href
+const memoryIconImage = (new URL('images/memory-icon.png', import.meta.url)).href
+const chatIconImage = (new URL('images/chat-icon.png', import.meta.url)).href
+const snakeIconImage = (new URL('images/snake-icon.png', import.meta.url)).href
 
+/**
+ * Defines templates.
+ */
+const template = document.createElement('template')
 template.innerHTML = `
   <div id='pwd'>
     <my-pwd-dock>
-      <my-pwd-icon id='my-memory-game' src='../../../images/memory-icon.png'></my-pwd-icon>
-      <my-pwd-icon id='my-chat' src='../../../images/chat-icon.png'></my-pwd-icon>
-      <my-pwd-icon id='my-snake-game' src='../../../images/snake-icon.png'></my-pwd-icon>
+      <my-pwd-icon id='my-memory-game' src='${memoryIconImage}'></my-pwd-icon>
+      <my-pwd-icon id='my-chat' src='${chatIconImage}'></my-pwd-icon>
+      <my-pwd-icon id='my-snake-game' src='${snakeIconImage}'></my-pwd-icon>
     </my-pwd-dock>
   </div>
   <style>
     #pwd {
       max-width: 100vw;
       min-height: 100vh;
-      background: url('../../../images/background2.jpg');
+      background: url('${wallpaperImage}');
       background-position: top;
       background-size: cover;
       background-repeat: no-repeat;
@@ -41,6 +51,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-pwd',
   /**
    * Represents a my-pwd element.

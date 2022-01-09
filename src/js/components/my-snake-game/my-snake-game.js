@@ -6,7 +6,7 @@
  */
 
 /**
- * Images used in component.
+ * Gets urls to images used in component.
  */
 const snakeTextImage = (new URL('images/snake-text.jpg', import.meta.url)).href
 const snakeStartButtonImage = (new URL('images/snake-start-button.png', import.meta.url)).href
@@ -16,8 +16,10 @@ const highlightedYesButtonImage = (new URL('images/yes-highlighted.png', import.
 const noButtonImage = (new URL('images/no.png', import.meta.url)).href
 const highlightedNoButtonImage = (new URL('images/no-highlighted.png', import.meta.url)).href
 
+/**
+ * Defines template
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <canvas id='game-canvas' width='500' height='500'></canvas>
   <div id='start-game'>
@@ -80,6 +82,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-snake-game',
   /**
    * Represents a my-snake-game element.

@@ -5,8 +5,10 @@
  * @version 1.0.0
  */
 
+/**
+ * Defines template.
+ */
 const template = document.createElement('template')
-
 template.innerHTML = `
   <button id='icon'>
     <img id='image-icon' />
@@ -45,6 +47,9 @@ template.innerHTML = `
   </style>
 `
 
+/**
+ * Defines custom element.
+ */
 customElements.define('my-pwd-icon',
   /**
    * Represents a my-pwd element.
