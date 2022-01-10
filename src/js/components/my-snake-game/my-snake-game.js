@@ -280,7 +280,7 @@ customElements.define('my-snake-game',
       this.#drawRect(this.#food.x, this.#food.y, 5, 5, 'white')
       this.#snake.forEach(part => this.#drawRect(part.x, part.y, this.#snakeLength, this.#snakeWidth, 'green'))
       this.#drawScore(`${this.#score}`, 10, 25)
-      this.#drawScore(`⭐ ${this.#highScore}`, 420, 25)
+      this.#drawScore(`⭐  ${this.#highScore}`, 420, 25)
     }
 
     /**

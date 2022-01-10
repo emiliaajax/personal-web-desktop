@@ -25,12 +25,14 @@ const notificationAudio = (new URL('audio/235911__yfjesse__notification-sound.wa
  */
 const template = document.createElement('template')
 template.innerHTML = `
-  <div id='chat'>
-    <div id='username'>
-      <my-username-form></my-username-form>
-    </div>
-    <div id='chat-output' class='hidden'></div>
-    <form id='chat-message' class='hidden'>
+  <div id='username'>
+    <my-username-form></my-username-form>
+  </div>
+  <div id='chat' class='hidden'>
+    <div id='offlineMessage' class='hidden'></div>
+    <div id='onlineMessage' class='hidden'></div>
+    <div id='chat-output'></div>
+    <form id='chat-message'>
       <textarea id='message'></textarea>
       <button id='send-button' type='submit'><img src='${sendIconImage}' alt='Send'></button>
       <my-emojis></my-emojis>
@@ -42,6 +44,12 @@ template.innerHTML = `
     <audio src='${notificationAudio}' controls class='hidden'>
   </div>
   <style>
+    #username {
+      background-color: #5de6de;
+      background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);
+      width: 500px;
+      height: 500px;
+    }
     #chat {
       width: 500px;
       height: 500px;
@@ -50,9 +58,10 @@ template.innerHTML = `
       display: grid;
       grid-template-rows: auto;
     }
-    #username {
-      grid-column: 1/4;
-      grid-row: 2/3;
+    my-username-form {
+      position: absolute;
+      top: 35%;
+      left: 28%;
       margin: 0 auto;
     }
     #chat-output {
@@ -162,6 +171,38 @@ template.innerHTML = `
     }
     #notification-sound img {
       width: 30px !important;
+    }
+    /* #offlineMessage {
+      width: 500px;
+      color: #B33A3A;
+      text-align: center;
+      height: 20px;
+      padding-top: 5px;
+      padding-bottom: 3px;
+      top: 46px;
+      position: fixed;
+      background-color: white;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+    } */
+    #offlineMessage {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      position: absolute;
+      top: 9px;
+      left: 53%;
+      background-color: #8b0000;
+    }
+    #onlineMessage {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      position: absolute;
+      top: 9px;
+      left: 53%;
+      background-color: green;
     }
     .hidden {
       display: none !important;
@@ -289,6 +330,8 @@ customElements.define('my-chat',
       this.shadowRoot.querySelector('my-emojis').addEventListener('clicked', event => this.#addEmojiToMessage(event))
       this.shadowRoot.querySelector('my-emojis').addEventListener('closed', () => this.#message.focus())
       this.#notificationSound.addEventListener('click', event => this.#soundControl(event))
+      window.addEventListener('offline', () => this.#displayOfflineMessage())
+      window.addEventListener('online', () => this.#displayOnlineMessage())
     }
 
     /**
@@ -296,6 +339,10 @@ customElements.define('my-chat',
      */
     connectedCallback () {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
+      this.#socket.addEventListener('close', () => {
+        this.#displayOfflineMessage()
+      })
+      this.#socket.addEventListener('open', () => this.#displayOnlineMessage())
       this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
       if (sessionStorage.getItem('username')) {
         this.#username = sessionStorage.getItem('username')
@@ -314,9 +361,8 @@ customElements.define('my-chat',
      * Displays the chat.
      */
     #startChat () {
-      this.#usernameForm.classList.add('hidden')
-      this.#chatOutput.classList.remove('hidden')
-      this.#chatMessage.classList.remove('hidden')
+      this.shadowRoot.querySelector('#username').classList.add('hidden')
+      this.shadowRoot.querySelector('#chat').classList.remove('hidden')
       this.#message.focus()
     }
 
@@ -418,6 +464,22 @@ customElements.define('my-chat',
           }
         }
       }
+    }
+
+    /**
+     * Displays a red dot.
+     */
+    #displayOfflineMessage () {
+      this.shadowRoot.querySelector('#offlineMessage').classList.remove('hidden')
+      this.shadowRoot.querySelector('#onlineMessage').classList.add('hidden')
+    }
+
+    /**
+     * Displays a green dot.
+     */
+    #displayOnlineMessage () {
+      this.shadowRoot.querySelector('#offlineMessage').classList.add('hidden')
+      this.shadowRoot.querySelector('#onlineMessage').classList.remove('hidden')
     }
   }
 )
