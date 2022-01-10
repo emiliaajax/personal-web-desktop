@@ -27,9 +27,9 @@ const template = document.createElement('template')
 template.innerHTML = `
   <div id='pwd'>
     <my-pwd-dock>
-      <my-pwd-icon id='my-memory-game' src='${memoryIconImage}'></my-pwd-icon>
-      <my-pwd-icon id='my-chat' src='${chatIconImage}'></my-pwd-icon>
-      <my-pwd-icon id='my-snake-game' src='${snakeIconImage}'></my-pwd-icon>
+      <my-pwd-icon name='Memory' app='my-memory-game' src='${memoryIconImage}'></my-pwd-icon>
+      <my-pwd-icon name='Chat' app='my-chat' src='${chatIconImage}'></my-pwd-icon>
+      <my-pwd-icon name='Snake' app='my-snake-game' src='${snakeIconImage}'></my-pwd-icon>
     </my-pwd-dock>
   </div>
   <style>
@@ -89,9 +89,10 @@ customElements.define('my-pwd',
      */
     #openApp (event) {
       event.target.blur()
-      const appName = event.target.getAttribute('id')
+      const appName = event.target.getAttribute('app')
       const app = document.createElement(appName)
       this.#window = document.createElement('my-window')
+      this.#window.setAttribute('header', event.target.getAttribute('name'))
       this.#window.style.zIndex = this.#zIndex.toString()
       this.#zIndex += 1
       this.#window.append(app)

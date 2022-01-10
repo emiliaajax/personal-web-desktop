@@ -14,6 +14,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <div id='window'>
     <div id='menu'>
+      <span id='header-text'></span>
       <button id='close'><span>x</span></button>
     </div>
     <slot></slot>
@@ -37,8 +38,15 @@ template.innerHTML = `
       border-radius: 5px 5px 0px 0px;
       border-bottom: 1px solid #cdcdcd;
     }
+    #header-text {
+      position: absolute;
+      left: 45%;
+      margin-top: 3px;
+      font-family: 'Montserrat', cursive;
+      font-size: 0.9rem;
+    }
     #close {
-      float: right;
+      float: left;
       border-radius: 100%;
       width: 13px;
       height: 13px;
@@ -65,7 +73,7 @@ template.innerHTML = `
       display: block;
       position: absolute;
       top: 10px;
-      right: 8px;
+      left: 9.25px;
     }
     ::slotted(*) {
       display: block;
@@ -153,6 +161,28 @@ customElements.define('my-window',
     connectedCallback () {
       this.#xOffset = Number(this.style.left.match(/(\d+)/gm)[0])
       this.#yOffset = Number(this.style.top.match(/(\d+)/gm)[0])
+    }
+
+    /**
+     * Attributes to monitor.
+     *
+     * @returns {string[]} A string array of attributes.
+     */
+    static get observedAttributes () {
+      return ['header']
+    }
+
+    /**
+     * Called when one or several of the observed attributes changes.
+     *
+     * @param {string} name - The attribute's name.
+     * @param {*} oldValue - The old value.
+     * @param {*} newValue - The new value.
+     */
+    attributeChangedCallback (name, oldValue, newValue) {
+      if (name === 'header' && oldValue !== newValue) {
+        this.shadowRoot.querySelector('#menu span').textContent = newValue
+      }
     }
 
     /**

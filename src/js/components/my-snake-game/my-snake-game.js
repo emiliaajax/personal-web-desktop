@@ -56,7 +56,7 @@ template.innerHTML = `
     }
     #start {
       position: absolute;
-      left: 200px;
+      left: 150px;
       top: 270px;
       background-color: rgb(0, 0, 0, 0);
       border: none;
@@ -74,7 +74,7 @@ template.innerHTML = `
       top: 150px;
     }
     #start img {
-      width: 90px;
+      width: 200px;
     }
     .hidden {
       display: none !important;
