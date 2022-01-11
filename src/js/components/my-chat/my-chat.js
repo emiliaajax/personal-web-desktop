@@ -410,10 +410,10 @@ customElements.define('my-chat',
             key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
             channel: this.#channel
           }))
+          this.#chatMessage.reset()
         } else {
           this.#noConnectionBanner()
         }
-        this.#chatMessage.reset()
       }
       this.#sendButton.blur()
       this.#message.focus()
@@ -521,7 +521,10 @@ customElements.define('my-chat',
      * Displays a green dot.
      */
     #displayOnlineMessage () {
-      // this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
+      if (this.#socket.readyState !== 1) {
+        this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
+        this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
+      }
       this.shadowRoot.querySelector('#offlineMessage').classList.add('hidden')
       this.shadowRoot.querySelector('#onlineMessage').classList.remove('hidden')
       this.#connected = true

@@ -1,5 +1,5 @@
 
-// The following code is written while following the code examples on lecture "Installerbara PWAs" from week 15, and therefore, is greatly inspired by those.
+// The following code is written while following the code examples on lecture "Installerbara PWAs" from week 15, and therefore, is greatly inspired by those examples.
 
 const version = '1.0.0'
 
@@ -63,7 +63,7 @@ self.addEventListener('activate', event => {
       cacheKeys.map(cache => {
         if (cache !== version) {
           console.log('ServiceWorker: Clearing cache', cache)
-          return caches.delete(cache)
+          return self.caches.delete(cache)
         }
         return undefined
       })
@@ -96,7 +96,7 @@ self.addEventListener('fetch', event => {
       // Happens when offline.
       console.log('ServiceWorker: Serving cached result instead')
       // Accesses the cache again and checks if there is a response that corresponds to the exact request. If it has, the response is returned.
-      return caches.match(request)
+      return self.caches.match(request)
     }
   }
 
@@ -104,12 +104,12 @@ self.addEventListener('fetch', event => {
   event.respondWith(cachedFetch(event.request))
 })
 
-// Gets message from the main thread.
-self.addEventListener('message', event => {
-  console.log('ServiceWorker: Got a message')
-})
+// // Gets message from the main thread.
+// self.addEventListener('message', event => {
+//   console.log('ServiceWorker: Got a message')
+// })
 
-// If the server pushes data to our service worker after the application has closed. Is used for notifications.
-self.addEventListener('push', event => {
-  console.log('ServiceWorker: Got a push message from the server')
-})
+// // If the server pushes data to our service worker after the application has closed. Is used for notifications.
+// self.addEventListener('push', event => {
+//   console.log('ServiceWorker: Got a push message from the server')
+// })

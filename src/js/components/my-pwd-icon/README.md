@@ -19,7 +19,7 @@ Default value: undefined
 ## Example
 
 ```html
-<my-pwd-icon src=''><my-pwd-icon>
+<my-pwd-icon src='memory-icon.png'><my-pwd-icon>
 ```
 
 ![Example](./images/my-pwd-icon.gif)
