@@ -14,6 +14,7 @@ import '../my-emojis/index.js'
 const sendIconImage = (new URL('images/send-icon.png', import.meta.url)).href
 const soundOffImage = (new URL('images/sound-off.png', import.meta.url)).href
 const soundOnImage = (new URL('images/sound-on.png', import.meta.url)).href
+const noWifi = (new URL('images/no-wifi.png', import.meta.url)).href
 
 /**
  * Gets url to audio used in component.
@@ -32,6 +33,10 @@ template.innerHTML = `
     <div id='offlineMessage' class='hidden'></div>
     <div id='onlineMessage' class='hidden'></div>
     <div id='chat-output'></div>
+    <div id='noConnection' class='hidden'>
+      <img src='${noWifi}' width='30'>
+      <span>No internet connection</span>
+    </div>
     <form id='chat-message'>
       <textarea id='message'></textarea>
       <button id='send-button' type='submit'><img src='${sendIconImage}' alt='Send'></button>
@@ -63,6 +68,31 @@ template.innerHTML = `
       top: 35%;
       left: 28%;
       margin: 0 auto;
+    }
+    #noConnection img {
+      position: absolute;
+      left: 60px;
+      top: 2px;
+      background-color: rgb(0, 0, 0, 0)
+    }
+    #noConnection span {
+      position: absolute;
+      left: 100px;
+      top: 10px;
+    }
+    #noConnection {
+      position: absolute;
+      top: 200px;
+      left: 100px;
+      width: 300px;
+      height: 30px;
+      border-radius: 10px;
+      background-color: #333;
+      text-align: center;
+      color: white;
+      padding-top: 10px;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      transition: all 0.3s ease;
     }
     #chat-output {
       background-color: white;
@@ -172,20 +202,6 @@ template.innerHTML = `
     #notification-sound img {
       width: 30px !important;
     }
-    /* #offlineMessage {
-      width: 500px;
-      color: #B33A3A;
-      text-align: center;
-      height: 20px;
-      padding-top: 5px;
-      padding-bottom: 3px;
-      top: 46px;
-      position: fixed;
-      background-color: white;
-      box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem;
-    } */
     #offlineMessage {
       width: 8px;
       height: 8px;
@@ -224,6 +240,18 @@ customElements.define('my-chat',
      * @type {string}
      */
     #channel = '1dsD-A444-Dfa0-sd43-0d32-P0we'
+    /**
+     * The timeout identifier.
+     *
+     * @type {number}
+     */
+    #timeoutID
+    /**
+     * A boolean with connection status.
+     *
+     * @type {boolean}
+     */
+     #connected
     /**
      * Represents the chat message form.
      *
@@ -339,10 +367,8 @@ customElements.define('my-chat',
      */
     connectedCallback () {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
-      this.#socket.addEventListener('close', () => {
-        this.#displayOfflineMessage()
-      })
       this.#socket.addEventListener('open', () => this.#displayOnlineMessage())
+      // this.#socket.addEventListener('close', () => this.#displayOfflineMessage())
       this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
       if (sessionStorage.getItem('username')) {
         this.#username = sessionStorage.getItem('username')
@@ -355,6 +381,7 @@ customElements.define('my-chat',
      */
     disconnectedCallback () {
       this.#socket.close()
+      clearTimeout(this.#timeoutID)
     }
 
     /**
@@ -375,7 +402,7 @@ customElements.define('my-chat',
       event.preventDefault()
       if (this.#message.value.length !== 0) {
         this.#searchMessageForEmojis()
-        if (this.#socket.readyState === 1) {
+        if (this.#socket.readyState === 1 && this.#connected) {
           this.#socket.send(JSON.stringify({
             type: 'message',
             data: this.#message.value,
@@ -383,11 +410,24 @@ customElements.define('my-chat',
             key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
             channel: this.#channel
           }))
+        } else {
+          this.#noConnectionBanner()
         }
         this.#chatMessage.reset()
       }
       this.#sendButton.blur()
       this.#message.focus()
+    }
+
+    /**
+     * Displays that there's no internet connection.
+     *
+     */
+    #noConnectionBanner () {
+      this.shadowRoot.querySelector('#noConnection').classList.remove('hidden')
+      this.#timeoutID = setTimeout(() => {
+        this.shadowRoot.querySelector('#noConnection').classList.add('hidden')
+      }, 5000)
     }
 
     /**
@@ -472,14 +512,19 @@ customElements.define('my-chat',
     #displayOfflineMessage () {
       this.shadowRoot.querySelector('#offlineMessage').classList.remove('hidden')
       this.shadowRoot.querySelector('#onlineMessage').classList.add('hidden')
+      this.#connected = false
+      // this.#socket.close()
+      this.#noConnectionBanner()
     }
 
     /**
      * Displays a green dot.
      */
     #displayOnlineMessage () {
+      // this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
       this.shadowRoot.querySelector('#offlineMessage').classList.add('hidden')
       this.shadowRoot.querySelector('#onlineMessage').classList.remove('hidden')
+      this.#connected = true
     }
   }
 )
