@@ -110,7 +110,7 @@ customElements.define('my-pwd',
     #positionWindow () {
       if (this.shadowRoot.querySelectorAll('my-window').length !== 0) {
         const howManyWindows = this.shadowRoot.querySelectorAll('my-window').length + 1
-        this.#window.style.left = `${howManyWindows * 10}px`
+        this.#window.style.left = `${howManyWindows * 20}px`
         this.#window.style.top = `${howManyWindows * 20}px`
       } else {
         this.#window.style.left = '20px'

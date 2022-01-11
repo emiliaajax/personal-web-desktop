@@ -253,8 +253,6 @@ customElements.define('my-window',
      * @param {Event} event The mouseup event.
      */
     #endDragging (event) {
-      this.#xInitial = this.#xPosition
-      this.#yInitial = this.#yPosition
       this.#dragging = false
     }
 
