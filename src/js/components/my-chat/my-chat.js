@@ -368,7 +368,7 @@ customElements.define('my-chat',
     connectedCallback () {
       this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
       this.#socket.addEventListener('open', () => this.#displayOnlineMessage())
-      // this.#socket.addEventListener('close', () => this.#displayOfflineMessage())
+      this.#socket.addEventListener('close', () => this.#displayOfflineMessage())
       this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
       if (sessionStorage.getItem('username')) {
         this.#username = sessionStorage.getItem('username')
