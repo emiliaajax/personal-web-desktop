@@ -6,7 +6,7 @@
  */
 
 /**
- * Gets urls to images used in component.
+ * Urls to images used in component.
  */
 const snakeTextImage = (new URL('images/snake-text.jpg', import.meta.url)).href
 const snakeStartButtonImage = (new URL('images/snake-start-button.png', import.meta.url)).href
@@ -62,6 +62,9 @@ template.innerHTML = `
       border: none;
       outline: none;
       cursor: pointer;
+    }
+    #start:focus {
+      outline: 2px solid white;
     }
     #snake-text {
       position: absolute;
@@ -187,7 +190,7 @@ customElements.define('my-snake-game',
      */
     #highScore = 0
     /**
-     * Representation of the snake.
+     * Representation of the snake. Inspired by: https://www.educative.io/blog/javascript-snake-game-tutorial.
      *
      * @type {object}
      */
@@ -284,6 +287,33 @@ customElements.define('my-snake-game',
     }
 
     /**
+     * A template for drawing a rectangle.
+     *
+     * @param {number} posX The x position where the rectangle will be drawn.
+     * @param {number} posY The y position where the rectangle will be drawn.
+     * @param {number} width The width of the rectangle.
+     * @param {number} height The height of the rectangle.
+     * @param {string} color The color of the rectangle.
+     */
+    #drawRect (posX, posY, width, height, color) {
+      this.#canvasContext.fillStyle = color
+      this.#canvasContext.fillRect(posX, posY, width, height)
+    }
+
+    /**
+     * Draws a score at the canvas.
+     *
+     * @param {string} scoreText The text to be drawn.
+     * @param {number} x The x position.
+     * @param {number} y The y positon.
+     */
+    #drawScore (scoreText, x, y) {
+      this.#canvasContext.font = '16px Arial'
+      this.#canvasContext.fillStyle = 'white'
+      this.#canvasContext.fillText(scoreText, x, y)
+    }
+
+    /**
      * Moves the snake. Inspired by: https://www.educative.io/blog/javascript-snake-game-tutorial.
      */
     #moveSnake () {
@@ -365,19 +395,6 @@ customElements.define('my-snake-game',
     }
 
     /**
-     * Draws a score at the canvas.
-     *
-     * @param {string} scoreText The text to be drawn.
-     * @param {number} x The x position.
-     * @param {number} y The y positon.
-     */
-    #drawScore (scoreText, x, y) {
-      this.#canvasContext.font = '16px Arial'
-      this.#canvasContext.fillStyle = 'white'
-      this.#canvasContext.fillText(scoreText, x, y)
-    }
-
-    /**
      * Checks if game has collided with itself. If it has, the game is over.
      */
     #collisionDetection () {
@@ -390,9 +407,18 @@ customElements.define('my-snake-game',
           setTimeout(() => {
             this.#gameOver()
             this.#setHighScore()
-          }, 500)
+          }, 300)
         }
       }
+    }
+
+    /**
+     * Displays game over.
+     */
+    #gameOver () {
+      this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
+      this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
+      this.#restartButton.focus()
     }
 
     /**
@@ -443,15 +469,6 @@ customElements.define('my-snake-game',
     }
 
     /**
-     * Displays game over.
-     */
-    #gameOver () {
-      this.#drawRect(0, 0, this.#canvas.width, this.#canvas.height, 'black')
-      this.shadowRoot.querySelector('#game-over').classList.remove('hidden')
-      this.#restartButton.focus()
-    }
-
-    /**
      * Indicates that the game should be ended.
      *
      * @param {Event} event The click event.
@@ -471,20 +488,6 @@ customElements.define('my-snake-game',
         localStorage.setItem('snakeHighScore', JSON.stringify(highScore))
         this.#highScore = this.#score
       }
-    }
-
-    /**
-     * A template for drawing a rectangle.
-     *
-     * @param {number} posX The x position where the rectangle will be drawn.
-     * @param {number} posY The y position where the rectangle will be drawn.
-     * @param {number} width The width of the rectangle.
-     * @param {number} height The height of the rectangle.
-     * @param {string} color The color of the rectangle.
-     */
-    #drawRect (posX, posY, width, height, color) {
-      this.#canvasContext.fillStyle = color
-      this.#canvasContext.fillRect(posX, posY, width, height)
     }
   }
 )

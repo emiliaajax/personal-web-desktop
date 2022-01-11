@@ -6,7 +6,19 @@ A web component representing a clickable icon.
 
 ### `src`
 
-The `src` attribute, if present, specifies the icon image.
+The `src` attribute specifies the icon image.
+
+Default value: undefined
+
+### `name`
+
+The `name` identifier attribute, if present, identifies the icon with a name.
+
+Default value: undefined
+
+### `app` 
+
+The `app` identifier attribute, if present, identifies the icon with an app.
 
 Default value: undefined
 

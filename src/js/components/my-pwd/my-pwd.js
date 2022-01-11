@@ -13,7 +13,7 @@ import '../my-window/index.js'
 import '../my-snake-game/index.js'
 
 /**
- * Gets urls to images used in component.
+ * Urls to images used in component.
  */
 const wallpaperImage = (new URL('images/wallpaper.jpg', import.meta.url)).href
 const memoryIconImage = (new URL('images/memory-icon.png', import.meta.url)).href
@@ -66,7 +66,7 @@ customElements.define('my-pwd',
      */
     #zIndex = 1
     /**
-     * The current my-window element.
+     * The current window.
      *
      * @type {HTMLElement}
      */
@@ -110,7 +110,7 @@ customElements.define('my-pwd',
     #positionWindow () {
       if (this.shadowRoot.querySelectorAll('my-window').length !== 0) {
         const howManyWindows = this.shadowRoot.querySelectorAll('my-window').length + 1
-        this.#window.style.left = `${howManyWindows * 20}px`
+        this.#window.style.left = `${howManyWindows * 10}px`
         this.#window.style.top = `${howManyWindows * 20}px`
       } else {
         this.#window.style.left = '20px'

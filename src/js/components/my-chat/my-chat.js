@@ -9,7 +9,7 @@ import '../my-username-form/index.js'
 import '../my-emojis/index.js'
 
 /**
- * Gets urls to images used in component.
+ * Urls to images used in component.
  */
 const sendIconImage = (new URL('images/send-icon.png', import.meta.url)).href
 const soundOffImage = (new URL('images/sound-off.png', import.meta.url)).href
@@ -17,7 +17,7 @@ const soundOnImage = (new URL('images/sound-on.png', import.meta.url)).href
 const noWifi = (new URL('images/no-wifi.png', import.meta.url)).href
 
 /**
- * Gets url to audio used in component.
+ * Gets url to audio used in component. Retrieved from https://freesound.org/people/yfjesse/sounds/235911/.
  */
 const notificationAudio = (new URL('audio/235911__yfjesse__notification-sound.wav', import.meta.url)).href
 
@@ -51,6 +51,7 @@ template.innerHTML = `
   <style>
     #username {
       background-color: #5de6de;
+      /* Background color with gradient retrieved from https://www.eggradients.com/category/blue-gradient */
       background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);
       width: 500px;
       height: 500px;
@@ -59,6 +60,7 @@ template.innerHTML = `
       width: 500px;
       height: 500px;
       background-color: #5de6de;
+      /* Background color with gradient retrieved from https://www.eggradients.com/category/blue-gradient */
       background-image: linear-gradient(315deg, #5de6de 0%, #b58ecc 74%);
       display: grid;
       grid-template-rows: auto;
@@ -91,6 +93,7 @@ template.innerHTML = `
       text-align: center;
       color: white;
       padding-top: 10px;
+      /* Box-shadow code from https://getcssscan.com/css-box-shadow-examples */
       box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
       transition: all 0.3s ease;
     }
@@ -420,17 +423,6 @@ customElements.define('my-chat',
     }
 
     /**
-     * Displays that there's no internet connection.
-     *
-     */
-    #noConnectionBanner () {
-      this.shadowRoot.querySelector('#noConnection').classList.remove('hidden')
-      this.#timeoutID = setTimeout(() => {
-        this.shadowRoot.querySelector('#noConnection').classList.add('hidden')
-      }, 5000)
-    }
-
-    /**
      * Displays the chat messages in the chat output area.
      *
      * @param {Event} event The message event.
@@ -469,7 +461,7 @@ customElements.define('my-chat',
     }
 
     /**
-     * Stores the username in sessionStorage.
+     * Stores the username.
      *
      * @param {Event} event The added event.
      */
@@ -485,7 +477,7 @@ customElements.define('my-chat',
      */
     #addEmojiToMessage (event) {
       this.#message.focus()
-      this.#message.value = this.#message.value + event.detail.emojiValue
+      this.#message.value = this.#message.value + event.detail.emojiValue + ' '
     }
 
     /**
@@ -507,21 +499,30 @@ customElements.define('my-chat',
     }
 
     /**
-     * Displays a red dot.
+     * Displays a timed banner with "no internet connection" text.
+     */
+    #noConnectionBanner () {
+      this.shadowRoot.querySelector('#noConnection').classList.remove('hidden')
+      this.#timeoutID = setTimeout(() => {
+        this.shadowRoot.querySelector('#noConnection').classList.add('hidden')
+      }, 5000)
+    }
+
+    /**
+     * Displays a red dot and a timed connection banner when offline.
      */
     #displayOfflineMessage () {
       this.shadowRoot.querySelector('#offlineMessage').classList.remove('hidden')
       this.shadowRoot.querySelector('#onlineMessage').classList.add('hidden')
       this.#connected = false
-      // this.#socket.close()
       this.#noConnectionBanner()
     }
 
     /**
-     * Displays a green dot.
+     * Displays a green dot when online, and if web socket is closed or closing, creates a new connection.
      */
     #displayOnlineMessage () {
-      if (this.#socket.readyState !== 1) {
+      if (this.#socket.readyState === 2 || this.#socket.readyState === 3) {
         this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
         this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
       }

@@ -9,7 +9,7 @@ import '../my-flipping-tile/index.js'
 import '../my-username-form/my-username-form.js'
 
 /**
- * Gets urls to images used in component. Tile images retrieved from NASA Image Gallery at https://images.nasa.gov/.
+ * Urls to images used in component. Tile images retrieved from NASA Image Gallery at https://images.nasa.gov/.
  */
 const tileImages = 8
 const tileImageUrls = []
@@ -42,6 +42,7 @@ template.innerHTML = `
   </div>
   <style>
     :host {
+      /* Some style regarding tiles are inspired from the solution to the exercise */
       --tile-size: 100px;
       background: url('${backgroundImage}');
       background-position: top;
@@ -288,13 +289,6 @@ customElements.define('my-memory-game',
       }
     }
 
-    // /**
-    //  * Called after the element is inserted in the DOM.
-    //  */
-    // connectedCallback () {
-    //   this.#createTiles()
-    // }
-
     /**
      * Creates tiles depending on size of the grid.
      */
@@ -360,9 +354,9 @@ customElements.define('my-memory-game',
     }
 
     /**
-     * Returns a shuffled array of relative adresses to the images used in the game. Inspired by code from A3 assignment.
+     * Returns a shuffled array of relative adresses to the images used in the game. Inspired by code from A3 assignment (deck module, shuffle method).
      *
-     * @returns {string[]} A shuffled array of relative adresses to images.
+     * @returns {string[]} A shuffled array of adresses to images.
      */
     #collectAndShuffleImages () {
       const imageArray = []
@@ -426,7 +420,7 @@ customElements.define('my-memory-game',
     }
 
     /**
-     * Compares the current score with the high score. If the current score is better, it will be set as the new high score.
+     * Compares the current score with the high score.
      */
     #compareScores () {
       this.#highScore = JSON.parse(localStorage.getItem('memoryHighscore'))

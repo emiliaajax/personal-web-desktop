@@ -6,7 +6,7 @@
  */
 
 /**
- * Gets url to image used in component.
+ * Url to image used in component. Image retrieved from NASA Image Gallery at https://images.nasa.gov/.
  */
 const backOfTileImage = (new URL('images/tile-back.jpg', import.meta.url)).href
 
