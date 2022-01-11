@@ -355,6 +355,7 @@ customElements.define('my-chat',
       this.#sendButton.addEventListener('click', event => this.#onSubmit(event))
       this.#message.addEventListener('keydown', event => {
         if (event.key === 'Enter') {
+          event.preventDefault()
           this.#onSubmit(event)
         }
       })

@@ -21,7 +21,7 @@ const highlightedNoButtonImage = (new URL('images/no-highlighted.png', import.me
  */
 const template = document.createElement('template')
 template.innerHTML = `
-  <canvas id='game-canvas' width='500' height='500'></canvas>
+  <canvas id='game-canvas' width='500' height='500' tabindex=0></canvas>
   <div id='start-game'>
     <img id='snake-text' src='${snakeTextImage}' alt='Snake' width='300'>
     <button id='start'>
@@ -38,6 +38,9 @@ template.innerHTML = `
     </button>
   </div>
   <style>
+    canvas:focus {
+      outline: none;
+    }
     #restart {
       position: absolute;
       left: 65px;
@@ -221,7 +224,7 @@ customElements.define('my-snake-game',
         this.#startGame()
       })
 
-      document.addEventListener('keydown', event => this.#turnSnake(event))
+      this.#canvas.addEventListener('keydown', event => this.#turnSnake(event))
 
       this.#quitButton.addEventListener('click', event => this.#quitGame(event))
       this.#quitButton.addEventListener('mouseover', () => this.#focusOnNoButton())
@@ -262,6 +265,7 @@ customElements.define('my-snake-game',
      * Starts the game.
      */
     #startGame () {
+      this.#canvas.focus()
       this.#food = {
         x: Math.floor(Math.random() * ((this.#canvas.width * 0.8) - 35) + 35),
         y: Math.floor(Math.random() * ((this.#canvas.height * 0.8) - 35) + 35)
