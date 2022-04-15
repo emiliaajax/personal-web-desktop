@@ -122,18 +122,6 @@ customElements.define('my-window',
      */
     #yPosition
     /**
-     * The offset from the start x position.
-     *
-     * @type {number}
-     */
-    #xOffset
-    /**
-     * The offset from the start y position.
-     *
-     * @type {number}
-     */
-    #yOffset
-    /**
      * A boolean indicating if a window is being dragged.
      *
      * @type {boolean}
@@ -160,8 +148,8 @@ customElements.define('my-window',
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
-      this.#xOffset = Number(this.style.left.match(/(\d+)/gm)[0])
-      this.#yOffset = Number(this.style.top.match(/(\d+)/gm)[0])
+      this.#xPosition = Number(this.style.left.match(/(\d+)/gm)[0])
+      this.#yPosition = Number(this.style.top.match(/(\d+)/gm)[0])
     }
 
     /**
@@ -195,10 +183,9 @@ customElements.define('my-window',
       if (this.#yPosition < 0) {
         this.#yPosition = 0
         this.#yInitial = 0
-        this.#yOffset = 0
       }
-      this.#xInitial = event.clientX - this.#xOffset
-      this.#yInitial = event.clientY - this.#yOffset
+      this.#xInitial = event.clientX - this.#xPosition
+      this.#yInitial = event.clientY - this.#yPosition
       this.#dragging = true
       this.dispatchEvent(new CustomEvent('focused'))
     }
@@ -234,7 +221,6 @@ customElements.define('my-window',
      */
     #updateXPos (event) {
       this.#xPosition = event.clientX - this.#xInitial
-      this.#xOffset = this.#xPosition
     }
 
     /**
@@ -244,7 +230,6 @@ customElements.define('my-window',
      */
     #updateYPos (event) {
       this.#yPosition = event.clientY - this.#yInitial
-      this.#yOffset = this.#yPosition
     }
 
     /**

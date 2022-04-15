@@ -8,6 +8,10 @@
 import '../my-username-form/index.js'
 import '../my-emojis/index.js'
 
+// Web socket server address and API key.
+const WSS_ADDRESS = ''
+const ACCESS_TOKEN_SECRET = ''
+
 /**
  * Urls to images used in component.
  */
@@ -370,7 +374,7 @@ customElements.define('my-chat',
      * Called after the element is inserted in the DOM.
      */
     connectedCallback () {
-      this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
+      this.#socket = new window.WebSocket(WSS_ADDRESS)
       this.#socket.addEventListener('open', () => this.#displayOnlineMessage())
       this.#socket.addEventListener('close', () => this.#displayOfflineMessage())
       this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
@@ -411,7 +415,7 @@ customElements.define('my-chat',
             type: 'message',
             data: this.#message.value,
             username: this.#username,
-            key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd',
+            key: ACCESS_TOKEN_SECRET,
             channel: this.#channel
           }))
           this.#chatMessage.reset()
@@ -524,7 +528,7 @@ customElements.define('my-chat',
      */
     #displayOnlineMessage () {
       if (this.#socket.readyState === 2 || this.#socket.readyState === 3) {
-        this.#socket = new window.WebSocket('wss://courselab.lnu.se/message-app/socket')
+        this.#socket = new window.WebSocket(WSS_ADDRESS)
         this.#socket.addEventListener('message', event => this.#displayChatMessage(event))
       }
       this.shadowRoot.querySelector('#offlineMessage').classList.add('hidden')

@@ -195,6 +195,10 @@ customElements.define('my-emojis',
 
       // Event handlers
       this.shadowRoot.querySelector('#emoji-button').addEventListener('click', event => this.#openAndCloseEmojiContainer(event))
+      // this.#emojiContainer.addEventListener('click', event => {
+      //   event.preventDefault()
+      //   this.dispatchEvent(new CustomEvent('clicked', { detail: { emojiValue: event.target.textContent } }))
+      // })
       this.shadowRoot.querySelectorAll('.emoji').forEach(emoji => emoji.addEventListener('click', event => {
         event.preventDefault()
         this.dispatchEvent(new CustomEvent('clicked', { detail: { emojiValue: emoji.textContent } }))

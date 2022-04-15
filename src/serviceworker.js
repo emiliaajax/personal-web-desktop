@@ -62,7 +62,7 @@ self.addEventListener('activate', event => {
       })
     )
   }
-  event.waitUntil(removeCachedResources)
+  event.waitUntil(removeCachedResources())
 })
 
 self.addEventListener('fetch', event => {
@@ -71,7 +71,7 @@ self.addEventListener('fetch', event => {
    * Tries to fetch the requested resource from the server. If success, the response is sent to the browser and also saved to cache. If error occurs, the cache is searched for a match.
    *
    * @param {object} request The requested resource.
-   * @returns {Promise}  A promise that resolves to undefined.
+   * @returns {Promise}  A promise that resolves to a Response.
    */
   const fetchAndCacheMeIfYouCan = async request => {
     try {
