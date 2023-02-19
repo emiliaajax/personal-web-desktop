@@ -14,9 +14,9 @@ import '../my-username-form/my-username-form.js'
 const tileImages = 8
 const tileImageUrls = []
 for (let i = 0; i < tileImages; i++) {
-  tileImageUrls[i] = (new URL(`images/${i + 1}.png`, import.meta.url)).href
+  tileImageUrls[i] = (new URL(`./images/${i + 1}.png`, import.meta.url)).href
 }
-const backgroundImage = (new URL('images/memory-background.jpg', import.meta.url)).href
+const backgroundImage = (new URL('./images/memory-background.jpg', import.meta.url)).href
 
 /**
  * Defines template.
